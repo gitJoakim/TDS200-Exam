@@ -1,14 +1,15 @@
 import { Image, StyleSheet, Platform, View, Text } from "react-native";
-
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import Authentication from "../authentication";
 
 export default function HomeScreen() {
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<Text>ArtVista</Text>
+			<Authentication />
+			{/*
+			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+				<Text>ArtVista</Text>
+			</View>
+*/}
 		</View>
 	);
 }
