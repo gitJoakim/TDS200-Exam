@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 import * as authenticationAPI from "@/api/authenticationApi";
@@ -9,7 +9,7 @@ const Authentication = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
-	const { logIn } = useAuthSession();
+	const { userNameSession } = useAuthSession();
 
 	return (
 		<View
@@ -28,24 +28,27 @@ const Authentication = () => {
 					style={{ borderColor: "black", borderWidth: 2, marginBottom: 16 }}
 					value={email}
 					onChangeText={setEmail}
+					autoCapitalize="none"
 				></TextInput>
 				<Text>Username</Text>
 				<TextInput
 					style={{ borderColor: "black", borderWidth: 2, marginBottom: 16 }}
 					value={username}
 					onChangeText={setUsername}
+					autoCapitalize="none"
 				></TextInput>
 				<Text>Passowrd</Text>
 				<TextInput
 					style={{ borderColor: "black", borderWidth: 2, marginBottom: 16 }}
 					value={password}
 					onChangeText={setPassword}
+					autoCapitalize="none"
 				></TextInput>
 				<View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
 					<Pressable
 						style={{ borderColor: "black", borderWidth: 2, width: 60 }}
 						onPress={() => {
-							logIn(email, password);
+							authenticationAPI.logIn(email, password);
 						}}
 					>
 						<Text>Log in</Text>
@@ -60,6 +63,14 @@ const Authentication = () => {
 						<Text>Sign up</Text>
 					</Pressable>
 				</View>
+
+				<Pressable
+					onPress={() => {
+						authenticationAPI.logOut();
+					}}
+				>
+					<Text>Log Out</Text>
+				</Pressable>
 			</View>
 		</View>
 	);

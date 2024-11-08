@@ -16,7 +16,6 @@ import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-
 // checking platform and using persistance/async storage based on platform
 export const auth = initializeAuth(app, {
 	persistence:

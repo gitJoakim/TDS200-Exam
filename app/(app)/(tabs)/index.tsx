@@ -1,15 +1,31 @@
-import { Image, StyleSheet, Platform, View, Text } from "react-native";
-import Authentication from "../authentication";
+import {
+	Image,
+	StyleSheet,
+	Platform,
+	View,
+	Text,
+	Modal,
+	Pressable,
+} from "react-native";
+import Authentication from "../../authentication";
+import { useState } from "react";
+import * as authenticationAPI from "@/api/authenticationApi";
 
 export default function HomeScreen() {
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<Authentication />
-			{/*
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<Text>ArtVista</Text>
+				<Text>Welcome to ArtVista, you fuckface</Text>
+
+				<Pressable
+					style={{ backgroundColor: "red", margin: 32 }}
+					onPress={() => {
+						authenticationAPI.logOut();
+					}}
+				>
+					<Text>LOG OUT NOW!!</Text>
+				</Pressable>
 			</View>
-*/}
 		</View>
 	);
 }
