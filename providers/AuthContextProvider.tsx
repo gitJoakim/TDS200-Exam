@@ -36,6 +36,17 @@ const AuthenticationContext = createContext<AuthContextType>({
 	user: null,
 });
 
+export function useAuthSession() {
+	const value = useContext(AuthenticationContext);
+	if (!value) {
+		throw new Error(
+			"UseAuthSession must be used within a AuthContext Provider"
+		);
+	}
+
+	return value;
+}
+
 export function AuthenticationSessionProvider({
 	children,
 }: {
