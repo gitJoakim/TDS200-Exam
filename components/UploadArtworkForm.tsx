@@ -9,11 +9,14 @@ import {
 	SafeAreaView,
 	ScrollView,
 	StatusBar,
+	Modal,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
+import ImageModal from "./Modals/GalleryModal";
+import CameraModal from "./Modals/CameraModal";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
@@ -85,7 +88,6 @@ export default function UploadArtworkForm() {
 								height: 300,
 								borderWidth: image ? 0 : 2,
 								justifyContent: "center",
-								marginBottom: 300,
 							}}
 						>
 							{image ? (
@@ -187,6 +189,23 @@ export default function UploadArtworkForm() {
 					<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
 				</View>
 			</ScrollView>
+
+			<Modal visible={isGalleryModalOpen}>
+				<ImageModal
+					closeModal={() => {
+						setIsGalleryModalOpen(false);
+					}}
+					setImage={setImage}
+				/>
+			</Modal>
+			<Modal visible={isCameraModalOpen}>
+				<CameraModal
+					closeModal={() => {
+						setIsCameraModalOpen(false);
+					}}
+					setImage={setImage}
+				/>
+			</Modal>
 		</SafeAreaView>
 	);
 }

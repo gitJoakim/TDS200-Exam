@@ -5,4 +5,5 @@ export interface ArtworkData {
 	imageURL: string;
 	id: string;
 	hashtags: string[];
+	date: string;
 }
