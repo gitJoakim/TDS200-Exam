@@ -10,6 +10,7 @@ import {
 import Authentication from "../../authentication";
 import { useState } from "react";
 import * as authenticationAPI from "@/api/authenticationApi";
+import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
 	return (
@@ -18,7 +19,7 @@ export default function HomeScreen() {
 				style={{
 					fontFamily: "Dancing-Script",
 					fontSize: 48,
-					color: "#DC143C",
+					color: Colors.ArtVistaRed,
 				}}
 			>
 				ArtVista

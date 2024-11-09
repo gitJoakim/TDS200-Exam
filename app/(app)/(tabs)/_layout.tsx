@@ -12,7 +12,7 @@ export default function TabLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: "blue",
+				tabBarActiveTintColor: Colors.ArtVistaRed,
 				headerShown: false,
 				tabBarHideOnKeyboard: true,
 				// had to add this because for some reason on android the tabs moved up when keybaord appeared.
@@ -23,7 +23,11 @@ export default function TabLayout() {
 				options={{
 					title: "Profile",
 					tabBarIcon: ({ focused }) => (
-						<Feather name="user" size={24} color={focused ? "blue" : "black"} />
+						<Feather
+							name="user"
+							size={24}
+							color={focused ? Colors.ArtVistaRed : "gray"}
+						/>
 					),
 				}}
 			/>
@@ -34,7 +38,7 @@ export default function TabLayout() {
 					tabBarIcon: ({ focused }) => (
 						<TabBarIcon
 							name={focused ? "home" : "home-outline"}
-							color={focused ? "blue" : "black"}
+							color={focused ? Colors.ArtVistaRed : "gray"}
 						/>
 					),
 				}}
@@ -47,7 +51,7 @@ export default function TabLayout() {
 						<Feather
 							name="plus-square"
 							size={24}
-							color={focused ? "blue" : "black"}
+							color={focused ? Colors.ArtVistaRed : "gray"}
 						/>
 					),
 				}}
