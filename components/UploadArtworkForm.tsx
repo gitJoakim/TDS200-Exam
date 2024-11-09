@@ -163,9 +163,11 @@ export default function UploadArtworkForm() {
 
 					<Text>Description</Text>
 					<TextInput
-						style={styles.textInput}
+						style={[styles.textInput, styles.descriptionTextField]}
 						value={description}
 						onChangeText={setDescription}
+						multiline={true}
+						placeholder="Describe the artwork.."
 					/>
 
 					<Text>Hashtags</Text>
@@ -201,7 +203,6 @@ export default function UploadArtworkForm() {
 
 					{/*  Upload and Clear input buttons		*/}
 					<View style={styles.buttonsContainer}>
-						{/* Upload/Post Button */}
 						<Pressable
 							style={styles.button}
 							onPress={() => console.log("Post/Upload")}
@@ -209,7 +210,6 @@ export default function UploadArtworkForm() {
 							<Text style={styles.buttonText}>Post Artwork</Text>
 						</Pressable>
 
-						{/* Clear Form Button */}
 						<Pressable
 							style={[styles.button, styles.clearButton]}
 							onPress={() => clearForm()}
@@ -290,5 +290,8 @@ const styles = StyleSheet.create({
 		color: "#fff", // White text color for the clear button
 		fontSize: 16,
 		fontWeight: "bold",
+	},
+	descriptionTextField: {
+		height: 100,
 	},
 });
