@@ -6,13 +6,28 @@ import {
 	Text,
 	Modal,
 	Pressable,
+	FlatList,
 } from "react-native";
 import Authentication from "../../authentication";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as authenticationAPI from "@/api/authenticationApi";
 import { Colors } from "@/constants/Colors";
+import { ArtworkData } from "@/utils/artworkData";
+import Artwork from "@/components/Artwork";
+import * as artworksAPI from "@/api/artworkApi";
 
 export default function HomeScreen() {
+	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
+
+	async function getArtworks() {
+		const artworks = await artworksAPI.getAllArtworks();
+		setArtworks(artworks);
+	}
+
+	useEffect(() => {
+		getArtworks();
+	}, []);
+
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 			<Text
@@ -24,6 +39,13 @@ export default function HomeScreen() {
 			>
 				ArtVista
 			</Text>
+
+			<FlatList
+				data={artworks}
+				renderItem={(artwork) => (
+					<Artwork key={artwork.index} artworkData={artwork.item} />
+				)}
+			/>
 		</View>
 	);
 }
