@@ -21,7 +21,15 @@ const Authentication = () => {
 				width: "100%",
 			}}
 		>
-			<Text>ArtVista</Text>
+			<Text
+				style={{
+					fontFamily: "Dancing-Script",
+					fontSize: 48,
+					color: "#DC143C",
+				}}
+			>
+				ArtVista
+			</Text>
 			<View style={{ width: 200 }}>
 				<Text>Email</Text>
 				<TextInput
