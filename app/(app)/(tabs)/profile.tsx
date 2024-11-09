@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import { View, Text, Pressable } from "react-native";
 
@@ -6,7 +7,15 @@ export default function Profile() {
 
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<Text>Hello, {userNameSession}!</Text>
+			<Text
+				style={{
+					fontFamily: "Dancing-Script",
+					fontSize: 48,
+					color: Colors.ArtVistaRed,
+				}}
+			>
+				Hello, {userNameSession}!
+			</Text>
 
 			<Pressable
 				style={{
@@ -24,4 +33,3 @@ export default function Profile() {
 		</View>
 	);
 }
-
