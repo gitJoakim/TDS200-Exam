@@ -14,6 +14,8 @@ export default function TabLayout() {
 			screenOptions={{
 				tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
 				headerShown: false,
+				tabBarHideOnKeyboard: true,
+				// had to add this because for some reason on android the tabs moved up when keybaord appeared.
 			}}
 		>
 			<Tabs.Screen
