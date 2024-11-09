@@ -1,6 +1,6 @@
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import { Redirect, Stack } from "expo-router";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function AppLayout() {
 	const { userNameSession, isLoading } = useAuthSession();
@@ -8,7 +8,8 @@ export default function AppLayout() {
 	if (isLoading) {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<Text>Fetching user... Please wait..</Text>
+				<ActivityIndicator />
+				<Text>Loading...</Text>
 			</View>
 		);
 	}
