@@ -12,7 +12,7 @@ export default function TabLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+				tabBarActiveTintColor: "blue",
 				headerShown: false,
 				tabBarHideOnKeyboard: true,
 				// had to add this because for some reason on android the tabs moved up when keybaord appeared.
@@ -22,8 +22,8 @@ export default function TabLayout() {
 				name="profile"
 				options={{
 					title: "Profile",
-					tabBarIcon: ({ color, focused }) => (
-						<Feather name="user" size={24} color={color} />
+					tabBarIcon: ({ focused }) => (
+						<Feather name="user" size={24} color={focused ? "blue" : "black"} />
 					),
 				}}
 			/>
@@ -31,10 +31,10 @@ export default function TabLayout() {
 				name="index"
 				options={{
 					title: "Home",
-					tabBarIcon: ({ color, focused }) => (
+					tabBarIcon: ({ focused }) => (
 						<TabBarIcon
 							name={focused ? "home" : "home-outline"}
-							color={color}
+							color={focused ? "blue" : "black"}
 						/>
 					),
 				}}
@@ -43,8 +43,12 @@ export default function TabLayout() {
 				name="upload"
 				options={{
 					title: "Upload",
-					tabBarIcon: ({ color, focused }) => (
-						<Feather name="plus-square" size={24} color={color} />
+					tabBarIcon: ({ focused }) => (
+						<Feather
+							name="plus-square"
+							size={24}
+							color={focused ? "blue" : "black"}
+						/>
 					),
 				}}
 			/>

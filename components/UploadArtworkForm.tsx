@@ -17,13 +17,18 @@ import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import ImageModal from "./Modals/GalleryModal";
 import CameraModal from "./Modals/CameraModal";
+import { dateFormatter } from "@/utils/dateFormatter";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
 	const [hashtagsArray, setHashtagsArray] = useState<string[]>([]);
+	const [image, setImage] = useState<string | null>(null);
+	const [date, setDate] = useState<string | null>(null);
+	const [title, setTitle] = useState("");
+	const [description, setDescription] = useState<string>("");
+
 	const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
-	const [image, setImage] = useState<string | null>(null);
 
 	function handleHashtagChange(input: string) {
 		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
@@ -58,6 +63,14 @@ export default function UploadArtworkForm() {
 		));
 	}
 
+	function clearForm() {
+		setTitle("");
+		setDescription("");
+		setImage(null);
+		setHashtagsArray([]);
+		setHashtag("#");
+	}
+
 	return (
 		<SafeAreaView
 			style={{
@@ -73,7 +86,11 @@ export default function UploadArtworkForm() {
 			>
 				<View style={{ paddingHorizontal: 24 }}>
 					<Text>Title</Text>
-					<TextInput style={styles.textInput} />
+					<TextInput
+						style={styles.textInput}
+						value={title}
+						onChangeText={setTitle}
+					/>
 
 					<View
 						style={{
@@ -94,7 +111,6 @@ export default function UploadArtworkForm() {
 								<Image
 									source={{ uri: image }}
 									style={{ resizeMode: "contain", width: "100%", height: 300 }}
-									alt="Image of spot"
 								/>
 							) : (
 								<Text
@@ -104,7 +120,7 @@ export default function UploadArtworkForm() {
 										fontWeight: "bold",
 									}}
 								>
-									Add an image of the spot
+									Add an image of the Artwork
 								</Text>
 							)}
 						</View>
@@ -146,7 +162,11 @@ export default function UploadArtworkForm() {
 					</View>
 
 					<Text>Description</Text>
-					<TextInput style={styles.textInput} />
+					<TextInput
+						style={styles.textInput}
+						value={description}
+						onChangeText={setDescription}
+					/>
 
 					<Text>Hashtags</Text>
 					<View
@@ -163,16 +183,6 @@ export default function UploadArtworkForm() {
 							autoCapitalize="none"
 							onSubmitEditing={addHashtag}
 						/>
-						<Pressable
-							onPress={addHashtag}
-							style={{
-								backgroundColor: "blue",
-								padding: 6,
-								alignSelf: "stretch",
-							}}
-						>
-							<Text>Add</Text>
-						</Pressable>
 					</View>
 
 					<Text
@@ -180,16 +190,37 @@ export default function UploadArtworkForm() {
 							textAlign: "center",
 							color: "gray",
 							marginVertical: 6,
-							opacity: hashtagsArray.length === 0 ? 0 : 1,
 						}}
 					>
-						Tap a hashtag to remove it
+						{hashtagsArray.length === 0
+							? "Type a hashtag and press Enter to add it (you can add multiple)"
+							: "Tap a hashtag to remove it"}
 					</Text>
 
 					<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
+
+					{/*  Upload and Clear input buttons		*/}
+					<View style={styles.buttonsContainer}>
+						{/* Upload/Post Button */}
+						<Pressable
+							style={styles.button}
+							onPress={() => console.log("Post/Upload")}
+						>
+							<Text style={styles.buttonText}>Post Artwork</Text>
+						</Pressable>
+
+						{/* Clear Form Button */}
+						<Pressable
+							style={[styles.button, styles.clearButton]}
+							onPress={() => clearForm()}
+						>
+							<Text style={styles.clearButtonText}>Clear Form</Text>
+						</Pressable>
+					</View>
 				</View>
 			</ScrollView>
 
+			{/*	Camera and gallery modals	*/}
 			<Modal visible={isGalleryModalOpen}>
 				<ImageModal
 					closeModal={() => {
@@ -213,9 +244,11 @@ export default function UploadArtworkForm() {
 const styles = StyleSheet.create({
 	textInput: {
 		borderColor: "black",
-		borderWidth: 2,
-		padding: 6,
+		borderWidth: 1,
+		padding: 8,
 		marginBottom: 32,
+		borderRadius: 12,
+		width: "100%",
 	},
 	hashtagsContainer: {
 		gap: 12,
@@ -229,5 +262,33 @@ const styles = StyleSheet.create({
 	},
 	hashtagTextColor: {
 		color: "blue",
+	},
+	buttonsContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between", // Spaces out buttons
+		alignItems: "center", // Centers vertically
+		marginTop: 20, // Optional margin for spacing
+		paddingHorizontal: 20,
+	},
+	button: {
+		backgroundColor: "#4CAF50", // Green color for the Post/Upload button
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+		borderRadius: 5,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	buttonText: {
+		color: "#fff", // White text color
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	clearButton: {
+		backgroundColor: "#F44336", // Red color for the Clear button
+	},
+	clearButtonText: {
+		color: "#fff", // White text color for the clear button
+		fontSize: 16,
+		fontWeight: "bold",
 	},
 });

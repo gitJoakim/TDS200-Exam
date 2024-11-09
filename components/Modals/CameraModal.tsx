@@ -21,7 +21,7 @@ export default function CameraModal({
 		return (
 			<View style={styles.container}>
 				<Text style={styles.message}>
-					We need your permission to show the camera
+					We need your permission to use the camera
 				</Text>
 				<Button onPress={requestPermission} title="grant permission" />
 			</View>
