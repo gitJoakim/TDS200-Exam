@@ -14,26 +14,15 @@ import * as authenticationAPI from "@/api/authenticationApi";
 export default function HomeScreen() {
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<Text
-					style={{
-						fontFamily: "Dancing-Script",
-						fontSize: 48,
-						color: "#DC143C",
-					}}
-				>
-					ArtVista
-				</Text>
-
-				<Pressable
-					style={{ backgroundColor: "red", margin: 32 }}
-					onPress={() => {
-						authenticationAPI.logOut();
-					}}
-				>
-					<Text>LOG OUT NOW!!</Text>
-				</Pressable>
-			</View>
+			<Text
+				style={{
+					fontFamily: "Dancing-Script",
+					fontSize: 48,
+					color: "#DC143C",
+				}}
+			>
+				ArtVista
+			</Text>
 		</View>
 	);
 }
