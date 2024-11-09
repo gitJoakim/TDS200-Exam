@@ -77,6 +77,7 @@ export default function UploadArtworkForm() {
 
 	function createArtwork() {
 		const artwork: ArtworkData = {
+			id: null, // we grab the id from firebase when we get the post so we dont need it yet
 			artist: userNameSession!,
 			title: title,
 			description: description,
