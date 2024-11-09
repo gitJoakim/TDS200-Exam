@@ -21,7 +21,6 @@ export const uploadImageToFirebase = async (uri: string) => {
 	const imageRef = getStorageRef(uploadPath);
 
 	try {
-		console.log("pls");
 		await uploadBytesResumable(imageRef, blob);
 		console.log("Uploading image to", uploadPath);
 		return uploadPath;

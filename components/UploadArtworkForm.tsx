@@ -18,6 +18,8 @@ import { useAuthSession } from "@/providers/AuthContextProvider";
 import ImageModal from "./Modals/GalleryModal";
 import CameraModal from "./Modals/CameraModal";
 import { dateFormatter } from "@/utils/dateFormatter";
+import { ArtworkData } from "@/utils/artworkData";
+import { addArtwork } from "@/api/artworkApi";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
@@ -29,6 +31,8 @@ export default function UploadArtworkForm() {
 
 	const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+
+	const { userNameSession } = useAuthSession();
 
 	function handleHashtagChange(input: string) {
 		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
@@ -69,6 +73,19 @@ export default function UploadArtworkForm() {
 		setImage(null);
 		setHashtagsArray([]);
 		setHashtag("#");
+	}
+
+	function createArtwork() {
+		const artwork: ArtworkData = {
+			artist: userNameSession!,
+			title: title,
+			description: description,
+			imageURL: image!,
+			hashtags: hashtagsArray,
+			date: dateFormatter(),
+		};
+		console.log(artwork);
+		return artwork;
 	}
 
 	return (
@@ -205,7 +222,7 @@ export default function UploadArtworkForm() {
 					<View style={styles.buttonsContainer}>
 						<Pressable
 							style={styles.button}
-							onPress={() => console.log("Post/Upload")}
+							onPress={() => addArtwork(createArtwork())}
 						>
 							<Text style={styles.buttonText}>Post Artwork</Text>
 						</Pressable>

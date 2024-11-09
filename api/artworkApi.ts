@@ -11,6 +11,8 @@ This is heavily inspired by lecture code
 *************************************************
 */
 
+
+// CREATE
 export const addArtwork = async (artwork: ArtworkData) => {
 	try {
 		const firebaseImage = await uploadImageToFirebase(artwork.imageURL);
