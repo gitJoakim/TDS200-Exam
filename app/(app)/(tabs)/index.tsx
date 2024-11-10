@@ -16,13 +16,10 @@ import { ArtworkData } from "@/utils/artworkData";
 import Artwork from "@/components/Artwork";
 import * as artworksAPI from "@/api/artworkApi";
 import React from "react";
-import Carousel from "react-native-reanimated-carousel";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import ArtworkCarousel from "@/components/ArtworkCarousel";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
-	const width = Dimensions.get("screen").width;
-	const height = Dimensions.get("screen").height;
 
 	async function getArtworks() {
 		const artworks = await artworksAPI.getAllArtworks();
@@ -46,63 +43,9 @@ export default function HomeScreen() {
 				ArtVista
 			</Text>
 
-			<Carousel
-				loop
-				width={width}
-				height={height}
-				style={{
-					justifyContent: "center",
-					alignItems: "center",
-					flex: 1,
-				}}
-				data={artworks}
-				vertical={true}
-				scrollAnimationDuration={1000}
-				onSnapToItem={(index) => console.log("current index:", index)}
-				renderItem={({ item }) => (
-					<View style={styles.imageContainer}>
-						<Image style={styles.image} source={{ uri: item.imageURL }} />
-						<Text
-							style={{ textAlign: "center", marginBottom: 12, fontSize: 24 }}
-						>
-							"{item.title}"
-						</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								justifyContent: "center",
-								gap: 6,
-							}}
-						>
-							<FontAwesome name="user-circle" size={16} color="black" />
-
-							<Text style={{ textAlign: "center" }}>{item.artist}</Text>
-						</View>
-					</View>
-				)}
-			/>
+			<ArtworkCarousel artworks={artworks} />
 		</View>
 	);
 }
 
-const styles = StyleSheet.create({
-	artistText: {
-		textAlign: "center",
-	},
-	image: {
-		width: 300,
-		height: 400,
-		resizeMode: "cover",
-		marginBottom: 48,
-	},
-	imageContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-		flex: 1,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 10 },
-		shadowOpacity: 0.7,
-		shadowRadius: 30,
-	},
-});
+const styles = StyleSheet.create({});
