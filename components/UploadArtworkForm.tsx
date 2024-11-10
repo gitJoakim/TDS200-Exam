@@ -78,9 +78,35 @@ export default function UploadArtworkForm() {
 		setHashtag("#");
 	}
 
+	// checks if the title, description, and image are valid
+	// hashtags aren't mandatory
+	function validateArtworkInputs() {
+		if (!title.trim()) {
+			alert("Please add a valid title to your artwork.");
+			return false;
+		}
+
+		if (!description.trim()) {
+			alert("Please enter a description for the artwork.");
+			return false;
+		}
+
+		if (!image) {
+			alert("Please add an image of the artwork.");
+			return false;
+		}
+
+		return true;
+	}
+
 	function createArtwork() {
+		// If validation fails, we just stop creation
+		if (!validateArtworkInputs()) {
+			return;
+		}
+
 		const artwork: ArtworkData = {
-			id: null, // we grab the id from firebase when we get the post so we dont need it yet
+			id: null, // we grab the id from firebase when we get the post so we don't need it yet
 			artist: userNameSession!,
 			title: title,
 			description: description,
@@ -88,6 +114,7 @@ export default function UploadArtworkForm() {
 			hashtags: hashtagsArray,
 			date: dateFormatter(),
 		};
+
 		console.log(artwork);
 		return artwork;
 	}
@@ -228,7 +255,12 @@ export default function UploadArtworkForm() {
 					<View style={styles.buttonsContainer}>
 						<Pressable
 							style={styles.button}
-							onPress={() => addArtwork(createArtwork())}
+							onPress={() => {
+								const artwork = createArtwork();
+								if (artwork) {
+									addArtwork(artwork);
+								}
+							}}
 						>
 							<Text style={styles.buttonText}>Post Artwork</Text>
 						</Pressable>
