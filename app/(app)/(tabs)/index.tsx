@@ -17,6 +17,7 @@ import Artwork from "@/components/Artwork";
 import * as artworksAPI from "@/api/artworkApi";
 import React from "react";
 import Carousel from "react-native-reanimated-carousel";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -61,6 +62,23 @@ export default function HomeScreen() {
 				renderItem={({ item }) => (
 					<View style={styles.imageContainer}>
 						<Image style={styles.image} source={{ uri: item.imageURL }} />
+						<Text
+							style={{ textAlign: "center", marginBottom: 12, fontSize: 24 }}
+						>
+							"{item.title}"
+						</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "center",
+								gap: 6,
+							}}
+						>
+							<FontAwesome name="user-circle" size={16} color="black" />
+
+							<Text style={{ textAlign: "center" }}>{item.artist}</Text>
+						</View>
 					</View>
 				)}
 			/>
@@ -76,6 +94,7 @@ const styles = StyleSheet.create({
 		width: 300,
 		height: 400,
 		resizeMode: "cover",
+		marginBottom: 48,
 	},
 	imageContainer: {
 		justifyContent: "center",
