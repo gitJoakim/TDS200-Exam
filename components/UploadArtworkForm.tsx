@@ -111,7 +111,7 @@ export default function UploadArtworkForm() {
 		}
 
 		const artwork: ArtworkData = {
-			id: null, // we grab the id from firebase when we get the post so we don't need it yet
+			id: "", // we grab the id from firebase when we get the post so we don't need it yet
 			artist: userNameSession!,
 			title: title,
 			description: description,
@@ -243,7 +243,7 @@ export default function UploadArtworkForm() {
 								event.preventDefault();
 							}}
 							ref={hashtagInputRef}
-							blurOnSubmit={false}
+							blurOnSubmit={false} // input dont lose focus on submitting hashtag
 						/>
 					</View>
 

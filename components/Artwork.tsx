@@ -1,15 +1,20 @@
 import { ArtworkData } from "@/utils/artworkData";
-import { Link } from "expo-router";
-import { Pressable, View, Text, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 
 type ArtworkProps = {
-	artworkData: ArtworkData;
+	artworkData: ArtworkData | null;
 };
 export default function Artwork({ artworkData }: ArtworkProps) {
+	if (artworkData === null) {
+		return (
+			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+				<Text>Uh oh, something went wrong. Please exit and try again.</Text>
+			</View>
+		);
+	}
+
 	return (
-		<Pressable
-			style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-		>
+		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 			<View>
 				<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
 					<Text>{artworkData.artist}</Text>
@@ -23,6 +28,6 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				<Text>{artworkData.description}</Text>
 				<Text>{artworkData.hashtags}</Text>
 			</View>
-		</Pressable>
+		</View>
 	);
 }

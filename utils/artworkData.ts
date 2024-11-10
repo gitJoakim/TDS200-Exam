@@ -1,5 +1,5 @@
 export interface ArtworkData {
-	id: string | null;
+	id: string;
 	artist: string; // username of uploader
 	title: string;
 	description: string;

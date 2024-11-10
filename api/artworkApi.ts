@@ -77,6 +77,7 @@ export const getArtworkById = async (id: string) => {
 		} as ArtworkData;
 	} catch (error) {
 		console.error("Error fetching artwork by ID:", error);
+		return null;
 	}
 };
 

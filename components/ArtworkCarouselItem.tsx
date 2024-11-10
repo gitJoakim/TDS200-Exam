@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ArtworkData } from "@/utils/artworkData";
+import { Link } from "expo-router";
 
 type ArtworkCarouselItemProps = {
 	artwork: ArtworkData;
@@ -19,13 +20,19 @@ export default function ArtworkCarouselItem({
 	const { width, height } = Dimensions.get("window");
 	return (
 		<View style={styles.imageContainer}>
-			<Image
-				style={styles.image}
-				source={{ uri: artwork.imageURL }}
-				resizeMode="contain"
-				width={width * 0.9}
-				height={height * 0.4}
-			/>
+			<Link
+				href={{ pathname: "/artworkDetails/[id]", params: { id: artwork.id } }}
+			>
+				<View>
+					<Image
+						style={styles.image}
+						source={{ uri: artwork.imageURL }}
+						resizeMode="contain"
+						width={width * 0.9}
+						height={height * 0.4}
+					/>
+				</View>
+			</Link>
 			<Text style={{ textAlign: "center", marginBottom: 12, fontSize: 24 }}>
 				"{artwork.title}"
 			</Text>
