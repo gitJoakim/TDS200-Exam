@@ -10,6 +10,7 @@ import {
 	ScrollView,
 	StatusBar,
 	Modal,
+	Dimensions,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -33,6 +34,8 @@ export default function UploadArtworkForm() {
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
 
 	const { userNameSession } = useAuthSession();
+
+	const { width, height } = Dimensions.get("window");
 
 	function handleHashtagChange(input: string) {
 		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
@@ -128,7 +131,9 @@ export default function UploadArtworkForm() {
 							{image ? (
 								<Image
 									source={{ uri: image }}
-									style={{ resizeMode: "contain", width: "100%", height: 300 }}
+									resizeMode="contain"
+									width={width * 0.9}
+									height={height * 0.4}
 								/>
 							) : (
 								<Text

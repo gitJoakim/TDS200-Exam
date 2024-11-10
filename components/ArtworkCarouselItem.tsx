@@ -1,4 +1,11 @@
-import { View, Image, Text, StyleSheet, Platform } from "react-native";
+import {
+	View,
+	Image,
+	Text,
+	StyleSheet,
+	Platform,
+	Dimensions,
+} from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ArtworkData } from "@/utils/artworkData";
 
@@ -9,12 +16,15 @@ type ArtworkCarouselItemProps = {
 export default function ArtworkCarouselItem({
 	artwork,
 }: ArtworkCarouselItemProps) {
+	const { width, height } = Dimensions.get("window");
 	return (
 		<View style={styles.imageContainer}>
 			<Image
 				style={styles.image}
 				source={{ uri: artwork.imageURL }}
-				resizeMode="cover"
+				resizeMode="contain"
+				width={width * 0.9}
+				height={height * 0.4}
 			/>
 			<Text style={{ textAlign: "center", marginBottom: 12, fontSize: 24 }}>
 				"{artwork.title}"
@@ -40,8 +50,6 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	image: {
-		width: 300,
-		height: 400,
 		marginBottom: 48,
 	},
 	imageContainer: {
