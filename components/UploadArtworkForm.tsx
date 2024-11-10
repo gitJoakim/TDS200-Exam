@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
 	View,
 	Text,
@@ -25,6 +25,7 @@ import { addArtwork } from "@/api/artworkApi";
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
 	const [hashtagsArray, setHashtagsArray] = useState<string[]>([]);
+	const hashtagInputRef = useRef<TextInput>(null);
 	const [image, setImage] = useState<string | null>(null);
 	const [date, setDate] = useState<string | null>(null);
 	const [title, setTitle] = useState("");
@@ -49,6 +50,10 @@ export default function UploadArtworkForm() {
 		if (hashtag.trim() && hashtag !== "#") {
 			setHashtagsArray((prev) => [...prev, hashtag]);
 			setHashtag("#");
+
+			if (hashtagInputRef.current) {
+				hashtagInputRef.current.focus();
+			}
 		}
 	}
 
@@ -233,7 +238,12 @@ export default function UploadArtworkForm() {
 							value={hashtag}
 							onChangeText={handleHashtagChange} // Use the filtered input handler
 							autoCapitalize="none"
-							onSubmitEditing={addHashtag}
+							onSubmitEditing={(event) => {
+								addHashtag();
+								event.preventDefault();
+							}}
+							ref={hashtagInputRef}
+							blurOnSubmit={false}
 						/>
 					</View>
 
