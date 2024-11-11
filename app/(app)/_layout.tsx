@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import { Redirect, Stack } from "expo-router";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -9,7 +10,7 @@ export default function AppLayout() {
 		return (
 			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 				<ActivityIndicator />
-				<Text>Loading...</Text>
+				<Text style={{ color: Colors.ArtVistaRed }}>Loading ArtVista</Text>
 			</View>
 		);
 	}
