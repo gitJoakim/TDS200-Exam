@@ -151,7 +151,7 @@ export default function UploadArtworkForm() {
 				</View>
 			</ScrollView>
 
-			{/*	Camera and gallery modals	*/}
+			{/*	Camera and gallery modals 	*/}
 			<Modal visible={isGalleryModalOpen}>
 				<ImageModal
 					closeModal={() => {
