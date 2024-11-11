@@ -25,7 +25,7 @@ export default function AppLayout() {
 				options={{
 					headerShown: false,
 					title: "Home",
-					animation: "fade_from_bottom",
+					animation: "fade",
 				}}
 			></Stack.Screen>
 		</Stack>
