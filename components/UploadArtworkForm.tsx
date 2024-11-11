@@ -10,6 +10,7 @@ import {
 	StatusBar,
 	Modal,
 	Dimensions,
+	ActivityIndicator,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -20,7 +21,9 @@ import CameraModal from "./Modals/CameraModal";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
 import { addArtwork } from "@/api/artworkApi";
-import { Image } from "expo-image"
+import { Image } from "expo-image";
+import { BlurView } from "expo-blur";
+import { Colors } from "@/constants/Colors";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
@@ -38,6 +41,8 @@ export default function UploadArtworkForm() {
 
 	const { width, height } = Dimensions.get("window");
 	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
+
+	const [isUploading, setIsUploading] = useState(false);
 
 	function handleHashtagChange(input: string) {
 		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
@@ -123,6 +128,14 @@ export default function UploadArtworkForm() {
 
 		console.log(artwork);
 		return artwork;
+	}
+
+	function blurDuringUpload() {
+		setIsUploading(true);
+		setTimeout(() => {
+			setIsUploading(false);
+			clearForm();
+		}, 3500);
 	}
 
 	return (
@@ -225,7 +238,19 @@ export default function UploadArtworkForm() {
 						placeholder="Describe the artwork.."
 					/>
 
-					<Text>Hashtags</Text>
+					<Text
+						style={{
+							textAlign: "center",
+							color: "gray",
+							marginVertical: 6,
+						}}
+					>
+						{hashtagsArray.length === 0
+							? "Type a hashtag and press Enter to add it (you can add multiple)"
+							: "Tap a hashtag to remove it"}
+					</Text>
+
+					<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
 					<View
 						style={{
 							flexDirection: "row",
@@ -247,20 +272,6 @@ export default function UploadArtworkForm() {
 						/>
 					</View>
 
-					<Text
-						style={{
-							textAlign: "center",
-							color: "gray",
-							marginVertical: 6,
-						}}
-					>
-						{hashtagsArray.length === 0
-							? "Type a hashtag and press Enter to add it (you can add multiple)"
-							: "Tap a hashtag to remove it"}
-					</Text>
-
-					<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
-
 					{/*  Upload and Clear input buttons		*/}
 					<View style={styles.buttonsContainer}>
 						<Pressable
@@ -269,6 +280,7 @@ export default function UploadArtworkForm() {
 								const artwork = createArtwork();
 								if (artwork) {
 									addArtwork(artwork);
+									blurDuringUpload();
 								}
 							}}
 						>
@@ -302,6 +314,30 @@ export default function UploadArtworkForm() {
 					setImage={setImage}
 				/>
 			</Modal>
+			{isUploading && (
+				<BlurView
+					intensity={20}
+					style={[styles.blurContainer, { height: height, width: width }]}
+				>
+					<ActivityIndicator />
+					<Text style={{ textAlign: "center", marginTop: 12, fontSize: 18 }}>
+						Uploading your masterpiece to{" "}
+						<Text
+							style={{
+								color: Colors.ArtVistaRed,
+								fontSize: 30,
+								fontFamily: "Dancing-Script",
+							}}
+						>
+							ArtVista
+						</Text>
+						.
+					</Text>
+					<Text style={{ textAlign: "center", marginTop: 6, fontSize: 18 }}>
+						Please wait a moment!
+					</Text>
+				</BlurView>
+			)}
 		</SafeAreaView>
 	);
 }
@@ -321,6 +357,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		alignItems: "center",
 		flexWrap: "wrap",
+		marginBottom: 12,
 	},
 	hashtag: {
 		backgroundColor: "lightgray",
@@ -358,5 +395,12 @@ const styles = StyleSheet.create({
 	},
 	descriptionTextField: {
 		height: 100,
+	},
+	blurContainer: {
+		position: "absolute", // Makes the blur overlay position absolute
+		top: 0,
+		left: 0,
+		justifyContent: "center", // Center content inside the blur container
+		alignItems: "center", // Center content horizontally
 	},
 });
