@@ -5,7 +5,6 @@ import {
 	TextInput,
 	StyleSheet,
 	Pressable,
-	Image,
 	SafeAreaView,
 	ScrollView,
 	StatusBar,
@@ -21,6 +20,7 @@ import CameraModal from "./Modals/CameraModal";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
 import { addArtwork } from "@/api/artworkApi";
+import { Image } from "expo-image"
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
@@ -37,6 +37,7 @@ export default function UploadArtworkForm() {
 	const { userNameSession } = useAuthSession();
 
 	const { width, height } = Dimensions.get("window");
+	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
 
 	function handleHashtagChange(input: string) {
 		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
@@ -163,9 +164,8 @@ export default function UploadArtworkForm() {
 							{image ? (
 								<Image
 									source={{ uri: image }}
-									resizeMode="contain"
-									width={width}
-									height={height * 0.4}
+									contentFit="contain"
+									style={imageDimensionsStyle}
 								/>
 							) : (
 								<Text
