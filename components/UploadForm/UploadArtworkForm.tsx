@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useState } from "react";
 import {
 	View,
 	Text,
@@ -12,27 +12,21 @@ import {
 	Dimensions,
 	ActivityIndicator,
 } from "react-native";
-import Feather from "@expo/vector-icons/Feather";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import ImageModal from "../Modals/GalleryModal";
 import CameraModal from "../Modals/CameraModal";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
-import { addArtwork } from "@/api/artworkApi";
-import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { Colors } from "@/constants/Colors";
 import FormActionButtons from "./FormActionButtons";
 import HashtagsInput from "./HashtagsInput";
+import ImagePicker from "./ImagePicker";
 
 export default function UploadArtworkForm() {
-	const [hashtag, setHashtag] = useState<string>("#");
 	const [hashtagsArray, setHashtagsArray] = useState<string[]>([]);
-	const hashtagInputRef = useRef<TextInput>(null);
 	const [image, setImage] = useState<string | null>(null);
-	const [date, setDate] = useState<string | null>(null);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState<string>("");
 
@@ -51,7 +45,6 @@ export default function UploadArtworkForm() {
 		setDescription("");
 		setImage(null);
 		setHashtagsArray([]);
-		setHashtag("#");
 	}
 
 	// checks if the title, description, and image are valid
@@ -124,75 +117,15 @@ export default function UploadArtworkForm() {
 						onChangeText={setTitle}
 					/>
 
-					<View
-						style={{
-							width: "100%",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<View
-							style={{
-								width: "100%",
-								height: 300,
-								borderWidth: image ? 0 : 2,
-								justifyContent: "center",
-							}}
-						>
-							{image ? (
-								<Image
-									source={{ uri: image }}
-									contentFit="contain"
-									style={imageDimensionsStyle}
-								/>
-							) : (
-								<Text
-									style={{
-										textAlign: "center",
-										fontSize: 32,
-										fontWeight: "bold",
-									}}
-								>
-									Add an image of the Artwork
-								</Text>
-							)}
-						</View>
-
-						<View
-							style={{
-								flexDirection: "row",
-								gap: 64,
-							}}
-						>
-							{/* check platform and dont render camera modal button for web */}
-							{Platform.OS !== "web" && (
-								<Pressable
-									style={{
-										borderRadius: 50,
-										backgroundColor: "orange",
-										padding: 16,
-									}}
-									onPress={() => {
-										setIsCameraModalOpen(true);
-									}}
-								>
-									<Feather name="camera" size={32} color="black" />
-								</Pressable>
-							)}
-							<Pressable
-								style={{
-									borderRadius: 50,
-									backgroundColor: "orange",
-									padding: 16,
-								}}
-								onPress={() => {
-									setIsGalleryModalOpen(true);
-								}}
-							>
-								<FontAwesome name="image" size={32} color="black" />
-							</Pressable>
-						</View>
-					</View>
+					{/*  Upload image from camera or gallery	*/}
+					<ImagePicker
+						image={image}
+						setImage={setImage}
+						setIsGalleryModalOpen={setIsGalleryModalOpen}
+						setIsCameraModalOpen={setIsCameraModalOpen}
+						width={width - 64}
+						height={height * 0.4}
+					/>
 
 					<Text>Description</Text>
 					<TextInput
@@ -203,12 +136,13 @@ export default function UploadArtworkForm() {
 						placeholder="Describe the artwork.."
 					/>
 
+					{/*  Hashtags component		*/}
 					<HashtagsInput
 						hashtagsArray={hashtagsArray}
 						setHashtagsArray={setHashtagsArray}
 					/>
 
-					{/*  Upload and Clear input buttons		*/}
+					{/*  Upload and Clear-input buttons		*/}
 					<FormActionButtons
 						createArtwork={createArtwork}
 						blurDuringUpload={blurDuringUpload}
@@ -234,6 +168,8 @@ export default function UploadArtworkForm() {
 					setImage={setImage}
 				/>
 			</Modal>
+
+			{/*  Blurs screen during upload		*/}
 			{isUploading && (
 				<BlurView
 					intensity={20}
