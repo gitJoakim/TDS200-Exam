@@ -25,6 +25,7 @@ import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { Colors } from "@/constants/Colors";
 import FormActionButtons from "./UploadForm/FormActionButtons";
+import HashtagsInput from "./UploadForm/HashtagsInput";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
@@ -44,43 +45,6 @@ export default function UploadArtworkForm() {
 	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
 
 	const [isUploading, setIsUploading] = useState(false);
-
-	function handleHashtagChange(input: string) {
-		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
-		// ** not mine, taken from stack overflow **
-		const sanitizedInput = input.replace(/[^a-zA-Z0-9]/g, "").replace(/^#/, "");
-		setHashtag(`#${sanitizedInput}`);
-	}
-
-	// add hashtag to the array
-	function addHashtag() {
-		if (hashtag.trim() && hashtag !== "#") {
-			setHashtagsArray((prev) => [...prev, hashtag]);
-			setHashtag("#");
-
-			if (hashtagInputRef.current) {
-				hashtagInputRef.current.focus();
-			}
-		}
-	}
-
-	// remove a hashtag from the array
-	function removeHashtag(index: number) {
-		setHashtagsArray((prev) => prev.filter((_, i) => i !== index));
-	}
-
-	// render all the hashtags
-	function renderHashtagsJSX() {
-		return hashtagsArray.map((hashtag: string, index) => (
-			<Pressable
-				key={index}
-				style={styles.hashtag}
-				onPress={() => removeHashtag(index)}
-			>
-				<Text style={styles.hashtagTextColor}>{hashtag}</Text>
-			</Pressable>
-		));
-	}
 
 	function clearForm() {
 		setTitle("");
@@ -239,39 +203,10 @@ export default function UploadArtworkForm() {
 						placeholder="Describe the artwork.."
 					/>
 
-					<Text
-						style={{
-							textAlign: "center",
-							color: "gray",
-							marginVertical: 6,
-						}}
-					>
-						{hashtagsArray.length === 0
-							? "Type a hashtag and press Enter to add it (you can add multiple)"
-							: "Tap a hashtag to remove it"}
-					</Text>
-
-					<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
-					<View
-						style={{
-							flexDirection: "row",
-							width: "100%",
-							alignItems: "center",
-						}}
-					>
-						<TextInput
-							style={[styles.textInput, { color: "blue", flex: 1 }]}
-							value={hashtag}
-							onChangeText={handleHashtagChange} // Use the filtered input handler
-							autoCapitalize="none"
-							onSubmitEditing={(event) => {
-								addHashtag();
-								event.preventDefault();
-							}}
-							ref={hashtagInputRef}
-							blurOnSubmit={false} // input dont lose focus on submitting hashtag
-						/>
-					</View>
+					<HashtagsInput
+						hashtagsArray={hashtagsArray}
+						setHashtagsArray={setHashtagsArray}
+					/>
 
 					{/*  Upload and Clear input buttons		*/}
 					<FormActionButtons
