@@ -16,16 +16,16 @@ import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
-import ImageModal from "./Modals/GalleryModal";
-import CameraModal from "./Modals/CameraModal";
+import ImageModal from "../Modals/GalleryModal";
+import CameraModal from "../Modals/CameraModal";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
 import { addArtwork } from "@/api/artworkApi";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { Colors } from "@/constants/Colors";
-import FormActionButtons from "./UploadForm/FormActionButtons";
-import HashtagsInput from "./UploadForm/HashtagsInput";
+import FormActionButtons from "./FormActionButtons";
+import HashtagsInput from "./HashtagsInput";
 
 export default function UploadArtworkForm() {
 	const [hashtag, setHashtag] = useState<string>("#");
