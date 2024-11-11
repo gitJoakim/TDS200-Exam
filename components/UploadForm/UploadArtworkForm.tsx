@@ -225,10 +225,10 @@ const styles = StyleSheet.create({
 		height: 100,
 	},
 	blurContainer: {
-		position: "absolute", // Makes the blur overlay position absolute
+		position: "absolute",
 		top: 0,
 		left: 0,
-		justifyContent: "center", // Center content inside the blur container
-		alignItems: "center", // Center content horizontally
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
