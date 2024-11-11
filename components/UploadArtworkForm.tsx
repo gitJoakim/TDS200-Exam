@@ -164,7 +164,7 @@ export default function UploadArtworkForm() {
 								<Image
 									source={{ uri: image }}
 									resizeMode="contain"
-									width={width * 0.9}
+									width={width}
 									height={height * 0.4}
 								/>
 							) : (

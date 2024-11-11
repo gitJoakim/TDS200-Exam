@@ -1,14 +1,8 @@
-import {
-	View,
-	Image,
-	Text,
-	StyleSheet,
-	Platform,
-	Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, Dimensions } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ArtworkData } from "@/utils/artworkData";
 import { Link } from "expo-router";
+import { Image } from "expo-image";
 
 type ArtworkCarouselItemProps = {
 	artwork: ArtworkData;
@@ -18,6 +12,7 @@ export default function ArtworkCarouselItem({
 	artwork,
 }: ArtworkCarouselItemProps) {
 	const { width, height } = Dimensions.get("window");
+	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
 	return (
 		<View style={styles.imageContainer}>
 			<Link
@@ -25,11 +20,9 @@ export default function ArtworkCarouselItem({
 			>
 				<View>
 					<Image
-						style={styles.image}
+						style={[styles.image, imageDimensionsStyle]}
 						source={{ uri: artwork.imageURL }}
-						resizeMode="contain"
-						width={width * 0.9}
-						height={height * 0.4}
+						contentFit="contain"
 					/>
 				</View>
 			</Link>
@@ -63,21 +56,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		flex: 1,
-		// Web-specific style
-		...(Platform.OS === "web" && {
-			boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.7)", // boxShadow for web
-		}),
-		// Mobile-specific styles
-		...(Platform.OS !== "web" && {
-			shadowColor: "#000",
-			shadowOffset: { width: 0, height: 10 },
-			shadowOpacity: 0.7,
-			shadowRadius: 30,
-		}),
-		// Android-specific styles (elevation for Android)
-		...(Platform.OS === "android" && {
-			elevation: 10, // Use elevation for Android shadow
-			shadowColor: "red",
-		}),
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 10 },
+		shadowOpacity: 0.7,
+		shadowRadius: 30,
 	},
 });

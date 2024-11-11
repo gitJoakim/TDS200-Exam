@@ -12,6 +12,7 @@ export default function artworkDetails() {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	async function getSelectedArtworkFromDb() {
+		console.log("AAAAAAAAA", id);
 		try {
 			const artworkFromDb = await getArtworkById(id as string);
 			if (artworkFromDb) {
