@@ -17,9 +17,13 @@ import Artwork from "@/components/Artwork";
 import * as artworksAPI from "@/api/artworkApi";
 import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
+import MasonryList from "@react-native-seoul/masonry-list";
+import ArtworkImageOnly from "@/components/ArtworkImageOnly";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
+	const [gridDisplay, setGridDisplay] = useState(true);
+	
 
 	async function getArtworks() {
 		const artworks = await artworksAPI.getAllArtworks();
@@ -43,7 +47,18 @@ export default function HomeScreen() {
 				ArtVista
 			</Text>
 
-			<ArtworkCarousel artworks={artworks} />
+			{gridDisplay ? (
+				<MasonryList
+					numColumns={2}
+					data={artworks}
+					keyExtractor={(item): string => item.id}
+					renderItem={({ item }) => (
+						<ArtworkImageOnly artwork={item as ArtworkData} />
+					)}
+				/>
+			) : (
+				<ArtworkCarousel artworks={artworks} />
+			)}
 		</View>
 	);
 }
