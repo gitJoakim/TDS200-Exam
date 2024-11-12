@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Dimensions, Image, StyleSheet, View, Pressable } from "react-native";
+import { useRouter } from "expo-router";
 import { ArtworkData } from "@/utils/artworkData";
 
 interface ArtworkGridImageProps {
@@ -7,16 +8,11 @@ interface ArtworkGridImageProps {
 }
 
 export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
-	/***************************************************************************************
-	 *  There might(probably is) a better way of doing this haha, but I was struggling to  *
-	 *  get the masonry list to display nicely with images being so different in sizes     *
-	 *  So this was my solution, I think it works well, but far from optimal.              *
-	 ***************************************************************************************/
-
 	const [imageWidth, setImageWidth] = useState<number>(0);
 	const [imageHeight, setImageHeight] = useState<number>(0);
+	const router = useRouter();
 
-	// This function gets the image dimensions and calculates its aspect ratio
+	// Get the image dimensions and calculate aspect ratio
 	useEffect(() => {
 		Image.getSize(artwork.imageURL, (width, height) => {
 			setImageWidth(width);
@@ -24,15 +20,22 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 		});
 	}, [artwork.imageURL]);
 
-	// Calculates the image height based on the aspect ratio
-	const getImageHeight = () => {
+	function getImageHeight() {
 		const aspectRatio = imageWidth / imageHeight;
 		const containerWidth = (Dimensions.get("window").width - 24) / 2;
 		return containerWidth / aspectRatio;
-	};
+	}
+
+	// function to handle navigation to artwork details
+	function handleImagePress() {
+		router.push(`/artworkDetails/${artwork.id}`);
+	}
 
 	return (
-		<View style={styles.container}>
+		// was taught ot use Link from expo-router here, but that failed to load the images
+		// on iOs and Android (guessing because of the way ive dealt with image sizing)
+		// so I´ve restorted to using pressable and handling the router through a function instead.
+		<Pressable onPress={handleImagePress} style={styles.container}>
 			{imageWidth && imageHeight ? (
 				<Image
 					source={{ uri: artwork.imageURL }}
@@ -43,7 +46,7 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 					resizeMode="contain"
 				/>
 			) : null}
-		</View>
+		</Pressable>
 	);
 }
 
