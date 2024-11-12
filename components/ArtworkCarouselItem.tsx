@@ -26,9 +26,7 @@ export default function ArtworkCarouselItem({
 					/>
 				</View>
 			</Link>
-			<Text style={{ textAlign: "center", marginBottom: 12, fontSize: 24 }}>
-				"{artwork.title}"
-			</Text>
+			<Text style={styles.artworkTitle}>'{artwork.title}'</Text>
 			<View
 				style={{
 					flexDirection: "row",
@@ -46,8 +44,11 @@ export default function ArtworkCarouselItem({
 }
 
 const styles = StyleSheet.create({
-	artistText: {
+	artworkTitle: {
 		textAlign: "center",
+		marginBottom: 12,
+		fontSize: 24,
+		fontStyle: "italic",
 	},
 	image: {
 		marginBottom: 48,

@@ -12,9 +12,9 @@ export default function ArtworkCarousel({ artworks }: CarouselProps) {
 	const width = Dimensions.get("screen").width;
 	const height = Dimensions.get("screen").height;
 	return (
-		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+		<View style={styles.mainContainer}>
 			<Carousel
-				loop
+				loop={false}
 				width={width}
 				height={height}
 				style={{
@@ -31,3 +31,11 @@ export default function ArtworkCarousel({ artworks }: CarouselProps) {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});

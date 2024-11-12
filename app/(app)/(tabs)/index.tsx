@@ -1,16 +1,11 @@
 import {
-	Image,
 	StyleSheet,
-	Platform,
 	View,
 	Text,
-	Modal,
+	RefreshControl,
 	Pressable,
-	FlatList,
-	Dimensions,
-	SafeAreaView,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import Artwork from "@/components/Artwork";
@@ -23,12 +18,20 @@ import { Stack } from "expo-router";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
-	const [gridDisplay, setGridDisplay] = useState(true);
+	const [gridDisplay, setGridDisplay] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
 
 	async function getArtworks() {
+		setRefreshing(true);
 		const artworks = await artworksAPI.getAllArtworks();
 		setArtworks(artworks);
+		setRefreshing(false);
 	}
+
+	const handleRefresh = useCallback(() => {
+		console.log("refreshing");
+		getArtworks();
+	}, []);
 
 	useEffect(() => {
 		getArtworks();
@@ -49,16 +52,9 @@ export default function HomeScreen() {
 						</Pressable>
 					),
 					headerTitle: () => (
-						<Text
-							style={{
-								textAlign: "center",
-								fontFamily: "Dancing-Script",
-								fontSize: 36,
-								color: Colors.ArtVistaRed,
-							}}
-						>
-							ArtVista
-						</Text>
+						<Pressable onPress={handleRefresh}>
+							<Text style={styles.headerTitle}>ArtVista</Text>
+						</Pressable>
 					),
 
 					headerRight: () => (
@@ -85,6 +81,8 @@ export default function HomeScreen() {
 					renderItem={({ item }) => (
 						<ArtworkImage artwork={item as ArtworkData} />
 					)}
+					refreshing={refreshing} // Controls the loading spinner when refreshing
+					onRefresh={handleRefresh}
 				/>
 			) : (
 				<ArtworkCarousel artworks={artworks} />
@@ -98,5 +96,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	headerTitle: {
+		textAlign: "center",
+		fontFamily: "Dancing-Script",
+		fontSize: 36,
+		color: Colors.ArtVistaRed,
 	},
 });
