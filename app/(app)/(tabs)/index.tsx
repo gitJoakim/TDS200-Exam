@@ -18,12 +18,11 @@ import * as artworksAPI from "@/api/artworkApi";
 import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
 import MasonryList from "@react-native-seoul/masonry-list";
-import ArtworkImageOnly from "@/components/ArtworkImageOnly";
+import ArtworkImage from "@/components/ArtworkGridImage";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
 	const [gridDisplay, setGridDisplay] = useState(true);
-	
 
 	async function getArtworks() {
 		const artworks = await artworksAPI.getAllArtworks();
@@ -49,11 +48,14 @@ export default function HomeScreen() {
 
 			{gridDisplay ? (
 				<MasonryList
-					numColumns={2}
+					numColumns={2} // Set number of columns
 					data={artworks}
 					keyExtractor={(item): string => item.id}
+					contentContainerStyle={{
+						paddingHorizontal: 6, // Adds padding between rows
+					}}
 					renderItem={({ item }) => (
-						<ArtworkImageOnly artwork={item as ArtworkData} />
+						<ArtworkImage artwork={item as ArtworkData} />
 					)}
 				/>
 			) : (
