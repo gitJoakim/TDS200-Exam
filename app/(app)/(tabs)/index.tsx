@@ -15,6 +15,7 @@ import ArtworkCarousel from "@/components/ArtworkCarousel";
 import MasonryList from "@react-native-seoul/masonry-list";
 import ArtworkImage from "@/components/ArtworkGridImage";
 import { Stack } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -43,7 +44,7 @@ export default function HomeScreen() {
 				options={{
 					headerLeft: () => (
 						<Pressable
-							style={{ paddingLeft: 6 }}
+							style={{ paddingLeft: 12 }}
 							onPress={async () => {
 								console.log("left click");
 							}}
@@ -59,10 +60,14 @@ export default function HomeScreen() {
 
 					headerRight: () => (
 						<Pressable
-							style={{ paddingRight: 6 }}
-							onPress={() => console.log("right click")}
+							style={{ paddingRight: 12 }}
+							onPress={() => setGridDisplay(!gridDisplay)}
 						>
-							<Text>Right</Text>
+							{gridDisplay ? (
+								<Ionicons name="image" size={24} color={Colors.ArtVistaRed} />
+							) : (
+								<Ionicons name="grid" size={24} color={Colors.ArtVistaRed} />
+							)}
 						</Pressable>
 					),
 					headerTitleAlign: "center", // needed to center on android and web
