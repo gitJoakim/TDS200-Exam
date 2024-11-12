@@ -19,6 +19,7 @@ import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
 import MasonryList from "@react-native-seoul/masonry-list";
 import ArtworkImage from "@/components/ArtworkGridImage";
+import { Stack } from "expo-router";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -34,25 +35,52 @@ export default function HomeScreen() {
 	}, []);
 
 	return (
-		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<Text
-				style={{
-					marginTop: 64,
-					fontFamily: "Dancing-Script",
-					fontSize: 48,
-					color: Colors.ArtVistaRed,
+		<View style={styles.mainContainer}>
+			<Stack.Screen
+				options={{
+					headerLeft: () => (
+						<Pressable
+							style={{ paddingLeft: 6 }}
+							onPress={async () => {
+								console.log("left click");
+							}}
+						>
+							<Text>Left</Text>
+						</Pressable>
+					),
+					headerTitle: () => (
+						<Text
+							style={{
+								textAlign: "center",
+								fontFamily: "Dancing-Script",
+								fontSize: 36,
+								color: Colors.ArtVistaRed,
+							}}
+						>
+							ArtVista
+						</Text>
+					),
+
+					headerRight: () => (
+						<Pressable
+							style={{ paddingRight: 6 }}
+							onPress={() => console.log("right click")}
+						>
+							<Text>Right</Text>
+						</Pressable>
+					),
+					headerTitleAlign: "center", // needed to center on android and web
 				}}
-			>
-				ArtVista
-			</Text>
+			/>
 
 			{gridDisplay ? (
 				<MasonryList
-					numColumns={2} // Set number of columns
+					style={{ marginVertical: 6 }}
+					numColumns={2}
 					data={artworks}
 					keyExtractor={(item): string => item.id}
 					contentContainerStyle={{
-						paddingHorizontal: 6, // Adds padding between rows
+						paddingHorizontal: 6,
 					}}
 					renderItem={({ item }) => (
 						<ArtworkImage artwork={item as ArtworkData} />
@@ -65,4 +93,10 @@ export default function HomeScreen() {
 	);
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});

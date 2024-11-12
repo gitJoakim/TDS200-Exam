@@ -1,21 +1,18 @@
 import { Tabs } from "expo-router";
 import React from "react";
-
+import { Text } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import Feather from "@expo/vector-icons/Feather";
 
 export default function TabLayout() {
-	const colorScheme = useColorScheme();
-
 	return (
 		<Tabs
 			screenOptions={{
 				tabBarActiveTintColor: Colors.ArtVistaRed,
-				headerShown: false,
+				headerShown: true,
 				tabBarHideOnKeyboard: true,
-				// had to add this because for some reason on android the tabs moved up when keybaord appeared.
 			}}
 		>
 			<Tabs.Screen
