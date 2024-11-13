@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Platform, Dimensions } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Platform,
+	Dimensions,
+	SafeAreaView,
+} from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ArtworkData } from "@/utils/artworkData";
 import { Link } from "expo-router";
@@ -6,15 +13,21 @@ import { Image } from "expo-image";
 
 type ArtworkCarouselItemProps = {
 	artwork: ArtworkData;
+	onLayout?: (e: any) => void;
 };
+const { height } = Dimensions.get("window");
 
 export default function ArtworkCarouselItem({
 	artwork,
 }: ArtworkCarouselItemProps) {
 	const { width, height } = Dimensions.get("window");
-	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
+	// setting it slightly bigger for web
+	const imageDimensionsStyle =
+		Platform.OS === "web"
+			? { width, height: height * 0.6 }
+			: { width: width - 64, height: height * 0.4 };
 	return (
-		<View style={styles.imageContainer}>
+		<SafeAreaView style={styles.imageContainer}>
 			<Link
 				href={{ pathname: "/artworkDetails/[id]", params: { id: artwork.id } }}
 			>
@@ -39,7 +52,7 @@ export default function ArtworkCarouselItem({
 
 				<Text style={{ textAlign: "center" }}>{artwork.artist}</Text>
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 }
 
@@ -57,9 +70,11 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		flex: 1,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 10 },
-		shadowOpacity: 0.7,
-		shadowRadius: 30,
+		...Platform.select({
+			web: {
+				marginTop: height * 0.05,
+				marginBottom: height * 0.025,
+			},
+		}),
 	},
 });

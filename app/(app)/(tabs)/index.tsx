@@ -4,11 +4,11 @@ import {
 	Text,
 	RefreshControl,
 	Pressable,
+	Platform,
 } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
-import Artwork from "@/components/Artwork";
 import * as artworksAPI from "@/api/artworkApi";
 import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
@@ -16,6 +16,7 @@ import MasonryList from "@react-native-seoul/masonry-list";
 import ArtworkImage from "@/components/ArtworkGridImage";
 import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -46,14 +47,18 @@ export default function HomeScreen() {
 						<Pressable
 							style={{ paddingLeft: 12 }}
 							onPress={async () => {
-								console.log("left click");
+								handleRefresh();
 							}}
 						>
-							<Text>Left</Text>
+							<Text>REFRESH</Text>
 						</Pressable>
 					),
 					headerTitle: () => (
-						<Pressable onPress={handleRefresh}>
+						<Pressable
+							onPress={() => {
+								handleRefresh();
+							}}
+						>
 							<Text style={styles.headerTitle}>ArtVista</Text>
 						</Pressable>
 					),
@@ -89,6 +94,8 @@ export default function HomeScreen() {
 					refreshing={refreshing} // Controls the loading spinner when refreshing
 					onRefresh={handleRefresh}
 				/>
+			) : Platform.OS === "web" ? (
+				<ArtworkWebCarousel artworks={artworks} />
 			) : (
 				<ArtworkCarousel artworks={artworks} />
 			)}
