@@ -1,5 +1,5 @@
 import { ArtworkData } from "@/utils/artworkData";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { getArtworkById } from "@/api/artworkApi";
 import Artwork from "@/components/Artwork";
@@ -10,6 +10,7 @@ export default function artworkDetails() {
 	const [artwork, setArtwork] = useState<ArtworkData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const navigation = useNavigation();
 
 	async function getSelectedArtworkFromDb() {
 		console.log("AAAAAAAAA", id);
@@ -29,6 +30,9 @@ export default function artworkDetails() {
 
 	useEffect(() => {
 		getSelectedArtworkFromDb();
+		navigation.setOptions({
+			title: "Artwork",
+		});
 	}, []);
 
 	if (loading) {
