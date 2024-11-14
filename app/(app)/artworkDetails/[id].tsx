@@ -5,7 +5,7 @@ import { getArtworkById } from "@/api/artworkApi";
 import Artwork from "@/components/Artwork";
 import { View, Text, ActivityIndicator } from "react-native";
 
-export default function artworkDetails() {
+export default function ArtworkDetails() {
 	const { id } = useLocalSearchParams();
 	const [artwork, setArtwork] = useState<ArtworkData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -13,7 +13,6 @@ export default function artworkDetails() {
 	const navigation = useNavigation();
 
 	async function getSelectedArtworkFromDb() {
-		console.log("AAAAAAAAA", id);
 		try {
 			const artworkFromDb = await getArtworkById(id as string);
 			if (artworkFromDb) {

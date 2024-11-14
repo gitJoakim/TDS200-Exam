@@ -40,18 +40,22 @@ export default function ArtworkCarouselItem({
 				</View>
 			</Link>
 			<Text style={styles.artworkTitle}>'{artwork.title}'</Text>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "center",
-					gap: 6,
-				}}
+			<Link
+				href={{ pathname: "/userProfile/[id]", params: { id: artwork.userId } }}
 			>
-				<FontAwesome name="user-circle" size={16} color="black" />
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "center",
+						gap: 6,
+					}}
+				>
+					<FontAwesome name="user-circle" size={16} color="black" />
 
-				<Text style={{ textAlign: "center" }}>{artwork.artist}</Text>
-			</View>
+					<Text style={{ textAlign: "center" }}>{artwork.artist}</Text>
+				</View>
+			</Link>
 		</SafeAreaView>
 	);
 }

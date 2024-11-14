@@ -4,6 +4,7 @@ import {
 	signInWithEmailAndPassword,
 	updateProfile,
 } from "firebase/auth";
+import { createUserInDb } from "./userApi";
 
 // sign up / create user
 export const signUp = async (
@@ -16,6 +17,8 @@ export const signUp = async (
 			await updateProfile(userCredential.user, {
 				displayName: username,
 			});
+			// we save userdata as a user in db
+			await createUserInDb(userCredential.user.uid, username, email);
 			console.log(
 				`Signed up with: username: ${userCredential.user.displayName}, email: ${userCredential.user.email}`
 			);

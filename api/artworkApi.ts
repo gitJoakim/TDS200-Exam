@@ -7,6 +7,8 @@ import {
 	doc,
 	getDoc,
 	getDocs,
+	query,
+	where,
 } from "firebase/firestore";
 import { uploadImageToFirebase } from "./imageApi";
 
@@ -76,8 +78,22 @@ export const getArtworkById = async (id: string) => {
 			id: specificArtwork.id,
 		} as ArtworkData;
 	} catch (error) {
-		console.error("Error fetching artwork by ID:", error);
+		console.log("Error fetching artwork by ID:", error);
 		return null;
+	}
+};
+
+export const getArtworksByUserId = async (userId: string) => {
+	try {
+		const result = await getDocs(
+			query(collection(db, "artworks"), where("userId", "==", userId))
+		);
+		return result.docs.map((doc) => {
+			return { ...doc.data(), id: doc.id } as ArtworkData;
+		});
+	} catch (error) {
+		console.log("Error fetching artworks by user id:", error);
+		return [];
 	}
 };
 
