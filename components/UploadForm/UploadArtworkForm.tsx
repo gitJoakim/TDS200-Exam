@@ -33,7 +33,7 @@ export default function UploadArtworkForm() {
 	const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
 
-	const { userNameSession } = useAuthSession();
+	const { userNameSession, user } = useAuthSession();
 
 	const { width, height } = Dimensions.get("window");
 	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
@@ -76,6 +76,7 @@ export default function UploadArtworkForm() {
 
 		const artwork: ArtworkData = {
 			id: "", // we grab the id from firebase when we get the post so we don't need it yet
+			userId: user!.uid,
 			artist: userNameSession!,
 			title: title,
 			description: description,

@@ -12,11 +12,8 @@ import {
 import * as authenticationAPI from "@/api/authenticationApi";
 
 /***********************************************
- *
  * This code is inspired by and taken from lecture materials.
- *
- * Slight modifications were made to adapt
- * the code to this specific project.
+ * With some slight modifications made to adapt the code to this specific project.
  *
  ***********************************************/
 

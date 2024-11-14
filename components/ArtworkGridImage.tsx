@@ -32,7 +32,7 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 	}
 
 	return (
-		// was taught ot use Link from expo-router here, but that failed to load the images
+		// was taught to use Link from expo-router here, but that failed to load the images
 		// on iOs and Android (guessing because of the way ive dealt with image sizing)
 		// so I´ve restorted to using pressable and handling the router through a function instead.
 		<Pressable onPress={handleImagePress} style={styles.container}>
