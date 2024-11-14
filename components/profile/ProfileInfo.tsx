@@ -1,6 +1,7 @@
 import { UserData } from "@/utils/userData";
 import { View, Text, Image, StyleSheet } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Colors } from "@/constants/Colors";
 
 type ProfileInfoProps = {
 	userData: UserData | null;
@@ -55,6 +56,9 @@ const styles = StyleSheet.create({
 	profilePicContainer: {
 		alignItems: "center",
 		marginBottom: 10,
+		borderRadius: 50,
+		borderWidth: 3,
+		borderColor: Colors.ArtVistaRed,
 	},
 	profilePic: {
 		width: 64,
