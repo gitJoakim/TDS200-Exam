@@ -51,6 +51,7 @@ export default function UploadArtworkForm() {
 		setDescription("");
 		setImage(null);
 		setHashtagsArray([]);
+		setLocation(null);
 	}
 
 	// checks if the title, description, and image are valid
@@ -89,7 +90,7 @@ export default function UploadArtworkForm() {
 			imageURL: image!,
 			hashtags: hashtagsArray,
 			date: dateFormatter(),
-			artworkCoords: null,
+			artworkCoords: location,
 		};
 
 		console.log(artwork);
