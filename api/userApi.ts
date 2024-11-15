@@ -1,6 +1,7 @@
-import { db } from "@/firebaseConfig";
+import { db, getDownloadUrl } from "@/firebaseConfig";
 import { UserData } from "@/utils/userData";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { uploadImageToFirebase } from "./imageApi";
 
 export const createUserInDb = async (
 	userId: string,
@@ -38,5 +39,43 @@ export const getUserInfoById = async (userId: string) => {
 	} catch (error) {
 		console.log("Error fetching userinfo by ID:", error);
 		return null;
+	}
+};
+
+// Update bio function
+export const updateUserBio = async (userId: string, newBio: string) => {
+	try {
+		const userRef = doc(db, "users", userId);
+		await updateDoc(userRef, {
+			bio: newBio,
+		});
+		console.log("User bio updated");
+	} catch (error) {
+		console.log("Error updating bio:", error);
+	}
+};
+
+// Update profile picture function
+export const updateUserProfilePicture = async (
+	userId: string,
+	newProfilePictureUri: string // Pass the local URI here
+) => {
+	try {
+		const firebaseImagePath = await uploadImageToFirebase(newProfilePictureUri);
+		if (firebaseImagePath === "ERROR") {
+			console.error("Failed to upload profile picture");
+			return;
+		}
+
+		const newProfilePictureUrl = await getDownloadUrl(firebaseImagePath);
+
+		const userRef = doc(db, "users", userId);
+		await updateDoc(userRef, {
+			profileImageUrl: newProfilePictureUrl, // Save the Firebase Storage URL
+		});
+
+		console.log("User profile picture updated");
+	} catch (error) {
+		console.log("Error updating profile picture:", error);
 	}
 };

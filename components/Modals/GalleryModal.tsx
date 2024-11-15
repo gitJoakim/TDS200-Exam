@@ -2,12 +2,15 @@ import { Text, View, StyleSheet, Button, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 
-type ImageModalProps = {
+type GalleryModalProps = {
 	closeModal: () => void;
 	setImage: (image: string) => void;
 };
 
-export default function ImageModal({ closeModal, setImage }: ImageModalProps) {
+export default function GalleryModal({
+	closeModal,
+	setImage,
+}: GalleryModalProps) {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 	const pickImage = async () => {

@@ -14,8 +14,8 @@ import {
 } from "react-native";
 import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
-import ImageModal from "../Modals/GalleryModal";
 import CameraModal from "../Modals/CameraModal";
+import GalleryModal from "../Modals/GalleryModal";
 import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
 import { BlurView } from "expo-blur";
@@ -154,7 +154,7 @@ export default function UploadArtworkForm() {
 
 			{/*	Camera and gallery modals 	*/}
 			<Modal visible={isGalleryModalOpen}>
-				<ImageModal
+				<GalleryModal
 					closeModal={() => {
 						setIsGalleryModalOpen(false);
 					}}

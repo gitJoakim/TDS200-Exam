@@ -7,12 +7,14 @@ import {
 	Pressable,
 	StyleSheet,
 	Image,
+	TouchableOpacity,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons"; // Import FontAwesome icon
-import { UserData } from "@/utils/userData"; // Assuming UserData is already imported
+import { FontAwesome } from "@expo/vector-icons";
+import { UserData } from "@/utils/userData";
 import { Colors } from "@/constants/Colors";
+import { updateUserBio, updateUserProfilePicture } from "@/api/userApi";
+import GalleryModal from "./GalleryModal";
 
-// Defining the props for EditProfileModal component
 interface EditProfileModalProps {
 	closeModal: () => void;
 	userData: UserData | null;
@@ -22,33 +24,58 @@ export default function EditProfileModal({
 	closeModal,
 	userData,
 }: EditProfileModalProps) {
-	const [editedBio, setEditedBio] = useState<string>(userData?.bio || "");
+	const [editedBioText, setEditedBioText] = useState<string>(
+		userData?.bio || ""
+	);
+	const [selectedImage, setSelectedImage] = useState<string | null>(
+		userData?.profileImageUrl || null
+	);
+	const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State to control ImageModal
 
-	// Handle Save action: call the API to save changes
 	const handleSave = async () => {
-		console.log("clicked save");
-		// You can add your API call here to save the bio changes
+		if (!userData) return;
+
+		let updated = false;
+
+		if (editedBioText !== userData.bio) {
+			await updateUserBio(userData.userId, editedBioText);
+			updated = true;
+		}
+
+		if (selectedImage && selectedImage !== userData.profileImageUrl) {
+			await updateUserProfilePicture(userData.userId, selectedImage);
+			updated = true;
+		}
+
+		if (updated) console.log("Changes saved successfully");
+		closeModal();
 	};
 
-	// Handle Cancel action: reset and close the modal
 	const handleCancel = () => {
-		closeModal(); // Ensure you're calling the closeModal function to close the modal
+		closeModal();
+	};
+
+	const openImagePicker = () => {
+		setIsImageModalOpen(true);
 	};
 
 	return (
 		<View style={styles.modalOverlay}>
 			<View style={styles.modalContent}>
-				{/* Profile Image or Icon */}
-				<View style={styles.profilePicContainer}>
-					{userData?.profileImageUrl ? (
-						<Image
-							source={{ uri: userData.profileImageUrl }}
-							style={styles.profilePic}
-						/>
+				{/* Profile Image with Tap-to-Change */}
+				<TouchableOpacity
+					onPress={openImagePicker}
+					style={styles.profilePicContainer}
+				>
+					{selectedImage ? (
+						<Image source={{ uri: selectedImage }} style={styles.profilePic} />
 					) : (
-						<FontAwesome name="user-circle" size={64} color="black" />
+						<FontAwesome name="user-circle" size={104} color="black" />
 					)}
-				</View>
+					<View style={styles.cameraIconOverlay}>
+						<FontAwesome name="camera" size={24} color="white" />
+					</View>
+				</TouchableOpacity>
 
 				{/* Username */}
 				<Text style={styles.username}>{userData?.username}</Text>
@@ -56,11 +83,13 @@ export default function EditProfileModal({
 				{/* Bio */}
 				<TextInput
 					style={styles.textInput}
-					value={editedBio}
-					onChangeText={setEditedBio}
+					value={editedBioText}
+					onChangeText={setEditedBioText}
 					multiline
 					placeholder="Write something about yourself..."
+					maxLength={200}
 				/>
+				<Text style={styles.charCount}>{editedBioText.length}/200</Text>
 
 				{/* Save & Cancel Buttons */}
 				<View style={styles.buttonsContainer}>
@@ -78,17 +107,29 @@ export default function EditProfileModal({
 					</Pressable>
 				</View>
 			</View>
+
+			{/* Image Picker Modal */}
+			{isImageModalOpen && (
+				<Modal transparent={true} animationType="slide">
+					<GalleryModal
+						closeModal={() => setIsImageModalOpen(false)}
+						setImage={(imageUri: string) => {
+							setSelectedImage(imageUri);
+							setIsImageModalOpen(false);
+						}}
+					/>
+				</Modal>
+			)}
 		</View>
 	);
 }
 
-// Styles for the modal
 const styles = StyleSheet.create({
 	modalOverlay: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
 	},
 	modalContent: {
 		backgroundColor: "white",
@@ -99,16 +140,26 @@ const styles = StyleSheet.create({
 	},
 	profilePicContainer: {
 		marginBottom: 20,
+		width: 110, // Set width slightly larger than image
+		height: 110, // Set height slightly larger than image
 		justifyContent: "center",
 		alignItems: "center",
-		borderRadius: 50,
+		borderRadius: 55, // Match half of container width/height
 		borderWidth: 3,
 		borderColor: Colors.ArtVistaRed,
 	},
 	profilePic: {
-		width: 100,
-		height: 100,
-		borderRadius: 50, // Circular image
+		width: 104, // Match container size minus border width (110 - 6)
+		height: 104, // Match container size minus border width (110 - 6)
+		borderRadius: 52, // Match half of profilePic width/height
+	},
+	cameraIconOverlay: {
+		position: "absolute",
+		bottom: 0,
+		right: 0,
+		backgroundColor: "rgba(0, 0, 0, 0.6)",
+		borderRadius: 15,
+		padding: 4,
 	},
 	username: {
 		fontSize: 18,
@@ -122,7 +173,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 5,
 		padding: 10,
-		marginBottom: 20,
+		marginBottom: 5,
+	},
+	charCount: {
+		alignSelf: "flex-end",
+		fontSize: 12,
+		color: "#777",
 	},
 	buttonsContainer: {
 		flexDirection: "row",
