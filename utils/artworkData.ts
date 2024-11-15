@@ -1,3 +1,5 @@
+import { LocationObjectCoords } from "expo-location";
+
 export interface ArtworkData {
 	id: string;
 	artist: string; // username of uploader
@@ -7,4 +9,5 @@ export interface ArtworkData {
 	imageURL: string;
 	hashtags: string[];
 	date: string;
+	artworkCoords: LocationObjectCoords | null;
 }

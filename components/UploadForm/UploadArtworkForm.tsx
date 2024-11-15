@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
 	View,
 	Text,
@@ -23,20 +23,26 @@ import { Colors } from "@/constants/Colors";
 import FormActionButtons from "./FormActionButtons";
 import HashtagsInput from "./HashtagsInput";
 import ImagePicker from "./ImagePicker";
+import * as Location from "expo-location";
+
+import MapModal from "../Modals/MapModal";
+import LocationSetter from "./LocationSetter";
 
 export default function UploadArtworkForm() {
 	const [hashtagsArray, setHashtagsArray] = useState<string[]>([]);
 	const [image, setImage] = useState<string | null>(null);
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState<string>("");
+	const [location, setLocation] =
+		useState<Location.LocationObjectCoords | null>(null);
 
 	const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+	const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
 	const { user } = useAuthSession();
 
 	const { width, height } = Dimensions.get("window");
-	const imageDimensionsStyle = { width: width - 64, height: height * 0.4 };
 
 	const [isUploading, setIsUploading] = useState(false);
 
@@ -83,6 +89,7 @@ export default function UploadArtworkForm() {
 			imageURL: image!,
 			hashtags: hashtagsArray,
 			date: dateFormatter(),
+			artworkCoords: null,
 		};
 
 		console.log(artwork);
@@ -143,6 +150,12 @@ export default function UploadArtworkForm() {
 						setHashtagsArray={setHashtagsArray}
 					/>
 
+					{/* Location setter */}
+					<LocationSetter
+						location={location}
+						setIsMapModalOpen={setIsMapModalOpen}
+					/>
+
 					{/*  Upload and Clear-input buttons		*/}
 					<FormActionButtons
 						createArtwork={createArtwork}
@@ -151,6 +164,13 @@ export default function UploadArtworkForm() {
 					/>
 				</View>
 			</ScrollView>
+
+			<Modal visible={isMapModalOpen} animationType="slide">
+				<MapModal
+					closeModal={() => setIsMapModalOpen(false)}
+					setLocation={setLocation}
+				/>
+			</Modal>
 
 			{/*	Camera and gallery modals 	*/}
 			<Modal visible={isGalleryModalOpen}>
@@ -231,5 +251,25 @@ const styles = StyleSheet.create({
 		left: 0,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	locationContainer: {
+		marginBottom: 32,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	tinyMap: {
+		width: 100,
+		height: 100,
+		borderRadius: 8,
+		marginBottom: 8,
+	},
+	locationIconContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	locationText: {
+		color: Colors.ArtVistaRed,
+		marginTop: 8,
+		fontSize: 12,
 	},
 });
