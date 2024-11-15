@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
 
 export default function PersonalProfile() {
-	const { userNameSession, logOut, user } = useAuthSession();
+	const { logOut, user } = useAuthSession();
 	const [userData, setUserData] = useState<UserData | null>(null);
 	const [artworks, setArtworks] = useState<ArtworkData[] | []>([]);
 	const [isEditProfileModalOpen, setIsEditProfileModalOpen] =
@@ -73,6 +73,7 @@ export default function PersonalProfile() {
 				<EditProfileModal
 					closeModal={() => setIsEditProfileModalOpen(false)}
 					userData={userData} // Ensure userData is passed correctly
+					onSave={fetchUserData}
 				/>
 			</Modal>
 		</View>

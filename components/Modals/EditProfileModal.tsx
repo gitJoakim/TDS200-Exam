@@ -18,11 +18,13 @@ import GalleryModal from "./GalleryModal";
 interface EditProfileModalProps {
 	closeModal: () => void;
 	userData: UserData | null;
+	onSave?: () => void;
 }
 
 export default function EditProfileModal({
 	closeModal,
 	userData,
+	onSave,
 }: EditProfileModalProps) {
 	const [editedBioText, setEditedBioText] = useState<string>(
 		userData?.bio || ""
@@ -47,7 +49,10 @@ export default function EditProfileModal({
 			updated = true;
 		}
 
-		if (updated) console.log("Changes saved successfully");
+		if (updated && onSave) {
+			console.log("Changes saved successfully");
+			onSave();
+		}
 		closeModal();
 	};
 
