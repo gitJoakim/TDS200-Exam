@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 
 import { onAuthStateChanged, User } from "firebase/auth";
 import {
-	createContext,
-	ReactNode,
-	useContext,
-	useEffect,
-	useState,
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import * as authenticationAPI from "@/api/authenticationApi";
 
@@ -18,73 +18,74 @@ import * as authenticationAPI from "@/api/authenticationApi";
  ***********************************************/
 
 type AuthContextType = {
-	logIn: (username: string, password: string) => void;
-	logOut: VoidFunction;
-	userNameSession?: string | null;
-	user: User | null;
-	isLoading: boolean;
+  logIn: (email: string, password: string) => void;
+  logOut: VoidFunction;
+  userEmailSession?: string | null; // Renamed to userEmailSession
+  user: User | null;
+  isLoading: boolean;
 };
 
 const AuthenticationContext = createContext<AuthContextType>({
-	logIn: () => null,
-	logOut: () => null,
-	userNameSession: null,
-	isLoading: false,
-	user: null,
+  logIn: () => null,
+  logOut: () => null,
+  userEmailSession: null, // Renamed to userEmailSession
+  isLoading: false,
+  user: null,
 });
 
 export function useAuthSession() {
-	const value = useContext(AuthenticationContext);
-	if (!value) {
-		throw new Error(
-			"UseAuthSession must be used within a AuthContext Provider"
-		);
-	}
+  const value = useContext(AuthenticationContext);
+  if (!value) {
+    throw new Error(
+      "useAuthSession must be used within an AuthenticationContext Provider"
+    );
+  }
 
-	return value;
+  return value;
 }
 
 export function AuthenticationSessionProvider({
-	children,
+  children,
 }: {
-	children: ReactNode;
+  children: ReactNode;
 }) {
-	const [userSession, setUserSession] = useState<string | null>(null);
-	const [userAuthSession, setUserAuthSession] = useState<User | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+  const [userEmailSession, setUserEmailSession] = useState<string | null>(null); // Store email session
+  const [userAuthSession, setUserAuthSession] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-	const router = useRouter();
+  const router = useRouter();
 
-	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				setUserSession(user.displayName);
-				setUserAuthSession(user);
-			} else {
-				setUserSession(null);
-				setUserAuthSession(null);
-			}
-			router.replace("/");
-			setIsLoading(false);
-		});
-	}, []);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmailSession(user.email); // Set userEmailSession to the email
+        setUserAuthSession(user);
+      } else {
+        setUserEmailSession(null); // Clear email session if no user
+        setUserAuthSession(null); // Clear user session if no user
+      }
+      router.replace("/"); // Redirect after state change
+      setIsLoading(false); // End loading
+    });
+  }, []);
 
-	return (
-		<AuthenticationContext.Provider
-			value={{
-				logIn: async (username: string, password: string) => {
-					await authenticationAPI.logIn(username, password);
-					setUserSession(username);
-				},
-				logOut: async () => {
-					await authenticationAPI.logOut();
-				},
-				userNameSession: userSession,
-				user: userAuthSession,
-				isLoading: isLoading,
-			}}
-		>
-			{children}
-		</AuthenticationContext.Provider>
-	);
+  return (
+    <AuthenticationContext.Provider
+      value={{
+        logIn: async (email: string, password: string) => {
+          await authenticationAPI.logIn(email, password);
+          setUserEmailSession(email); // Set email after successful login
+        },
+        logOut: async () => {
+          await authenticationAPI.logOut();
+          setUserEmailSession(null); // Clear email session on log out
+        },
+        userEmailSession, // Updated to store email session
+        user: userAuthSession,
+        isLoading: isLoading,
+      }}
+    >
+      {children}
+    </AuthenticationContext.Provider>
+  );
 }

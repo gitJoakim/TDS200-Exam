@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
-import * as authenticationAPI from "@/api/authenticationApi";
+import * as authenticationAPI from "@/api/authenticationApi"; // Assuming this API handles sign up
 import { useAuthSession } from "@/providers/AuthContextProvider";
 
 const Authentication = () => {
@@ -9,7 +9,18 @@ const Authentication = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
-	const { userNameSession } = useAuthSession();
+	const { user } = useAuthSession();
+
+	const handleSignUp = () => {
+		if (!username.trim()) {
+			alert("Please set a valid username.");
+			return;
+		}
+
+		// Proceed with sign-up process
+		authenticationAPI.signUp(email, password, username);
+		console.log("User signed up");
+	};
 
 	return (
 		<View
@@ -37,21 +48,21 @@ const Authentication = () => {
 					value={email}
 					onChangeText={setEmail}
 					autoCapitalize="none"
-				></TextInput>
+				/>
 				<Text>Username</Text>
 				<TextInput
 					style={{ borderColor: "black", borderWidth: 2, marginBottom: 16 }}
 					value={username}
 					onChangeText={setUsername}
 					autoCapitalize="none"
-				></TextInput>
-				<Text>Passowrd</Text>
+				/>
+				<Text>Password</Text>
 				<TextInput
 					style={{ borderColor: "black", borderWidth: 2, marginBottom: 16 }}
 					value={password}
 					onChangeText={setPassword}
 					autoCapitalize="none"
-				></TextInput>
+				/>
 				<View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
 					<Pressable
 						style={{ borderColor: "black", borderWidth: 2, width: 60 }}
@@ -63,10 +74,7 @@ const Authentication = () => {
 					</Pressable>
 					<Pressable
 						style={{ borderColor: "black", borderWidth: 2, width: 60 }}
-						onPress={() => {
-							authenticationAPI.signUp(email, password, username);
-							console.log("lol");
-						}}
+						onPress={handleSignUp} // Use the validation function for sign-up
 					>
 						<Text>Sign up</Text>
 					</Pressable>

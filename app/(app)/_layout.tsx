@@ -4,7 +4,7 @@ import { Redirect, Stack } from "expo-router";
 import { ActivityIndicator, Text, View } from "react-native";
 
 export default function AppLayout() {
-	const { userNameSession, isLoading } = useAuthSession();
+	const { user, isLoading } = useAuthSession();
 
 	if (isLoading) {
 		return (
@@ -15,7 +15,7 @@ export default function AppLayout() {
 		);
 	}
 
-	if (!userNameSession) {
+	if (!user) {
 		return <Redirect href="/authentication" />;
 	}
 
