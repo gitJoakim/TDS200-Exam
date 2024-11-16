@@ -1,4 +1,5 @@
 import { addArtwork } from "@/api/artworkApi";
+import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 
@@ -16,6 +17,12 @@ export default function FormActionButtons({
 	return (
 		<View style={styles.buttonsContainer}>
 			<Pressable
+				style={[styles.button, styles.clearButton]}
+				onPress={() => clearForm()}
+			>
+				<Text style={styles.clearButtonText}>Clear Form</Text>
+			</Pressable>
+			<Pressable
 				style={styles.button}
 				onPress={() => {
 					const artwork = createArtwork();
@@ -25,14 +32,7 @@ export default function FormActionButtons({
 					}
 				}}
 			>
-				<Text style={styles.buttonText}>Post Artwork</Text>
-			</Pressable>
-
-			<Pressable
-				style={[styles.button, styles.clearButton]}
-				onPress={() => clearForm()}
-			>
-				<Text style={styles.clearButtonText}>Clear Form</Text>
+				<Text style={styles.buttonText}>Upload Artwork</Text>
 			</Pressable>
 		</View>
 	);
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 	button: {
-		backgroundColor: "#4CAF50", // Green color for the Post/Upload button
+		backgroundColor: Colors.ArtVistaRed, // Red color for the Upload button
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
@@ -55,15 +55,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	buttonText: {
-		color: "#fff", // White text color
+		color: "#fff", // White text color for the Upload button
 		fontSize: 16,
 		fontWeight: "bold",
 	},
 	clearButton: {
-		backgroundColor: "#F44336", // Red color for the Clear button
+		backgroundColor: "transparent", // Transparent background for the Clear button
+		borderColor: "gray", // Grey border
+		borderWidth: 1, // Border width
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+		borderRadius: 5,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	clearButtonText: {
-		color: "#fff", // White text color for the clear button
+		color: "gray", // Gray text color for the Clear button
 		fontSize: 16,
 		fontWeight: "bold",
 	},

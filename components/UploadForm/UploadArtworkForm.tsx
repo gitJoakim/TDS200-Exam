@@ -106,19 +106,13 @@ export default function UploadArtworkForm() {
 	}
 
 	return (
-		<SafeAreaView
-			style={{
-				flex: 1,
-				paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-				// safeareaview for some reason ignored the statusbar on android ??? so this is my solution
-			}}
-		>
+		<SafeAreaView style={[styles.contentContainer]}>
 			<ScrollView
 				style={{ flex: 1 }}
 				keyboardDismissMode="interactive"
 				automaticallyAdjustKeyboardInsets
 			>
-				<View style={{ paddingHorizontal: 24 }}>
+				<View style={{ paddingHorizontal: 24, marginVertical: 12 }}>
 					<Text>Title</Text>
 					<TextInput
 						style={styles.textInput}
@@ -221,6 +215,13 @@ export default function UploadArtworkForm() {
 }
 
 const styles = StyleSheet.create({
+	contentContainer: {
+		flex: 1,
+		...(Platform.OS === "web" && {
+			width: "70%",
+			marginHorizontal: "auto",
+		}),
+	},
 	textInput: {
 		borderColor: "black",
 		borderWidth: 1,

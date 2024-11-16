@@ -1,30 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { Modal, View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+	Modal,
+	View,
+	Text,
+	StyleSheet,
+	Pressable,
+	Platform,
+} from "react-native";
 import MapView, { MapPressEvent, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
+import WebMap from "@teovilla/react-native-web-maps";
+import googleConfig from "../../googlemapsEnv";
+import WebMapWithOl from "../WebMap/WebMapWithOl";
+import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 
 interface MapModalProps {
 	setLocation: (location: Location.LocationObjectCoords | null) => void; // Passes only latitude & longitude
 	closeModal: () => void;
 }
 
-const MapModal = ({ setLocation, closeModal }: MapModalProps) => {
+export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 	const [addressCoords, setAddressCoords] = useState<
 		Location.LocationGeocodedAddress[] | null
 	>(null);
 	const [selectedCoords, setSelectedCoords] =
 		useState<Location.LocationObjectCoords | null>(null);
 
-	function handleMapPress(event: any) {
-		const location: Location.LocationObjectCoords =
-			event.nativeEvent.coordinate;
-		setSelectedCoords(location);
-
-		console.log(location);
-	}
+	const handleMapPress = useCallback((event: MapPressEvent) => {
+		const location = event.nativeEvent.coordinate;
+		setSelectedCoords(location as Location.LocationObjectCoords); // Directly setting coords without additional processing
+	}, []);
 
 	function handleSaveLocation() {
 		setLocation(selectedCoords);
@@ -38,33 +46,58 @@ const MapModal = ({ setLocation, closeModal }: MapModalProps) => {
 		}
 	};
 
+	const fetchAddressInfoFromGoogle = async () => {
+		if (selectedCoords) {
+			const address = await fetchAddressWithGoogleAPI(selectedCoords);
+			setAddressCoords(address);
+		}
+	};
+
 	useEffect(() => {
-		fetchAddressInfoFromCoords();
+		if (Platform.OS === "web" || "android") {
+			fetchAddressInfoFromGoogle();
+		} else {
+			fetchAddressInfoFromCoords();
+		}
 	}, [selectedCoords]);
 
 	return (
 		<View style={styles.modalContainer}>
 			<View style={styles.modalContent}>
-				{/* Close Button */}
-				<Pressable style={styles.closeButton} onPress={closeModal}>
-					<Ionicons name="close" size={30} color={Colors.ArtVistaRed} />
-				</Pressable>
-
-				<MapView
-					style={styles.map}
-					zoomEnabled={true}
-					scrollEnabled={true}
-					initialRegion={{
-						latitude: 37.78825, // Default center
-						longitude: -122.4324, // Default center
-						latitudeDelta: 0.0922,
-						longitudeDelta: 0.0421,
-					}}
-					onPress={handleMapPress}
-				>
-					{/* Display Marker if a location is selected */}
-					{selectedCoords && <Marker coordinate={selectedCoords} />}
-				</MapView>
+				{Platform.OS === "web" ? (
+					<View
+						style={{
+							flex: 4,
+							width: "100%",
+						}}
+					>
+						<WebMapWithOl
+							region={selectedCoords}
+							onMapClick={({ latitude, longitude }) => {
+								setSelectedCoords({
+									latitude,
+									longitude,
+								} as Location.LocationObjectCoords);
+							}}
+						/>
+					</View>
+				) : (
+					<MapView
+						style={styles.map}
+						zoomEnabled={true}
+						scrollEnabled={true}
+						region={{
+							latitude: selectedCoords ? selectedCoords.latitude : 59.9,
+							longitude: selectedCoords ? selectedCoords.longitude : 10.75,
+							latitudeDelta: 0.1,
+							longitudeDelta: 0.1,
+						}}
+						onPress={handleMapPress}
+					>
+						{/* Display Marker if a location is selected */}
+						{selectedCoords && <Marker coordinate={selectedCoords} />}
+					</MapView>
+				)}
 
 				<View
 					style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -86,10 +119,14 @@ const MapModal = ({ setLocation, closeModal }: MapModalProps) => {
 						</Pressable>
 					</View>
 				</View>
+				{/* Close Button */}
+				<Pressable style={styles.closeButton} onPress={closeModal}>
+					<Ionicons name="close" size={30} color={Colors.ArtVistaRed} />
+				</Pressable>
 			</View>
 		</View>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	modalContainer: {
@@ -105,11 +142,11 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		overflow: "hidden",
 		alignItems: "center",
-		justifyContent: "flex-start",
+		justifyContent: "space-between",
 	},
 	map: {
 		width: "100%",
-		height: "80%",
+		height: "70%",
 	},
 	addressText: {
 		marginTop: 12,
@@ -119,9 +156,13 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: "row",
-		justifyContent: "space-evenly",
-		width: "100%",
-		padding: 16,
+		justifyContent: "space-between", // Spreads buttons horizontally
+		alignItems: "center",
+		width: "90%", // Makes the button container a bit narrower than the modal
+		marginVertical: 16, // Adds spacing at the bottom
+		...(Platform.OS === "web" && {
+			gap: 64,
+		}),
 	},
 	cancelButton: {
 		backgroundColor: "gray",
@@ -145,5 +186,3 @@ const styles = StyleSheet.create({
 		right: 16,
 	},
 });
-
-export default MapModal;

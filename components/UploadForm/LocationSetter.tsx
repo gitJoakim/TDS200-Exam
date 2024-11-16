@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors"; // Adjust this to your project setup
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
+import WebMap from "@teovilla/react-native-web-maps";
+import googleConfig from "../../googlemapsEnv";
+import WebMapWithOl from "../WebMap/WebMapWithOl";
+import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 
 interface LocationSetterProps {
 	location: Location.LocationObjectCoords | null;
@@ -26,8 +30,19 @@ export default function LocationSetter({
 		}
 	};
 
+	const fetchAddressInfoFromGoogle = async () => {
+		if (location) {
+			const address = await fetchAddressWithGoogleAPI(location);
+			setAddressCoords(address);
+		}
+	};
+
 	useEffect(() => {
-		fetchAddressInfoFromCoords();
+		if (Platform.OS === "web" || "android") {
+			fetchAddressInfoFromGoogle();
+		} else {
+			fetchAddressInfoFromCoords();
+		}
 	}, [location]);
 
 	return (
@@ -56,21 +71,26 @@ export default function LocationSetter({
 				}}
 				style={styles.mapWrapper}
 			>
-				<MapView
-					style={styles.tinyMap}
-					region={{
-						latitude: location ? location.latitude : 59.9,
-						longitude: location ? location.longitude : 10.75,
-						latitudeDelta: 0.1,
-						longitudeDelta: 0.1,
-					}}
-					zoomEnabled={true}
-					scrollEnabled={true}
-					rotateEnabled={false}
-					pitchEnabled={false}
-				>
-					{location && <Marker coordinate={location}></Marker>}
-				</MapView>
+				{Platform.OS === "web" ? (
+					// @ts-ignore
+					<WebMapWithOl region={location} />
+				) : (
+					<MapView
+						style={styles.tinyMap}
+						region={{
+							latitude: location ? location.latitude : 59.9,
+							longitude: location ? location.longitude : 10.75,
+							latitudeDelta: 0.1,
+							longitudeDelta: 0.1,
+						}}
+						zoomEnabled={true}
+						scrollEnabled={true}
+						rotateEnabled={false}
+						pitchEnabled={false}
+					>
+						{location && <Marker coordinate={location}></Marker>}
+					</MapView>
+				)}
 
 				{/* Overlay to grey out the map if no location */}
 				{!location && <View style={styles.greyOverlay} />}
@@ -86,7 +106,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	mapWrapper: {
-		position: "relative",
+		justifyContent: "center",
+		alignItems: "center",
 		width: "100%",
 		height: 150,
 		borderRadius: 8,

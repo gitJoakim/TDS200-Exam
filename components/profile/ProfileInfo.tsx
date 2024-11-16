@@ -15,7 +15,7 @@ export default function ProfileInfo({ userData }: ProfileInfoProps) {
 			</View>
 		);
 	}
-
+	console.log(userData.profileImageUrl);
 	return (
 		<View style={styles.mainContainer}>
 			{/* Profile Picture */}
