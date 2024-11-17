@@ -122,7 +122,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				>
 					<Image
 						resizeMode="contain"
-						style={[styles.image, imageDimensionsStyle]}
+						style={[styles.artworkImage, imageDimensionsStyle]}
 						source={{ uri: artworkData!.imageURL }}
 					/>
 				</View>
@@ -168,26 +168,25 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					</View>
 					{/* Date */}
 					<Text style={styles.dateText}>{artworkData!.date}</Text>
-
-					{/* Location */}
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							alignItems: "center",
-							width: "100%",
-							marginBottom: 8,
-						}}
-					>
-						<Text style={styles.locationTextStyle}>Location: </Text>
-						<Text style={styles.locationTextStyle}>
-							{artworkData!.artworkCoords
-								? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
-								: "Unknown"}
-						</Text>
-					</View>
 				</View>
 
+				{/* Location */}
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						width: "100%",
+						marginBottom: 8,
+					}}
+				>
+					<Text style={styles.locationTextStyle}>Location:</Text>
+					<Text style={styles.locationTextStyle}>
+						{artworkData!.artworkCoords
+							? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
+							: "Unknown"}
+					</Text>
+				</View>
 				{/* Map Container */}
 				<View style={styles.mapContainer}>
 					{/* Conditionally render WebMapWithOl for Web or MapView for Mobile */}
@@ -241,7 +240,8 @@ const styles = StyleSheet.create({
 		color: "#888", // Lighter gray
 		marginBottom: 20,
 	},
-	image: {
+	artworkImage: {
+		marginVertical: 12,
 		borderRadius: 8,
 	},
 	title: {
