@@ -137,6 +137,7 @@ export default function UploadArtworkForm() {
 						onChangeText={setDescription}
 						multiline={true}
 						placeholder="Describe the artwork.."
+						textAlignVertical="top" // had to set this for android, its auto top on web and ios
 					/>
 
 					{/*  Hashtags component		*/}
@@ -217,8 +218,9 @@ export default function UploadArtworkForm() {
 const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
+		backgroundColor: "white",
 		...(Platform.OS === "web" && {
-			width: "70%",
+			width: "50%",
 			marginHorizontal: "auto",
 		}),
 	},
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		padding: 8,
 		marginBottom: 32,
-		borderRadius: 12,
+		borderRadius: 8,
 		width: "100%",
 	},
 	hashtagsContainer: {

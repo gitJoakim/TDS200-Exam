@@ -1,8 +1,8 @@
 import { View, Text, Pressable, Platform } from "react-native";
 import { Image } from "expo-image";
 import Feather from "@expo/vector-icons/Feather";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Colors } from "@/constants/Colors";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type ImagePickerProps = {
 	image: string | null;
@@ -35,7 +35,8 @@ export default function ImagePicker({
 				style={{
 					width: "100%",
 					height: height,
-					backgroundColor: "blue",
+					borderColor: "black",
+					borderWidth: 2,
 					justifyContent: "center",
 					alignItems: "center",
 					marginBottom: 12,
@@ -48,15 +49,20 @@ export default function ImagePicker({
 						style={imageDimensionsStyle}
 					/>
 				) : (
-					<Text
-						style={{
-							textAlign: "center",
-							fontSize: 32,
-							fontWeight: "bold",
-						}}
-					>
-						Add an image of the Artwork
-					</Text>
+					<MaterialCommunityIcons
+						name="image-off-outline"
+						size={200}
+						color={Colors.ArtVistaRed}
+					/>
+					// <Text
+					// 	style={{
+					// 		textAlign: "center",
+					// 		fontSize: 32,
+					// 		fontWeight: "bold",
+					// 	}}
+					// >
+					// 	Add an image of the Artwork
+					// </Text>
 				)}
 			</View>
 
@@ -94,7 +100,11 @@ export default function ImagePicker({
 						setIsGalleryModalOpen(true);
 					}}
 				>
-					<FontAwesome name="image" size={32} color={Colors.ArtVistaRed} />
+					<MaterialCommunityIcons
+						name="file-image-plus"
+						size={32}
+						color={Colors.ArtVistaRed}
+					/>
 				</Pressable>
 			</View>
 		</View>

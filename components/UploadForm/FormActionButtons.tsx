@@ -43,8 +43,9 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between", // Spaces out buttons
 		alignItems: "center", // Centers vertically
-		marginTop: 20, // Optional margin for spacing
+		marginTop: 28, // Optional margin for spacing
 		paddingHorizontal: 20,
+		marginBottom: 20,
 	},
 	button: {
 		backgroundColor: Colors.ArtVistaRed, // Red color for the Upload button
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 	clearButton: {
 		backgroundColor: "transparent", // Transparent background for the Clear button
 		borderColor: "gray", // Grey border
-		borderWidth: 1, // Border width
+		borderWidth: 2, // Border width
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,

@@ -112,20 +112,12 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				<Text style={styles.title}>{artworkData!.title}</Text>
 
 				{/* Artwork Image */}
-				<View
-					style={{
-						flex: 1, // Allow the container to grow and take available space
-						justifyContent: "center", // Center the image vertically in the container
-						alignItems: "center", // Center the image horizontally
-						width: "100%", // Ensure full width
-					}}
-				>
-					<Image
-						resizeMode="contain"
-						style={[styles.artworkImage, imageDimensionsStyle]}
-						source={{ uri: artworkData!.imageURL }}
-					/>
-				</View>
+
+				<Image
+					resizeMode="contain"
+					style={[styles.artworkImage, imageDimensionsStyle]}
+					source={{ uri: artworkData!.imageURL }}
+				/>
 
 				<View style={styles.textContainer}>
 					<Link

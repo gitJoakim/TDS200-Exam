@@ -1,8 +1,15 @@
 import React from "react";
-import { FlatList, View, Image, StyleSheet, Text } from "react-native";
+import {
+	FlatList,
+	View,
+	Image,
+	StyleSheet,
+	Dimensions,
+	Platform,
+} from "react-native";
 import { ArtworkData } from "@/utils/artworkData";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { Link } from "expo-router";
+import { Colors } from "@/constants/Colors";
 
 type ProfileArtGridProps = {
 	artworks: ArtworkData[];
@@ -11,47 +18,61 @@ type ProfileArtGridProps = {
 export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
 	const renderItem = ({ item }: { item: ArtworkData }) => (
 		<View style={styles.itemContainer}>
-			{item.imageURL ? (
+			{item.imageURL && (
 				<Link
 					href={{
 						pathname: "/artworkDetails/[id]",
 						params: { id: item.id },
 					}}
 				>
-					<Image source={{ uri: item.imageURL }} style={styles.image} />
+					<View>
+						<Image source={{ uri: item.imageURL }} style={styles.image} />
+					</View>
 				</Link>
-			) : (
-				<SimpleLineIcons name="picture" size={50} color="black" />
 			)}
 		</View>
 	);
 
 	return (
-		<FlatList
-			data={artworks}
-			renderItem={renderItem}
-			keyExtractor={(item) => item.id.toString()}
-			numColumns={3}
-			showsVerticalScrollIndicator={false}
-			contentContainerStyle={styles.gridContainer}
-		/>
+		<View style={styles.mainContainer}>
+			<FlatList
+				data={artworks}
+				renderItem={renderItem}
+				keyExtractor={(item) => item.id.toString()}
+				numColumns={3}
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={styles.gridContainer}
+			/>
+		</View>
 	);
 }
 
+const windowWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		width: "100%",
+	},
 	gridContainer: {
 		paddingTop: 10,
+		paddingBottom: 10,
+		width: Platform.OS === "web" ? "50%" : "100%",
 	},
 	itemContainer: {
-		width: "33.33%",
+		width: (Platform.OS === "web" ? windowWidth * 0.5 : windowWidth) / 3 - 10,
 		padding: 5,
 		alignItems: "center",
 		marginBottom: 10,
 	},
 	image: {
-		width: 100,
-		height: 100,
+		width: (Platform.OS === "web" ? windowWidth * 0.5 : windowWidth) / 3 - 20,
+		height: (Platform.OS === "web" ? windowWidth * 0.5 : windowWidth) / 3 - 20,
 		borderRadius: 12,
+		borderColor: Colors.ArtVistaRed,
+		borderWidth: 4,
 		resizeMode: "cover",
 	},
 });

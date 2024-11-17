@@ -99,16 +99,13 @@ export default function EditProfileModal({
 				{/* Save & Cancel Buttons */}
 				<View style={styles.buttonsContainer}>
 					<Pressable
-						onPress={handleSave}
-						style={[styles.button, styles.saveButton]}
-					>
-						<Text style={styles.buttonText}>Save</Text>
-					</Pressable>
-					<Pressable
-						onPress={handleCancel}
 						style={[styles.button, styles.cancelButton]}
+						onPress={handleCancel}
 					>
-						<Text style={styles.buttonText}>Cancel</Text>
+						<Text style={styles.cancelButtonText}>Cancel</Text>
+					</Pressable>
+					<Pressable style={styles.button} onPress={handleSave}>
+						<Text style={styles.buttonText}>Save</Text>
 					</Pressable>
 				</View>
 			</View>
@@ -187,23 +184,41 @@ const styles = StyleSheet.create({
 	},
 	buttonsContainer: {
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "space-between", // Spaces out buttons
 		width: "100%",
+		marginTop: 20, // Optional margin for spacing
+		paddingHorizontal: 20,
 	},
+
 	button: {
+		backgroundColor: Colors.ArtVistaRed, // Red color for the Save button
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
-		margin: 5,
+		justifyContent: "center",
+		alignItems: "center",
 	},
-	saveButton: {
-		backgroundColor: "#4CAF50",
-	},
-	cancelButton: {
-		backgroundColor: "#f44336",
-	},
+
 	buttonText: {
-		color: "white",
+		color: "#fff", // White text color for the Save button
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+
+	cancelButton: {
+		backgroundColor: "transparent", // Transparent background for the Cancel button
+		borderColor: "gray", // Grey border
+		borderWidth: 2, // Border width
+		paddingVertical: 10,
+		paddingHorizontal: 20,
+		borderRadius: 5,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	cancelButtonText: {
+		color: "gray", // Gray text color for the Cancel button
+		fontSize: 16,
 		fontWeight: "bold",
 	},
 });
