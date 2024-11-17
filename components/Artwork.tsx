@@ -109,16 +109,17 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 		<ScrollView style={styles.scrollContainer}>
 			<View style={styles.container}>
 				{/* Artwork Title and Artist */}
-				<Text style={styles.title}>{artworkData!.title}</Text>
+				<View>
+					<Text style={styles.title}>{artworkData!.title}</Text>
 
-				{/* Artwork Image */}
+					{/* Artwork Image */}
 
-				<Image
-					resizeMode="contain"
-					style={[styles.artworkImage, imageDimensionsStyle]}
-					source={{ uri: artworkData!.imageURL }}
-				/>
-
+					<Image
+						resizeMode="contain"
+						style={[styles.artworkImage, imageDimensionsStyle]}
+						source={{ uri: artworkData!.imageURL }}
+					/>
+				</View>
 				<View style={styles.textContainer}>
 					<Link
 						href={{
@@ -211,6 +212,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	container: {
+		backgroundColor: "white",
 		flex: 1,
 		justifyContent: "flex-start", // Keep it at the top
 		alignItems: "center", // Align all children horizontally at the center
