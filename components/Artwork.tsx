@@ -6,17 +6,21 @@ import {
 	StyleSheet,
 	Platform,
 	ScrollView,
+	Image,
 } from "react-native";
-import { Image } from "expo-image";
 import MapView, { Marker } from "react-native-maps";
 import { Link } from "expo-router";
 import { ArtworkData } from "@/utils/artworkData";
-
-import "ol/ol.css"; // Import OpenLayers styles
+import "ol/ol.css";
 import WebMapWithOl from "./WebMap/WebMapWithOl";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 import * as Location from "expo-location";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { UserData } from "@/utils/userData";
+import { useAuthSession } from "@/providers/AuthContextProvider";
+import { getUserInfoById } from "@/api/userApi";
+import { Colors } from "@/constants/Colors";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -31,12 +35,19 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	const [regionForMobileView, setRegionForMobileView] = useState({
 		latitude: 10.75,
 		longitude: 59.9,
-		latitudeDelta: 0.0922, // default zoom level
-		longitudeDelta: 0.0421, // default zoom level
+		latitudeDelta: 0.0922,
+		longitudeDelta: 0.0421,
 	});
-
 	const [location, setLocation] =
 		useState<Location.LocationObjectCoords | null>(null);
+	const [userData, setUserData] = useState<UserData | null>(null);
+
+	// Fetch the user data
+	async function fetchUserData() {
+		const userId = artworkData?.userId;
+		const userInfoFromDb = await getUserInfoById(userId!);
+		setUserData(userInfoFromDb);
+	}
 
 	const fetchAddressInfoFromCoords = async () => {
 		if (location) {
@@ -50,6 +61,16 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 			const address = await fetchAddressWithGoogleAPI(location);
 			setAddressCoords(address);
 		}
+	};
+
+	const renderHashtags = (hashtags: string[]) => {
+		return hashtags.map((hashtag, index) => {
+			return (
+				<Text key={index} style={styles.hashtags}>
+					{hashtag}
+				</Text>
+			);
+		});
 	};
 
 	useEffect(() => {
@@ -71,6 +92,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				longitudeDelta: 0.0421,
 			});
 		}
+		fetchUserData();
 	}, [artworkData]);
 
 	useEffect(() => {
@@ -87,41 +109,84 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 		<ScrollView style={styles.scrollContainer}>
 			<View style={styles.container}>
 				{/* Artwork Title and Artist */}
-				<View style={styles.headerContainer}>
-					<Text style={styles.title}>{artworkData!.title}</Text>
+				<Text style={styles.title}>{artworkData!.title}</Text>
+
+				{/* Artwork Image */}
+				<View
+					style={{
+						flex: 1, // Allow the container to grow and take available space
+						justifyContent: "center", // Center the image vertically in the container
+						alignItems: "center", // Center the image horizontally
+						width: "100%", // Ensure full width
+					}}
+				>
+					<Image
+						resizeMode="contain"
+						style={[styles.image, imageDimensionsStyle]}
+						source={{ uri: artworkData!.imageURL }}
+					/>
+				</View>
+
+				<View style={styles.textContainer}>
 					<Link
 						href={{
 							pathname: "/userProfile/[id]",
 							params: { id: artworkData!.userId },
 						}}
 					>
-						<Text style={styles.artistName}>{artworkData!.artist}</Text>
+						<View
+							style={{
+								width: "100%", // Ensure the container takes full width
+								flexDirection: "row", // Horizontal layout
+								alignItems: "center", // Vertically center items within the row
+								justifyContent: "flex-start", // Align the items to the left
+								gap: 6, // Space between image and text
+								marginVertical: 12, // Vertical margin
+							}}
+						>
+							<View style={styles.profilePicContainer}>
+								{userData?.profileImageUrl ? (
+									<Image
+										resizeMode="center"
+										source={{ uri: userData?.profileImageUrl! }}
+										style={{ width: 24, height: 24, borderRadius: 50 }}
+									/>
+								) : (
+									<FontAwesome name="user-circle" size={24} color="black" />
+								)}
+							</View>
+							<Text style={styles.artistName}>{artworkData!.artist}</Text>
+						</View>
 					</Link>
+
+					{/* Artwork Description */}
+					<Text style={styles.description}>{artworkData!.description}</Text>
+
+					{/* Hashtags */}
+					<View style={styles.hashtagsContainer}>
+						{renderHashtags(artworkData!.hashtags)}
+					</View>
+					{/* Date */}
+					<Text style={styles.dateText}>{artworkData!.date}</Text>
+
+					{/* Location */}
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+							width: "100%",
+							marginBottom: 8,
+						}}
+					>
+						<Text style={styles.locationTextStyle}>Location: </Text>
+						<Text style={styles.locationTextStyle}>
+							{artworkData!.artworkCoords
+								? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
+								: "Unknown"}
+						</Text>
+					</View>
 				</View>
-
-				{/* Artwork Image */}
-				<Image
-					contentFit="contain"
-					style={[styles.image, imageDimensionsStyle]}
-					source={{ uri: artworkData!.imageURL }}
-				/>
-
-				{/* Date */}
-				<Text style={styles.dateText}>{artworkData!.date}</Text>
-
-				{/* Artwork Description */}
-				<Text style={styles.description}>{artworkData!.description}</Text>
-
-				{/* Hashtags */}
-				<Text style={styles.hashtags}>{artworkData!.hashtags}</Text>
-
-				{/* Location */}
-				<Text style={styles.locationTextStyle}>
-					Location:{" "}
-					{artworkData!.artworkCoords
-						? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
-						: "Unknown"}
-				</Text>
 
 				{/* Map Container */}
 				<View style={styles.mapContainer}>
@@ -153,61 +218,60 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 const styles = StyleSheet.create({
 	scrollContainer: {
 		flex: 1,
-		backgroundColor: "#f9f9f9", // Add background to make it feel more like a post
 	},
 	container: {
 		flex: 1,
-		justifyContent: "flex-start",
-		alignItems: "center",
+		justifyContent: "flex-start", // Keep it at the top
+		alignItems: "center", // Align all children horizontally at the center
 		paddingHorizontal: 24,
-		width: "100%", // Default width for mobile
+		paddingVertical: 24,
+		width: "100%", // Ensure the container takes full width
 		...(Platform.OS === "web" && {
-			width: "70%", // Adjust width for web
-			marginHorizontal: "auto",
+			width: "50%", // Adjust width for web
+			marginHorizontal: "auto", // Center content in web
 		}),
 	},
-	headerContainer: {
-		alignItems: "center",
-		marginBottom: 16,
-	},
 	artistName: {
+		textAlign: "center",
 		fontSize: 16,
 		fontWeight: "bold",
-		color: "#555", // Dark gray for subtle contrast
 	},
 	dateText: {
 		fontSize: 14,
 		color: "#888", // Lighter gray
-		marginBottom: 12,
+		marginBottom: 20,
+	},
+	image: {
+		borderRadius: 8,
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
-		color: "#222", // Dark color for contrast
-		marginBottom: 8,
 		textAlign: "center",
-	},
-	image: {
-		borderRadius: 8,
-		overflow: "hidden",
-		marginBottom: 24,
+		marginBottom: 12,
 	},
 	description: {
-		textAlign: "center",
 		fontSize: 16,
-		marginBottom: 8,
-		color: "#333",
+		marginBottom: 12,
 	},
 	hashtags: {
+		marginBottom: 12,
 		textAlign: "center",
-		color: "#0077ff", // Bright blue for hashtags
-		marginBottom: 20,
+		color: "blue", // Bright blue for hashtags
+	},
+	textContainer: {
+		width: "100%",
+		alignItems: "flex-start",
 	},
 	locationTextStyle: {
 		textAlign: "center",
 		fontSize: 14,
 		color: "#666",
-		marginBottom: 16,
+	},
+	hashtagsContainer: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: 12,
 	},
 	mapContainer: {
 		width: "100%",
@@ -216,6 +280,13 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 		marginBottom: 30,
 		position: "relative",
+	},
+	profilePicContainer: {
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: 50,
+		borderWidth: 3,
+		borderColor: Colors.ArtVistaRed,
 	},
 	tinyMap: {
 		width: "100%",
