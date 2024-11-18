@@ -42,6 +42,7 @@ export default function PersonalProfile() {
 
 		navigation.setOptions({
 			title: "Your Profile",
+			headerTitleAlign: "center",
 			headerLeft: () => (
 				<Pressable
 					onPress={() => {

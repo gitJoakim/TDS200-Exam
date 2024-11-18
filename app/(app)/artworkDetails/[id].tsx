@@ -31,6 +31,7 @@ export default function ArtworkDetails() {
 		getSelectedArtworkFromDb();
 		navigation.setOptions({
 			title: "Artwork",
+			headerTitleAlign: "center",
 		});
 	}, []);
 

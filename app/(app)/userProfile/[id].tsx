@@ -15,15 +15,10 @@ export default function UserProfile() {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigation = useNavigation();
 	const [userData, setUserData] = useState<UserData | null>(null);
-	console.log("userID:", id);
 
 	// Fetch user data by ID
 	async function getUserDataById() {
-		if (!id) {
-			setErrorMessage("User ID is missing");
-			return;
-		}
-
+		setLoading(true);
 		try {
 			const userInfoFromDb = await getUserInfoById(id as string);
 			if (userInfoFromDb) {
@@ -66,6 +61,7 @@ export default function UserProfile() {
 		if (userData?.username) {
 			navigation.setOptions({
 				title: userData.username,
+				headerTitleAlign: "center",
 			});
 		}
 	}, [userData]);
@@ -82,8 +78,14 @@ export default function UserProfile() {
 	// Display user information and artworks
 	return (
 		<View style={styles.mainContainer}>
-			<ProfileInfo userData={userData} />
-			<ProfileArtGrid artworks={artworks} />
+			{errorMessage ? (
+				<Text>{errorMessage}</Text>
+			) : (
+				<>
+					<ProfileInfo userData={userData} />
+					<ProfileArtGrid artworks={artworks} />
+				</>
+			)}
 		</View>
 	);
 }
