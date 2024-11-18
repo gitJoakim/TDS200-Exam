@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		width: "100%",
 		height: 100,
-		borderColor: "#ccc",
+		borderColor: Colors.ArtVistaRed,
 		borderWidth: 1,
 		borderRadius: 5,
 		padding: 10,

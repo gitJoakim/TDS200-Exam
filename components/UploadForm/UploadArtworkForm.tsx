@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
 		}),
 	},
 	textInput: {
-		borderColor: "black",
+		borderColor: Colors.ArtVistaRed,
 		borderWidth: 1,
 		padding: 8,
 		marginBottom: 32,

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import React, { useState } from "react";
 import { Pressable, View, Text, StyleSheet, TextInput } from "react-native";
 
@@ -80,7 +81,7 @@ export default function HashtagsInput({
 
 const styles = StyleSheet.create({
 	textInput: {
-		borderColor: "black",
+		borderColor: Colors.ArtVistaRed,
 		borderWidth: 1,
 		padding: 8,
 		marginBottom: 32,
