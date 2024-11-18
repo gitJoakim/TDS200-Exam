@@ -11,6 +11,7 @@ import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AlertModal from "@/components/Modals/AlertModal";
 
 export default function PersonalProfile() {
 	const { logOut, user } = useAuthSession();
@@ -19,6 +20,7 @@ export default function PersonalProfile() {
 	const [isEditProfileModalOpen, setIsEditProfileModalOpen] =
 		useState<boolean>(false);
 	const navigation = useNavigation();
+	const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
 
 	// Fetch the user data
 	async function fetchUserData() {
@@ -43,7 +45,7 @@ export default function PersonalProfile() {
 			headerLeft: () => (
 				<Pressable
 					onPress={() => {
-						logOut();
+						setIsLogOutModalOpen(true);
 					}}
 					style={{
 						marginLeft: 16,
@@ -76,6 +78,17 @@ export default function PersonalProfile() {
 					closeModal={() => setIsEditProfileModalOpen(false)}
 					userData={userData} // Ensure userData is passed correctly
 					onSave={fetchUserData}
+				/>
+			</Modal>
+			<Modal visible={isLogOutModalOpen}>
+				<AlertModal
+					prompt="Are you sure you want to log out?"
+					optionNo="No, cancel"
+					optionYes="Yes, Log Out"
+					onConfirm={logOut}
+					onCancel={() => {
+						setIsLogOutModalOpen(false);
+					}}
 				/>
 			</Modal>
 		</View>

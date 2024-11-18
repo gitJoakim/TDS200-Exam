@@ -23,6 +23,7 @@ import { useAuthSession } from "@/providers/AuthContextProvider";
 import { getUserInfoById } from "@/api/userApi";
 import { Colors } from "@/constants/Colors";
 import * as artworkAPI from "@/api/artworkApi";
+import CommentSection from "./CommentSection";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -218,6 +219,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						{renderHashtags(artworkData!.hashtags)}
 					</View>
 				</View>
+				<CommentSection artworkId={artworkData!.id} />
 
 				{/* Location */}
 				<View

@@ -1,9 +1,9 @@
 import { LocationObjectCoords } from "expo-location";
 
 export interface ArtworkData {
-	id: string;
+	id: string; // artwork id
 	artist: string; // username of uploader
-	userId: string;
+	userId: string; // id of artist
 	title: string;
 	description: string;
 	imageURL: string;
@@ -15,4 +15,15 @@ export interface ArtworkData {
 export interface LikeData {
 	artworkId: string;
 	userIds: string[];
+}
+
+export interface Comment {
+	commentId: string;
+	commentAuthor: string;
+	comment: string;
+}
+
+export interface CommentData {
+	artworkId: string;
+	comments: Comment[];
 }

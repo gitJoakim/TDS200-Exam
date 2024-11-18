@@ -12,31 +12,61 @@ export const signUp = async (
 	password: string,
 	username: string
 ) => {
-	createUserWithEmailAndPassword(auth, email, password)
-		.then(async (userCredential) => {
-			await updateProfile(userCredential.user, {
-				displayName: username,
-			});
-			// we save userdata as a user in db
-			await createUserInDb(userCredential.user.uid, username, email);
-			console.log(
-				`Signed up with: username: ${userCredential.user.displayName}, email: ${userCredential.user.email}`
-			);
-		})
-		.catch((error) => {
-			console.log("Error signing up: ", error);
-		});
+	try {
+		const userCredential = await createUserWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+		await updateProfile(userCredential.user, { displayName: username });
+		// we save userdata as a user in db
+		await createUserInDb(userCredential.user.uid, username, email);
+		console.log(
+			`Signed up with: username: ${userCredential.user.displayName}, email: ${userCredential.user.email}`
+		);
+	} catch (error) {
+		throw new Error(handleFirebaseError(error));
+	}
 };
 
 // log in
 export const logIn = async (email: string, password: string) => {
-	await signInWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-			console.log("Sign in info: ", userCredential);
-		})
-		.catch((error) => {
-			console.log("Error logging in: ", error);
-		});
+	try {
+		const userCredential = await signInWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+		console.log("Sign in info: ", userCredential);
+	} catch (error) {
+		throw new Error(handleFirebaseError(error));
+	}
+};
+
+// 
+const handleFirebaseError = (error: any) => {
+	let errorMessage = "An unexpected error occurred. Please try again.";
+	switch (error.code) {
+		case "auth/invalid-email":
+			errorMessage = "Incorrect login information.";
+			break;
+		case "auth/user-not-found":
+			errorMessage = "Incorrect login information.";
+			break;
+		case "auth/wrong-password":
+			errorMessage = "Incorrect login information.";
+			break;
+		case "auth/email-already-in-use":
+			errorMessage = "This email is already in use.";
+			break;
+		case "auth/weak-password":
+			errorMessage = "Password must be at least 6 characters long.";
+			break;
+		default:
+			errorMessage = error.message || "An unexpected error occurred. Sorry :(";
+			break;
+	}
+	return errorMessage;
 };
 
 // log out

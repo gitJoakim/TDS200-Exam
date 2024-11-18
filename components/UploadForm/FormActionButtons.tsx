@@ -1,4 +1,4 @@
-import { addArtwork } from "@/api/artworkApi";
+import * as artworkAPI from "@/api/artworkApi";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import { Pressable, View, Text, StyleSheet } from "react-native";
@@ -27,7 +27,7 @@ export default function FormActionButtons({
 				onPress={() => {
 					const artwork = createArtwork();
 					if (artwork) {
-						addArtwork(artwork);
+						artworkAPI.createArtwork(artwork);
 						blurDuringUpload();
 					}
 				}}

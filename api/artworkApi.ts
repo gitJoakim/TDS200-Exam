@@ -1,5 +1,10 @@
 import { db, getDownloadUrl } from "@/firebaseConfig";
-import { ArtworkData, LikeData } from "@/utils/artworkData";
+import {
+	ArtworkData,
+	Comment,
+	CommentData,
+	LikeData,
+} from "@/utils/artworkData";
 import {
 	addDoc,
 	collection,
@@ -26,7 +31,7 @@ This is heavily inspired by lecture code
 //**************************************
 
 // create an artwork
-export const addArtwork = async (artwork: ArtworkData) => {
+export const createArtwork = async (artwork: ArtworkData) => {
 	try {
 		const firebaseImage = await uploadImageToFirebase(artwork.imageURL);
 		if (firebaseImage === "ERROR") {
@@ -44,23 +49,67 @@ export const addArtwork = async (artwork: ArtworkData) => {
 		);
 		console.log("Document written with ID:", docRef);
 		const artworkId = docRef.id;
-		await addLikesData(artworkId);
-		console.log("Likes created for artwork:", artworkId);
+		await createLikesData(artworkId);
+		await createCommentsData(artworkId);
 	} catch (error) {
 		console.log("Error adding document:", error);
 	}
 };
 
 // creates likes collection
-export const addLikesData = async (artworkId: string) => {
+export const createLikesData = async (artworkId: string) => {
 	try {
 		const likesData: LikeData = {
 			artworkId,
 			userIds: [],
 		};
 		await addDoc(collection(db, "likes"), likesData);
+		console.log("Likes created for artwork:", artworkId);
 	} catch (error) {
 		console.log("Error creating likes:", error);
+	}
+};
+
+// creates comments collection
+export const createCommentsData = async (artworkId: string) => {
+	try {
+		const commentData: CommentData = {
+			artworkId,
+			comments: [],
+		};
+		await addDoc(collection(db, "comments"), commentData);
+		console.log("Successfully created comments for artworkId:", artworkId);
+	} catch (error) {
+		console.log("Error creating comments:", error);
+	}
+};
+
+export const addComment = async (artworkId: string, comment: Comment) => {
+	try {
+		const result = await getDocs(
+			query(collection(db, "comments"), where("artworkId", "==", artworkId))
+		);
+
+		if (!result.empty) {
+			const commentData = result.docs[0].data() as CommentData;
+
+			const newCommentId = doc(collection(db, "comments")).id;
+
+			const commentWithId = { ...comment, commentId: newCommentId };
+			const updatedComments = [...commentData.comments, commentWithId];
+
+			const commentDocRef = result.docs[0].ref;
+
+			await updateDoc(commentDocRef, {
+				comments: updatedComments,
+			});
+
+			console.log("Comment was successfully added!!!! WOOOOO");
+		} else {
+			console.log("No comments document found for this artworkId:", artworkId);
+		}
+	} catch (error) {
+		console.log("Error adding comment to artworkId:", artworkId);
 	}
 };
 
@@ -125,11 +174,29 @@ export const getLikesByArtworkId = async (artworkId: string) => {
 			const docId = result.docs[0].id;
 			return { likeData: likeData as LikeData, docId };
 		} else {
-			console.log("returning null!!!!!");
 			return null;
 		}
 	} catch (error) {
 		console.log("Error fetching likes:", error);
+		return null;
+	}
+};
+
+// gets comments
+export const getCommentsByArtworkId = async (artworkId: string) => {
+	try {
+		const result = await getDocs(
+			query(collection(db, "comments"), where("artworkId", "==", artworkId))
+		);
+		if (!result.empty) {
+			const commentData = result.docs[0].data();
+			const docId = result.docs[0].id;
+			return { commentData: commentData as CommentData, docId };
+		} else {
+			return null;
+		}
+	} catch (error) {
+		console.log("Error fetching comments", error);
 		return null;
 	}
 };
@@ -146,7 +213,9 @@ export const toggleLike = async (artworkId: string, userId: string) => {
 
 			// Toggle the like for the user
 			if (likesData.likeData.userIds.includes(userId)) {
-				updatedUserIds = likesData.likeData.userIds.filter((id) => id !== userId);
+				updatedUserIds = likesData.likeData.userIds.filter(
+					(id) => id !== userId
+				);
 			} else {
 				updatedUserIds = [...likesData.likeData.userIds, userId];
 			}
