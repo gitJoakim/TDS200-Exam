@@ -1,5 +1,5 @@
 import { db, getDownloadUrl } from "@/firebaseConfig";
-import { ArtworkData } from "@/utils/artworkData";
+import { ArtworkData, LikeData } from "@/utils/artworkData";
 import {
 	addDoc,
 	collection,
@@ -8,6 +8,7 @@ import {
 	getDoc,
 	getDocs,
 	query,
+	updateDoc,
 	where,
 } from "firebase/firestore";
 import { uploadImageToFirebase } from "./imageApi";
@@ -42,8 +43,24 @@ export const addArtwork = async (artwork: ArtworkData) => {
 			artworkWithImageData
 		);
 		console.log("Document written with ID:", docRef);
+		const artworkId = docRef.id;
+		await addLikesData(artworkId);
+		console.log("Likes created for artwork:", artworkId);
 	} catch (error) {
 		console.log("Error adding document:", error);
+	}
+};
+
+// creates likes collection
+export const addLikesData = async (artworkId: string) => {
+	try {
+		const likesData: LikeData = {
+			artworkId,
+			userIds: [],
+		};
+		await addDoc(collection(db, "likes"), likesData);
+	} catch (error) {
+		console.log("Error creating likes:", error);
 	}
 };
 
@@ -94,6 +111,56 @@ export const getArtworksByUserId = async (userId: string) => {
 	} catch (error) {
 		console.log("Error fetching artworks by user id:", error);
 		return [];
+	}
+};
+
+// get likes collection based on artworkId
+export const getLikesByArtworkId = async (artworkId: string) => {
+	try {
+		const result = await getDocs(
+			query(collection(db, "likes"), where("artworkId", "==", artworkId))
+		);
+		if (!result.empty) {
+			const likeData = result.docs[0].data();
+			const docId = result.docs[0].id;
+			return { likeData: likeData as LikeData, docId };
+		} else {
+			console.log("returning null!!!!!");
+			return null;
+		}
+	} catch (error) {
+		console.log("Error fetching likes:", error);
+		return null;
+	}
+};
+
+//**************************************
+// UPDATE
+//**************************************
+
+export const toggleLike = async (artworkId: string, userId: string) => {
+	try {
+		const likesData = await getLikesByArtworkId(artworkId); // Fetch likes data for the artwork
+		if (likesData) {
+			let updatedUserIds;
+
+			// Toggle the like for the user
+			if (likesData.likeData.userIds.includes(userId)) {
+				updatedUserIds = likesData.likeData.userIds.filter((id) => id !== userId);
+			} else {
+				updatedUserIds = [...likesData.likeData.userIds, userId];
+			}
+
+			// Update the likes in Firestore
+			const likeDocRef = doc(db, "likes", likesData.docId);
+			await updateDoc(likeDocRef, {
+				userIds: updatedUserIds,
+			});
+		}
+	} catch (error) {
+		console.error("Error toggling like for userId:", userId);
+		console.error("Error toggling like on post:", artworkId);
+		console.log(error);
 	}
 };
 

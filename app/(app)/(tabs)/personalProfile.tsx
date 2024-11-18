@@ -10,6 +10,7 @@ import { UserData } from "@/utils/userData";
 import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function PersonalProfile() {
 	const { logOut, user } = useAuthSession();
@@ -44,11 +45,11 @@ export default function PersonalProfile() {
 					onPress={() => {
 						logOut();
 					}}
-					style={{ marginLeft: 15 }}
+					style={{
+						marginLeft: 16,
+					}}
 				>
-					<Text style={{ color: Colors.ArtVistaRed, fontWeight: "bold" }}>
-						Log out
-					</Text>
+					<MaterialIcons name="logout" size={24} color={Colors.ArtVistaRed} />
 				</Pressable>
 			),
 			headerRight: () => (
@@ -56,8 +57,9 @@ export default function PersonalProfile() {
 					onPress={() => {
 						setIsEditProfileModalOpen(true);
 					}}
+					style={{ marginRight: 16 }}
 				>
-					<Text>Settings</Text>
+					<MaterialIcons name="settings" size={24} color={Colors.ArtVistaRed} />
 				</Pressable>
 			),
 		});

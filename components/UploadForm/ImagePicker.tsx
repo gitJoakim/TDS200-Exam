@@ -35,8 +35,6 @@ export default function ImagePicker({
 				style={{
 					width: "100%",
 					height: height,
-					borderColor: "black",
-					borderWidth: 2,
 					justifyContent: "center",
 					alignItems: "center",
 					marginBottom: 12,
@@ -52,17 +50,8 @@ export default function ImagePicker({
 					<MaterialCommunityIcons
 						name="image-off-outline"
 						size={200}
-						color={Colors.ArtVistaRed}
+						color="black"
 					/>
-					// <Text
-					// 	style={{
-					// 		textAlign: "center",
-					// 		fontSize: 32,
-					// 		fontWeight: "bold",
-					// 	}}
-					// >
-					// 	Add an image of the Artwork
-					// </Text>
 				)}
 			</View>
 

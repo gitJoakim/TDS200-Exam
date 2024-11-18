@@ -7,10 +7,11 @@ import {
 	Platform,
 	ScrollView,
 	Image,
+	Pressable,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Link } from "expo-router";
-import { ArtworkData } from "@/utils/artworkData";
+import { ArtworkData, LikeData } from "@/utils/artworkData";
 import "ol/ol.css";
 import WebMapWithOl from "./WebMap/WebMapWithOl";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
@@ -21,6 +22,7 @@ import { UserData } from "@/utils/userData";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import { getUserInfoById } from "@/api/userApi";
 import { Colors } from "@/constants/Colors";
+import * as artworkAPI from "@/api/artworkApi";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -41,12 +43,35 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	const [location, setLocation] =
 		useState<Location.LocationObjectCoords | null>(null);
 	const [userData, setUserData] = useState<UserData | null>(null);
+	const [likesData, setLikesData] = useState<LikeData | null>(null);
+	const [userHasLiked, setUserHasLiked] = useState(false);
+	const { user } = useAuthSession();
 
 	// Fetch the user data
 	async function fetchUserData() {
-		const userId = artworkData?.userId;
-		const userInfoFromDb = await getUserInfoById(userId!);
+		const userId = artworkData!.userId;
+		const userInfoFromDb = await getUserInfoById(userId);
 		setUserData(userInfoFromDb);
+	}
+
+	async function fetchLikesData() {
+		const artworkId = artworkData!.id;
+		const likesDataFromDb = await artworkAPI.getLikesByArtworkId(artworkId);
+		setLikesData(likesDataFromDb?.likeData || null);
+		if (likesDataFromDb?.likeData.userIds.includes(user!.uid)) {
+			setUserHasLiked(true);
+		} else {
+			setUserHasLiked(false);
+		}
+	}
+
+	async function handleLikeClick(artworkId: string, userId: string) {
+		try {
+			await artworkAPI.toggleLike(artworkId, userId); // Toggle the like on Firestore
+			fetchLikesData(); // Fetch updated like data after the operation
+		} catch (error) {
+			console.error("Error toggling like:", error);
+		}
 	}
 
 	const fetchAddressInfoFromCoords = async () => {
@@ -93,6 +118,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 			});
 		}
 		fetchUserData();
+		fetchLikesData();
 	}, [artworkData]);
 
 	useEffect(() => {
@@ -120,37 +146,69 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						source={{ uri: artworkData!.imageURL }}
 					/>
 				</View>
+				{/* Date */}
+				<Text style={styles.dateText}>{artworkData!.date}</Text>
 				<View style={styles.textContainer}>
-					<Link
-						href={{
-							pathname: "/userProfile/[id]",
-							params: { id: artworkData!.userId },
+					<View
+						style={{
+							width: "100%",
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+							marginVertical: 12, // Vertical margin
 						}}
 					>
-						<View
-							style={{
-								width: "100%", // Ensure the container takes full width
-								flexDirection: "row", // Horizontal layout
-								alignItems: "center", // Vertically center items within the row
-								justifyContent: "flex-start", // Align the items to the left
-								gap: 6, // Space between image and text
-								marginVertical: 12, // Vertical margin
+						<Link
+							href={{
+								pathname: "/userProfile/[id]",
+								params: { id: artworkData!.userId },
 							}}
 						>
-							<View style={styles.profilePicContainer}>
-								{userData?.profileImageUrl ? (
-									<Image
-										resizeMode="center"
-										source={{ uri: userData?.profileImageUrl! }}
-										style={{ width: 24, height: 24, borderRadius: 50 }}
-									/>
-								) : (
-									<FontAwesome name="user-circle" size={24} color="black" />
-								)}
+							<View
+								style={{
+									width: "100%", // Ensure the container takes full width
+									flexDirection: "row", // Horizontal layout
+									alignItems: "center", // Vertically center items within the row
+									justifyContent: "flex-start", // Align the items to the left
+									columnGap: 6, // Space between image and text
+								}}
+							>
+								<View style={styles.profilePicContainer}>
+									{userData?.profileImageUrl ? (
+										<Image
+											resizeMode="center"
+											source={{ uri: userData?.profileImageUrl! }}
+											style={{ width: 24, height: 24, borderRadius: 50 }}
+										/>
+									) : (
+										<FontAwesome name="user-circle" size={24} color="black" />
+									)}
+								</View>
+								<Text style={styles.artistName}>{artworkData!.artist}</Text>
 							</View>
-							<Text style={styles.artistName}>{artworkData!.artist}</Text>
-						</View>
-					</Link>
+						</Link>
+						<Pressable
+							onPress={() => {
+								console.log("clicked like");
+								handleLikeClick(artworkData!.id, user!.uid);
+							}}
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+								columnGap: 6,
+							}}
+						>
+							<Text style={{ color: Colors.ArtVistaRed }}>
+								{likesData?.userIds.length}
+							</Text>
+							<FontAwesome
+								name={userHasLiked ? "heart" : "heart-o"} // Conditionally render heart or heart-o
+								size={28}
+								color={Colors.ArtVistaRed}
+							/>
+						</Pressable>
+					</View>
 
 					{/* Artwork Description */}
 					<Text style={styles.description}>{artworkData!.description}</Text>
@@ -159,8 +217,6 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					<View style={styles.hashtagsContainer}>
 						{renderHashtags(artworkData!.hashtags)}
 					</View>
-					{/* Date */}
-					<Text style={styles.dateText}>{artworkData!.date}</Text>
 				</View>
 
 				{/* Location */}
@@ -173,12 +229,14 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						marginBottom: 8,
 					}}
 				>
-					<Text style={styles.locationTextStyle}>Location:</Text>
-					<Text style={styles.locationTextStyle}>
-						{artworkData!.artworkCoords
-							? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
-							: "Unknown"}
-					</Text>
+					<View style={styles.locationTextContainer}>
+						<Text style={styles.locationTextStyle}>Location:</Text>
+						<Text style={styles.locationTextStyle}>
+							{artworkData!.artworkCoords
+								? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
+								: "Unknown"}
+						</Text>
+					</View>
 				</View>
 				{/* Map Container */}
 				<View style={styles.mapContainer}>
@@ -231,12 +289,10 @@ const styles = StyleSheet.create({
 	},
 	dateText: {
 		fontSize: 14,
-		color: "#888", // Lighter gray
 		marginBottom: 20,
 	},
 	artworkImage: {
 		marginVertical: 12,
-		borderRadius: 8,
 	},
 	title: {
 		fontSize: 28,
@@ -251,16 +307,22 @@ const styles = StyleSheet.create({
 	hashtags: {
 		marginBottom: 12,
 		textAlign: "center",
-		color: "blue", // Bright blue for hashtags
+		color: "blue",
 	},
 	textContainer: {
+		paddingHorizontal: 6,
 		width: "100%",
 		alignItems: "flex-start",
 	},
 	locationTextStyle: {
 		textAlign: "center",
 		fontSize: 14,
-		color: "#666",
+	},
+	locationTextContainer: {
+		paddingHorizontal: 6,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-between",
 	},
 	hashtagsContainer: {
 		flexDirection: "row",

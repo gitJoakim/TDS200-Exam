@@ -11,3 +11,8 @@ export interface ArtworkData {
 	date: string;
 	artworkCoords: LocationObjectCoords | null;
 }
+
+export interface LikeData {
+	artworkId: string;
+	userIds: string[];
+}

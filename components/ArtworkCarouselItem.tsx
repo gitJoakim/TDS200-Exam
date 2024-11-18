@@ -9,6 +9,10 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { ArtworkData } from "@/utils/artworkData";
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { UserData } from "@/utils/userData";
+import { getUserInfoById } from "@/api/userApi";
+import { Colors } from "@/constants/Colors";
 import { Image } from "expo-image";
 
 type ArtworkCarouselItemProps = {
@@ -26,6 +30,19 @@ export default function ArtworkCarouselItem({
 		Platform.OS === "web"
 			? { width, height: height * 0.6 }
 			: { width: width - 64, height: height * 0.4 };
+	const [userData, setUserData] = useState<UserData | null>(null);
+
+	// Fetch the user data
+	async function fetchUserData() {
+		const artistId = artwork.userId;
+		const userInfoFromDb = await getUserInfoById(artistId);
+		setUserData(userInfoFromDb);
+	}
+
+	useEffect(() => {
+		fetchUserData();
+	}, [artwork]);
+
 	return (
 		<SafeAreaView style={styles.imageContainer}>
 			<Link
@@ -51,9 +68,18 @@ export default function ArtworkCarouselItem({
 						gap: 6,
 					}}
 				>
-					<FontAwesome name="user-circle" size={16} color="black" />
-
-					<Text style={{ textAlign: "center" }}>{artwork.artist}</Text>
+					{/* Profile picture with red border if available */}
+					<View style={styles.profilePicContainer}>
+						{userData?.profileImageUrl ? (
+							<Image
+								source={{ uri: userData.profileImageUrl }}
+								style={styles.profilePic}
+							/>
+						) : (
+							<FontAwesome name="user-circle" size={24} color="black" />
+						)}
+					</View>
+					<Text style={styles.artistName}>{artwork.artist}</Text>
 				</View>
 			</Link>
 		</SafeAreaView>
@@ -80,5 +106,24 @@ const styles = StyleSheet.create({
 				marginBottom: height * 0.025,
 			},
 		}),
+	},
+	profilePicContainer: {
+		width: 30,
+		height: 30,
+		borderRadius: 50, // Circle shape
+		borderWidth: 3,
+		borderColor: Colors.ArtVistaRed, // Assuming you have a color constant for the red
+		overflow: "hidden", // Ensures the image fits within the circular border
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	profilePic: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 50,
+	},
+	artistName: {
+		textAlign: "center",
+		fontSize: 16,
 	},
 });

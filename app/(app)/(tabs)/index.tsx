@@ -18,6 +18,7 @@ import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
 import { LinearGradient } from "expo-linear-gradient";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -56,7 +57,11 @@ export default function HomeScreen() {
 								handleRefresh();
 							}}
 						>
-							<Text>REFRESH</Text>
+							<MaterialCommunityIcons
+								name="refresh"
+								size={24}
+								color={Colors.ArtVistaRed}
+							/>
 						</Pressable>
 					),
 					headerTitle: () => (
