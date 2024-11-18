@@ -29,13 +29,13 @@ export default function AlertModal({
 						style={[styles.button, styles.noButton]}
 						onPress={onCancel}
 					>
-						<Text style={styles.buttonText}>{optionNo}</Text>
+						<Text style={styles.noText}>{optionNo}</Text>
 					</Pressable>
 					<Pressable
 						style={[styles.button, styles.yesButton]}
 						onPress={onConfirm}
 					>
-						<Text style={styles.buttonText}>{optionYes}</Text>
+						<Text style={styles.yesText}>{optionYes}</Text>
 					</Pressable>
 				</View>
 			</View>
@@ -74,15 +74,21 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	buttonText: {
+	yesText: {
 		fontSize: 16,
 		fontWeight: "bold",
-		color: "#fff",
+		color: "white",
+	},
+	noText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: "grey",
 	},
 	yesButton: {
 		backgroundColor: Colors.ArtVistaRed, // Yes button color (red)
 	},
 	noButton: {
-		backgroundColor: "gray", // No button color (gray)
+		borderColor: "grey",
+		borderWidth: 3,
 	},
 });

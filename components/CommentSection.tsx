@@ -81,43 +81,51 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollContainer}>
-				{commentsData?.comments.map((comment) => {
-					const username = usersData[comment.commentAuthor];
-					return (
-						<View key={comment.commentId} style={styles.commentContainer}>
-							<View style={styles.comment}>
-								<Link
-									href={{
-										pathname: "/userProfile/[id]",
-										params: { id: comment.commentAuthor },
-									}}
-								>
-									<Text style={styles.commentAuthor}>
-										{username ? username : comment.commentAuthor}
-									</Text>
-								</Link>
-								<View style={styles.commentContent}>
-									<Text style={styles.commentText}>{comment.comment}</Text>
-								</View>
-								{/* Trash icon positioned at the bottom right */}
-								{user!.uid === comment.commentAuthor && (
-									<Pressable
-										style={styles.deleteButton}
-										onPress={() => {
-											setIsDeleteModalOpen(true);
+				{commentsData?.comments.length! > 0 ? (
+					commentsData?.comments.map((comment) => {
+						const username = usersData[comment.commentAuthor];
+						return (
+							<View key={comment.commentId} style={styles.commentContainer}>
+								<View style={styles.comment}>
+									<Link
+										href={{
+											pathname: "/userProfile/[id]",
+											params: { id: comment.commentAuthor },
 										}}
 									>
-										<Feather
-											name="trash-2"
-											size={24}
-											color={Colors.ArtVistaRed}
-										/>
-									</Pressable>
-								)}
+										<Text style={styles.commentAuthor}>
+											{username ? username : comment.commentAuthor}
+										</Text>
+									</Link>
+									<View style={styles.commentContent}>
+										<Text style={styles.commentText}>{comment.comment}</Text>
+									</View>
+									{/* Trash icon positioned at the bottom right */}
+									{user!.uid === comment.commentAuthor && (
+										<Pressable
+											style={styles.deleteButton}
+											onPress={() => {
+												setIsDeleteModalOpen(true);
+											}}
+										>
+											<Feather
+												name="trash-2"
+												size={24}
+												color={Colors.ArtVistaRed}
+											/>
+										</Pressable>
+									)}
+								</View>
 							</View>
-						</View>
-					);
-				})}
+						);
+					})
+				) : (
+					<View style={styles.commentContent}>
+						<Text style={[styles.commentText, { textAlign: "center" }]}>
+							Couldn't find any comments...
+						</Text>
+					</View>
+				)}
 			</ScrollView>
 
 			<View style={styles.inputContainer}>
@@ -161,7 +169,9 @@ const styles = StyleSheet.create({
 	},
 	scrollContainer: {
 		width: "100%",
-		height: 200,
+		height: "auto",
+		minHeight: 100,
+		maxHeight: 200,
 		borderWidth: 1,
 		borderColor: Colors.ArtVistaRed,
 		borderRadius: 8,
@@ -200,9 +210,8 @@ const styles = StyleSheet.create({
 	inputContainer: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginTop: 12,
+		marginBottom: 12,
 		width: "100%",
-		paddingHorizontal: 8,
 	},
 	textInput: {
 		flex: 1,
@@ -215,9 +224,9 @@ const styles = StyleSheet.create({
 	},
 	addButton: {
 		backgroundColor: Colors.ArtVistaRed,
-		borderRadius: 8,
+		borderRadius: 9,
 		paddingHorizontal: 12,
-		paddingVertical: 8,
+		paddingVertical: 9,
 	},
 	addButtonText: {
 		color: "white",
