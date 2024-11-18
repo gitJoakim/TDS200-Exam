@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View, StyleSheet } from "react-native";
 import * as authenticationAPI from "@/api/authenticationApi"; // Assuming this API handles sign up
+import { Colors } from "@/constants/Colors";
 
 const Authentication = () => {
 	const [email, setEmail] = useState("");
@@ -50,6 +51,13 @@ const Authentication = () => {
 		setErrorMessage(""); // Clear any previous error message
 	};
 
+	/*
+	 * --------------------------------------------------------
+	 *	Very nice UI design by ChatGPT, altered by me to fit
+	 *  the ArtVista Application! I can't take all the credit.
+	 * --------------------------------------------------------
+	 */
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.formContainer}>
@@ -67,7 +75,7 @@ const Authentication = () => {
 
 				{/* Conditional rendering for Sign Up */}
 				{isSignUp && (
-					<>
+					<View>
 						<Text>Username</Text>
 						<TextInput
 							style={styles.input}
@@ -76,7 +84,7 @@ const Authentication = () => {
 							autoCapitalize="none"
 							placeholder="Choose a username"
 						/>
-					</>
+					</View>
 				)}
 
 				{/* Password Field */}
@@ -90,6 +98,11 @@ const Authentication = () => {
 					placeholder="Enter your password"
 				/>
 
+				{/* Display error message if there is one */}
+				{errorMessage ? (
+					<Text style={styles.errorMessage}>{errorMessage}</Text>
+				) : null}
+
 				{/* Submit Button */}
 				<Pressable
 					style={[styles.button, styles.submitButton]}
@@ -99,11 +112,6 @@ const Authentication = () => {
 						{isSignUp ? "Sign Up" : "Log In"}
 					</Text>
 				</Pressable>
-
-				{/* Display error message if there is one */}
-				{errorMessage ? (
-					<Text style={styles.errorMessage}>{errorMessage}</Text>
-				) : null}
 
 				{/* Toggle between Log In and Sign Up */}
 				<View style={styles.toggleContainer}>
@@ -134,7 +142,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontFamily: "Dancing-Script",
 		fontSize: 48,
-		color: "#DC143C",
+		color: Colors.ArtVistaRed,
 		marginBottom: 40,
 	},
 	formContainer: {
@@ -142,7 +150,9 @@ const styles = StyleSheet.create({
 		maxWidth: 400,
 		padding: 20,
 		backgroundColor: "white",
-		borderRadius: 8,
+		borderRadius: 12,
+		borderColor: Colors.ArtVistaRed,
+		borderWidth: 2,
 	},
 	input: {
 		borderColor: "#ccc",
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	submitButton: {
-		backgroundColor: "#DC143C",
+		backgroundColor: Colors.ArtVistaRed,
 	},
 	buttonText: {
 		color: "white",
@@ -172,13 +182,13 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	toggleText: {
-		color: "#DC143C",
+		color: Colors.ArtVistaRed,
 		fontWeight: "bold",
 	},
 	errorMessage: {
-		color: "red",
+		color: Colors.ArtVistaRed,
 		fontWeight: "bold",
-		marginTop: 10,
+		marginBottom: 12,
 	},
 });
 
