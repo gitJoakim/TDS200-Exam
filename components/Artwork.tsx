@@ -133,8 +133,8 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	}, [location]);
 
 	return (
-		<ScrollView style={styles.scrollContainer}>
-			<View style={styles.container}>
+		<View style={styles.container}>
+			<ScrollView style={styles.scrollContainer}>
 				{/* Artwork Title and Artist */}
 				<View>
 					<Text style={styles.title}>{artworkData!.title}</Text>
@@ -262,8 +262,8 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					{!location && <View style={styles.greyOverlay} />}
 				</View>
 				<CommentSection artworkId={artworkData!.id} />
-			</View>
-		</ScrollView>
+			</ScrollView>
+		</View>
 	);
 }
 
@@ -277,12 +277,14 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start", // Keep it at the top
 		alignItems: "center", // Align all children horizontally at the center
 		paddingHorizontal: 24,
-		paddingVertical: 24,
+		paddingBottom: 24,
 		width: "100%", // Ensure the container takes full width
 		...(Platform.OS === "web" && {
 			width: "50%", // Adjust width for web
 			marginHorizontal: "auto", // Center content in web
 		}),
+		borderTopWidth: 1,
+		borderTopColor: Colors.ArtVistaRed,
 	},
 	artistName: {
 		textAlign: "center",

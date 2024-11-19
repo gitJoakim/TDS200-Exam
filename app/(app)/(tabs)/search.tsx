@@ -19,7 +19,7 @@ import { UserData } from "@/utils/userData";
 import { getUsersBySearch } from "@/api/userApi";
 import * as artworkAPI from "@/api/artworkApi";
 
-export default function Explore() {
+export default function Search() {
 	const [searchText, setSearchText] = useState("");
 	const [searchType, setSearchType] = useState("title or description");
 	const [searchQuery, setSearchQuery] = useState("");
@@ -91,8 +91,23 @@ export default function Explore() {
 		return <UsernameSearchItem userData={item} />;
 	};
 
+	// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
+	// ** not mine, taken from stack overflow **
+	const handleTextChange = (text: string) => {
+		if (searchType === "hashtags") {
+			const filteredText = text.replace(/[^a-zA-Z#]/g, "");
+			if (filteredText[0] !== "#") {
+				setSearchText("#" + filteredText);
+			} else {
+				setSearchText(filteredText);
+			}
+		} else {
+			setSearchText(text);
+		}
+	};
+
 	useEffect(() => {
-		const delayDebounce = setTimeout(() => {}, 1800);
+		const delayDebounce = setTimeout(() => {}, 1000);
 		if (searchType === "title or description" && searchText.trim() !== "") {
 			searchTitleOrDescription();
 		}
@@ -116,9 +131,12 @@ export default function Explore() {
 					style={styles.searchIcon}
 				/>
 				<TextInput
-					style={styles.searchInput}
+					style={[
+						styles.searchInput,
+						searchType === "hashtags" && { color: "blue" },
+					]}
 					value={searchText}
-					onChangeText={setSearchText}
+					onChangeText={handleTextChange} // Update based on searchType
 					placeholder={`Search by ${searchType}...`}
 					placeholderTextColor="#888"
 					autoCapitalize="none"
@@ -204,7 +222,6 @@ export default function Explore() {
 						numColumns={2}
 						data={artworks}
 						keyExtractor={(item) => item.id}
-						contentContainerStyle={styles.contentContainer}
 						renderItem={({ item }) => (
 							<ArtworkImage artwork={item as ArtworkData} /> // Replace with your artwork display component
 						)}
@@ -227,6 +244,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
+		borderTopWidth: 1,
+		borderTopColor: Colors.ArtVistaRed,
 		paddingVertical: 16,
 		paddingHorizontal: 16,
 		...(Platform.OS === "web" && {
@@ -272,16 +291,13 @@ const styles = StyleSheet.create({
 	},
 	searchTypeText: {
 		fontSize: 14,
-		color: "#555",
+		color: Colors.ArtVistaRed,
 	},
 	activeText: {
 		color: "white",
 	},
 	masonryList: {
 		marginVertical: 6,
-	},
-	contentContainer: {
-		paddingHorizontal: 6,
 	},
 	noResultsText: {
 		fontSize: 16,

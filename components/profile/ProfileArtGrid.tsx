@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		width: "100%",
+		backgroundColor: "white",
+		borderTopColor: "lightgray",
+		borderTopWidth: 1,
 	},
 	gridContainer: {
 		paddingTop: 10,
@@ -70,9 +73,6 @@ const styles = StyleSheet.create({
 	image: {
 		width: (Platform.OS === "web" ? windowWidth * 0.5 : windowWidth) / 3 - 20,
 		height: (Platform.OS === "web" ? windowWidth * 0.5 : windowWidth) / 3 - 20,
-		borderRadius: 12,
-		borderColor: Colors.ArtVistaRed,
-		borderWidth: 4,
 		resizeMode: "cover",
 	},
 });

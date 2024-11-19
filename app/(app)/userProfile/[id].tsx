@@ -2,6 +2,7 @@ import { getArtworksByUserId } from "@/api/artworkApi";
 import { getUserInfoById } from "@/api/userApi";
 import ProfileArtGrid from "@/components/profile/ProfileArtGrid";
 import ProfileInfo from "@/components/profile/ProfileInfo";
+import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import { UserData } from "@/utils/userData";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -95,5 +96,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		borderTopColor: Colors.ArtVistaRed,
+		borderTopWidth: 1,
 	},
 });

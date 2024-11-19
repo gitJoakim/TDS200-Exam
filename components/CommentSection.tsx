@@ -175,7 +175,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: Colors.ArtVistaRed,
 		borderRadius: 8,
-		padding: 8,
+		paddingHorizontal: 8,
+		paddingVertical: 8,
 		marginVertical: 12,
 		backgroundColor: "white",
 	},
@@ -224,9 +225,9 @@ const styles = StyleSheet.create({
 	},
 	addButton: {
 		backgroundColor: Colors.ArtVistaRed,
-		borderRadius: 9,
+		borderRadius: 8,
 		paddingHorizontal: 12,
-		paddingVertical: 9,
+		paddingVertical: 14,
 	},
 	addButtonText: {
 		color: "white",

@@ -113,7 +113,7 @@ export default function UploadArtworkForm() {
 				automaticallyAdjustKeyboardInsets
 			>
 				<View style={{ paddingHorizontal: 24, marginVertical: 12 }}>
-					<Text>Title</Text>
+					<Text style={styles.textStyle}>Title</Text>
 					<TextInput
 						style={styles.textInput}
 						value={title}
@@ -130,7 +130,7 @@ export default function UploadArtworkForm() {
 						height={height * 0.4}
 					/>
 
-					<Text>Description</Text>
+					<Text style={styles.textStyle}>Description</Text>
 					<TextInput
 						style={[styles.textInput, styles.descriptionTextField]}
 						value={description}
@@ -218,6 +218,8 @@ export default function UploadArtworkForm() {
 const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
+		borderTopColor: Colors.ArtVistaRed,
+		borderTopWidth: 1,
 		backgroundColor: "white",
 		...(Platform.OS === "web" && {
 			width: "50%",
@@ -231,6 +233,10 @@ const styles = StyleSheet.create({
 		marginBottom: 32,
 		borderRadius: 8,
 		width: "100%",
+	},
+	textStyle: {
+		color: Colors.ArtVistaRed,
+		fontSize: 18,
 	},
 	hashtagsContainer: {
 		gap: 12,

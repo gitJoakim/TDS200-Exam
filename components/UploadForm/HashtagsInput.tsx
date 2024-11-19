@@ -13,9 +13,9 @@ export default function HashtagsInput({
 }: HashtagsInputProps) {
 	const [hashtag, setHashtag] = useState<string>("#");
 
+	// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
+	// ** not mine, taken from stack overflow **
 	function handleHashtagChange(input: string) {
-		// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
-		// ** not mine, taken from stack overflow **
 		const sanitizedInput = input.replace(/[^a-zA-Z0-9]/g, "").replace(/^#/, "");
 		setHashtag(`#${sanitizedInput}`);
 	}
@@ -52,7 +52,7 @@ export default function HashtagsInput({
 				style={{
 					textAlign: "center",
 					color: "gray",
-					marginVertical: 6,
+					marginTop: 6,
 				}}
 			>
 				{hashtagsArray.length === 0
@@ -61,8 +61,14 @@ export default function HashtagsInput({
 			</Text>
 			<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
 			<View
-				style={{ flexDirection: "row", width: "100%", alignItems: "center" }}
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					width: "100%",
+					alignItems: "center",
+				}}
 			>
+				<Text style={styles.textStyle}>Hashtags</Text>
 				<TextInput
 					style={[styles.textInput, { color: "blue", flex: 1 }]}
 					value={hashtag}
@@ -94,7 +100,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-evenly",
 		alignItems: "center",
 		flexWrap: "wrap",
-		marginBottom: 12,
+		marginTop: 4,
 	},
 	hashtag: {
 		backgroundColor: "lightgray",
@@ -103,5 +109,11 @@ const styles = StyleSheet.create({
 	},
 	hashtagTextColor: {
 		color: "blue",
+	},
+	textStyle: {
+		color: Colors.ArtVistaRed,
+		fontSize: 18,
+		textAlign: "left",
+		width: "100%",
 	},
 });

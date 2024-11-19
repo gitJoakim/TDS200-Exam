@@ -69,7 +69,15 @@ export default function PersonalProfile() {
 	}, [navigation]);
 
 	return (
-		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+		<View
+			style={{
+				flex: 1,
+				justifyContent: "center",
+				alignItems: "center",
+				borderTopColor: Colors.ArtVistaRed,
+				borderTopWidth: 1,
+			}}
+		>
 			<ProfileInfo userData={userData} />
 			<ProfileArtGrid artworks={artworks} />
 

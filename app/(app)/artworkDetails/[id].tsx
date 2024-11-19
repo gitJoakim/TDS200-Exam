@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getArtworkById } from "@/api/artworkApi";
 import Artwork from "@/components/Artwork";
 import { View, Text, ActivityIndicator } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 export default function ArtworkDetails() {
 	const { id } = useLocalSearchParams();
@@ -38,7 +39,15 @@ export default function ArtworkDetails() {
 	if (loading) {
 		// While loading, show the ActivityIndicator
 		return (
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					borderTopColor: Colors.ArtVistaRed,
+					borderTopWidth: 1,
+				}}
+			>
 				<ActivityIndicator size="large" color="#0000ff" />
 				<Text>Loading Artwork...</Text>
 			</View>
@@ -48,7 +57,15 @@ export default function ArtworkDetails() {
 	if (errorMessage) {
 		// If there's an error, show the error message
 		return (
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					borderTopColor: Colors.ArtVistaRed,
+					borderTopWidth: 1,
+				}}
+			>
 				<Text>{errorMessage}</Text>
 			</View>
 		);

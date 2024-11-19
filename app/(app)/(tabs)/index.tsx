@@ -113,6 +113,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+		borderTopColor: Colors.ArtVistaRed,
+		borderTopWidth: 1,
+		backgroundColor: "white",
 	},
 	headerTitle: {
 		textAlign: "center",
