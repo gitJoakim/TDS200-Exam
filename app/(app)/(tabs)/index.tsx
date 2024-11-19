@@ -17,7 +17,6 @@ import ArtworkImage from "@/components/ArtworkGridImage";
 import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
-import { LinearGradient } from "expo-linear-gradient";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function HomeScreen() {
@@ -42,12 +41,7 @@ export default function HomeScreen() {
 	}, []);
 
 	return (
-		<LinearGradient
-			colors={["#F2F2F2", "#FFFFFF"]}
-			style={styles.mainContainer}
-			start={{ x: 0, y: 0 }} // Start at the top left
-			end={{ x: 0, y: 1 }}
-		>
+		<View style={styles.mainContainer}>
 			<Stack.Screen
 				options={{
 					headerLeft: () => (
@@ -110,7 +104,7 @@ export default function HomeScreen() {
 			) : (
 				<ArtworkCarousel artworks={artworks} />
 			)}
-		</LinearGradient>
+		</View>
 	);
 }
 

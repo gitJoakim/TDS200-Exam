@@ -80,7 +80,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 
 	return (
 		<View style={styles.container}>
-			<ScrollView style={styles.scrollContainer}>
+			<ScrollView style={styles.scrollContainer} nestedScrollEnabled={true}>
 				{commentsData?.comments.length! > 0 ? (
 					commentsData?.comments.map((comment) => {
 						const username = usersData[comment.commentAuthor];

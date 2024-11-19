@@ -219,7 +219,6 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						{renderHashtags(artworkData!.hashtags)}
 					</View>
 				</View>
-				<CommentSection artworkId={artworkData!.id} />
 
 				{/* Location */}
 				<View
@@ -262,6 +261,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					{/* Overlay to grey out the map if no location */}
 					{!location && <View style={styles.greyOverlay} />}
 				</View>
+				<CommentSection artworkId={artworkData!.id} />
 			</View>
 		</ScrollView>
 	);
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 	},
 	hashtags: {
-		marginBottom: 12,
+		marginBottom: 20,
 		textAlign: "center",
 		color: "blue",
 	},
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
 		height: 180, // A bit larger map container to keep a balance
 		borderRadius: 10,
 		overflow: "hidden",
-		marginBottom: 30,
+		marginBottom: 12,
 		position: "relative",
 	},
 	profilePicContainer: {
