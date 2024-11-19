@@ -1,6 +1,15 @@
 import { db, getDownloadUrl } from "@/firebaseConfig";
 import { UserData } from "@/utils/userData";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+	doc,
+	getDoc,
+	setDoc,
+	updateDoc,
+	getDocs,
+	query,
+	where,
+	collection,
+} from "firebase/firestore";
 import { uploadImageToFirebase } from "./imageApi";
 
 export const createUserInDb = async (
@@ -39,6 +48,25 @@ export const getUserInfoById = async (userId: string) => {
 	} catch (error) {
 		console.log("Error fetching userinfo by ID:", error);
 		return null;
+	}
+};
+
+export const getUsersBySearch = async (searchInput: string) => {
+	try {
+		const endString = searchInput + "\uf8ff";
+		const querySnapshot = await getDocs(
+			query(
+				collection(db, "users"),
+				where("username", ">=", searchInput),
+				where("username", "<=", endString)
+			)
+		);
+		return querySnapshot.docs.map((doc) => {
+			return { ...doc.data(), userId: doc.id } as UserData;
+		});
+	} catch (error) {
+		console.log("Error getting searched users");
+		return [];
 	}
 };
 

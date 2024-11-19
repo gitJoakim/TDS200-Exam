@@ -9,7 +9,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
-import * as artworksAPI from "@/api/artworkApi";
+import * as artworkAPI from "@/api/artworkApi";
 import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
 import MasonryList from "@react-native-seoul/masonry-list";
@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
 	async function getArtworks() {
 		setRefreshing(true);
-		const artworks = await artworksAPI.getAllArtworks();
+		const artworks = await artworkAPI.getAllArtworks();
 		setArtworks(artworks);
 		setRefreshing(false);
 	}

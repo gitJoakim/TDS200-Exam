@@ -1,0 +1,292 @@
+import React, { useEffect, useState } from "react";
+import {
+	View,
+	TextInput,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	Pressable,
+	FlatList,
+	Platform,
+} from "react-native";
+import MasonryList from "@react-native-seoul/masonry-list";
+import { Colors } from "@/constants/Colors";
+import ArtworkImage from "@/components/ArtworkGridImage";
+import Feather from "@expo/vector-icons/Feather";
+import { ArtworkData } from "@/utils/artworkData";
+import UsernameSearchItem from "@/components/search/usernameSearchItem";
+import { UserData } from "@/utils/userData";
+import { getUsersBySearch } from "@/api/userApi";
+import * as artworkAPI from "@/api/artworkApi";
+
+export default function Explore() {
+	const [searchText, setSearchText] = useState("");
+	const [searchType, setSearchType] = useState("title or description");
+	const [searchQuery, setSearchQuery] = useState("");
+	const [artworks, setArtworks] = useState<ArtworkData[] | null>(null);
+	const [userData, setUserData] = useState<UserData[] | null>(null);
+	const [refreshing, setRefreshing] = useState(false);
+	const handleSearchTypeChange = (type: string) => {
+		setSearchType(type);
+	};
+
+	const handleRefresh = () => {
+		// Implement refresh logic
+		console.log("Refreshing artworks...");
+	};
+
+	async function searchUsernames() {
+		const resultFromDb = await getUsersBySearch(searchText.toLowerCase());
+		setUserData(resultFromDb);
+	}
+
+	async function searchHashtags() {
+		const resultFromDb = await artworkAPI.getArtworkByHashtagSearch(
+			searchText.toLowerCase()
+		);
+		setArtworks(resultFromDb);
+	}
+
+	async function searchTitleOrDescription() {
+		await getAllArtworksAndFilter();
+	}
+	async function getAllArtworksAndFilter() {
+		const artworks = await artworkAPI.getAllArtworks();
+		// Filter artworks by title or description matching the search term
+		const filteredArtworks = artworks.filter((artwork) => {
+			const searchTerm = searchText.toLowerCase(); // Assuming searchText is your search input
+
+			// Check if title or description contains the search term
+			const matchesTitle = artwork.title.toLowerCase().includes(searchTerm);
+			const matchesDescription = artwork.description
+				? artwork.description.toLowerCase().includes(searchTerm)
+				: false; // Ensure description exists before checking
+
+			return matchesTitle || matchesDescription; // Return artwork if either matches
+		});
+
+		// Set the filtered artworks state
+		setArtworks(filteredArtworks);
+	}
+
+	// Handle search based on search type
+	function handleSearch() {
+		setSearchQuery(searchText);
+		switch (searchType) {
+			case "usernames":
+				searchUsernames();
+				break;
+			case "hashtags":
+				searchHashtags();
+				break;
+			case "title":
+				searchTitleOrDescription();
+				break;
+			default:
+				break;
+		}
+	}
+
+	const renderUsernameSearchResults = ({ item }: { item: UserData }) => {
+		return <UsernameSearchItem userData={item} />;
+	};
+
+	useEffect(() => {
+		const delayDebounce = setTimeout(() => {}, 1800);
+		if (searchType === "title or description" && searchText.trim() !== "") {
+			searchTitleOrDescription();
+		}
+		return () => clearTimeout(delayDebounce);
+	}, [searchText]);
+
+	useEffect(() => {
+		setArtworks(null);
+		setUserData(null);
+		setSearchText("");
+	}, [searchType]);
+
+	return (
+		<View style={styles.container}>
+			{/* Search Field */}
+			<View style={styles.searchContainer}>
+				<Feather
+					name="search"
+					size={20}
+					color={Colors.ArtVistaRed}
+					style={styles.searchIcon}
+				/>
+				<TextInput
+					style={styles.searchInput}
+					value={searchText}
+					onChangeText={setSearchText}
+					placeholder={`Search by ${searchType}...`}
+					placeholderTextColor="#888"
+					autoCapitalize="none"
+				/>
+			</View>
+
+			{/* Search Type Selector */}
+			<View style={styles.searchTypeContainer}>
+				<TouchableOpacity
+					style={[
+						styles.searchTypeButton,
+						searchType === "title or description" && styles.activeButton,
+					]}
+					onPress={() => handleSearchTypeChange("title or description")}
+				>
+					<Text
+						style={[
+							styles.searchTypeText,
+							searchType === "title or description" && styles.activeText,
+						]}
+					>
+						Title / Description
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						styles.searchTypeButton,
+						searchType === "hashtags" && styles.activeButton,
+					]}
+					onPress={() => handleSearchTypeChange("hashtags")}
+				>
+					<Text
+						style={[
+							styles.searchTypeText,
+							searchType === "hashtags" && styles.activeText,
+						]}
+					>
+						Hashtag
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						styles.searchTypeButton,
+						searchType === "usernames" && styles.activeButton,
+					]}
+					onPress={() => handleSearchTypeChange("usernames")}
+				>
+					<Text
+						style={[
+							styles.searchTypeText,
+							searchType === "usernames" && styles.activeText,
+						]}
+					>
+						Username
+					</Text>
+				</TouchableOpacity>
+			</View>
+			<Pressable onPress={handleSearch}>
+				<Text>aaaaaa</Text>
+			</Pressable>
+			{searchType === "usernames" && (
+				<View>
+					{userData && userData.length > 0 ? (
+						<FlatList
+							data={userData} // Array of UserData objects
+							renderItem={renderUsernameSearchResults} // For each item, render UsernameSearchItem
+							keyExtractor={(item) => item.userId} // Assuming userId is unique
+						/>
+					) : (
+						userData !== null && ( // Only show "No results" if userData has been set
+							<Text style={styles.noResultsText}>
+								No results found for "{searchQuery.trim()}".
+							</Text>
+						)
+					)}
+				</View>
+			)}
+			<View style={styles.masonryContainer}>
+				{/* Masonry List */}
+				{artworks && artworks.length > 0 ? (
+					<MasonryList
+						style={styles.masonryList}
+						numColumns={2}
+						data={artworks}
+						keyExtractor={(item) => item.id}
+						contentContainerStyle={styles.contentContainer}
+						renderItem={({ item }) => (
+							<ArtworkImage artwork={item as ArtworkData} /> // Replace with your artwork display component
+						)}
+						refreshing={refreshing}
+						onRefresh={handleRefresh}
+					/>
+				) : (
+					artworks !== null && (
+						<Text style={styles.noResultsText}>
+							No results found for "{searchQuery.trim()}".
+						</Text>
+					)
+				)}
+			</View>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: "white",
+		paddingVertical: 16,
+		paddingHorizontal: 16,
+		...(Platform.OS === "web" && {
+			marginHorizontal: "25%",
+		}),
+	},
+	masonryContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	searchInput: {
+		height: 40,
+		paddingHorizontal: 10,
+		backgroundColor: "white",
+		flex: 1,
+	},
+	searchContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		borderColor: Colors.ArtVistaRed,
+		borderWidth: 2,
+		borderRadius: 8,
+		paddingHorizontal: 10,
+		backgroundColor: "white",
+		marginBottom: 10,
+	},
+	searchIcon: {
+		marginRight: 8,
+	},
+	searchTypeContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginBottom: 10,
+	},
+	searchTypeButton: {
+		paddingVertical: 5,
+		paddingHorizontal: 10,
+		borderRadius: 5,
+	},
+	activeButton: {
+		backgroundColor: Colors.ArtVistaRed,
+	},
+	searchTypeText: {
+		fontSize: 14,
+		color: "#555",
+	},
+	activeText: {
+		color: "white",
+	},
+	masonryList: {
+		marginVertical: 6,
+	},
+	contentContainer: {
+		paddingHorizontal: 6,
+	},
+	noResultsText: {
+		fontSize: 16,
+		color: "#888",
+		textAlign: "center",
+		marginTop: 20,
+	},
+});

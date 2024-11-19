@@ -42,6 +42,19 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="search"
+				options={{
+					title: "Search",
+					tabBarIcon: ({ focused }) => (
+						<Feather
+							name="search"
+							size={24}
+							color={focused ? Colors.ArtVistaRed : "gray"}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name="upload"
 				options={{
 					title: "Upload",

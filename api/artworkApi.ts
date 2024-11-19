@@ -163,6 +163,57 @@ export const getArtworksByUserId = async (userId: string) => {
 	}
 };
 
+export const getArtworkByHashtagSearch = async (searchInput: string) => {
+	// search requires minimum 2 charcter, so we just return early if its not true
+	if (searchInput.length < 2) {
+		console.log(
+			"Search query is too short. Please enter at least 2 characters."
+		);
+		return [];
+	}
+	try {
+		const querySnapshot = await getDocs(
+			query(
+				collection(db, "artworks"),
+				where("hashtags", "array-contains", searchInput)
+			)
+		);
+		return querySnapshot.docs.map((doc) => {
+			return { ...doc.data(), id: doc.id } as ArtworkData;
+		});
+	} catch (error) {
+		console.log("Error getting posts by hashtag:", error);
+		return [];
+	}
+};
+
+export const getArtworksByTitleSearch = async (searchInput: string) => {
+	// search requires minimum 2 charcter, so we just return early if its not true
+	if (searchInput.length < 2) {
+		console.log(
+			"Search query is too short. Please enter at least 2 characters."
+		);
+		return [];
+	}
+
+	try {
+		const endString = searchInput + "\uf8ff";
+		const querySnapshot = await getDocs(
+			query(
+				collection(db, "artworks"),
+				where("title", ">=", searchInput),
+				where("title", "<=", endString)
+			)
+		);
+		return querySnapshot.docs.map((doc) => {
+			return { ...doc.data(), id: doc.id } as ArtworkData;
+		});
+	} catch (error) {
+		console.log("Error getting sorted posts:", error);
+		return [];
+	}
+};
+
 // get likes collection based on artworkId
 export const getLikesByArtworkId = async (artworkId: string) => {
 	try {
