@@ -51,11 +51,13 @@ export default function GalleryModal({
 				<Text style={styles.message}>
 					We need your permission to access your gallery
 				</Text>
-				<View style={styles.buttonBorder}>
-					<Button title="Grant Permission" onPress={requestPermission} />
-				</View>
-				<View style={styles.buttonBorder}>
-					<Button color="red" title="Exit" onPress={closeModal} />
+				<View style={styles.buttonContainer}>
+					<View style={styles.buttonSpacing}>
+						<Button title="Grant Permission" onPress={requestPermission} />
+					</View>
+					<View style={styles.buttonSpacing}>
+						<Button color="red" title="Exit" onPress={closeModal} />
+					</View>
 				</View>
 			</View>
 		);
@@ -64,9 +66,14 @@ export default function GalleryModal({
 	return (
 		<View style={styles.container}>
 			<Text style={styles.message}>Select an image from your gallery</Text>
-			<Button title="Pick Image" onPress={pickImage} />
-			<View>
-				<Button title="Go Back" onPress={closeModal} color="red" />
+			<View style={styles.buttonContainer}>
+				<View style={styles.buttonSpacing}>
+					<Button title="Pick Image" onPress={pickImage} />
+				</View>
+
+				<View style={styles.buttonSpacing}>
+					<Button title="Go Back" onPress={closeModal} color="red" />
+				</View>
 			</View>
 			{selectedImage && (
 				<Image source={{ uri: selectedImage }} style={styles.selectedImage} />
@@ -96,5 +103,12 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		padding: 8,
 		marginVertical: 24,
+	},
+	buttonSpacing: {
+		marginVertical: 12,
+	},
+	buttonContainer: {
+		flexDirection: "row",
+		columnGap: 20,
 	},
 });
