@@ -1,5 +1,6 @@
 import { getStorageRef } from "@/firebaseConfig";
 import { uploadBytesResumable } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 /*
 *************************************************
@@ -13,8 +14,8 @@ export const uploadImageToFirebase = async (uri: string) => {
 	const fetchResponse = await fetch(uri);
 	const blob = await fetchResponse.blob();
 
-	const imagePath = uri.split("/").pop()?.split(".")[0] ?? "unnamed_image";
-	console.log("imagepath", imagePath);
+	// Use UUID for a unique name
+	const imagePath = uuidv4(); // Generates a unique ID each time
 
 	const uploadPath = `images/${imagePath}`;
 

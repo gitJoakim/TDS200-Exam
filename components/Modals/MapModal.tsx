@@ -12,8 +12,6 @@ import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
-import WebMap from "@teovilla/react-native-web-maps";
-import googleConfig from "../../googlemapsEnv";
 import WebMapWithOl from "../WebMap/WebMapWithOl";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 
