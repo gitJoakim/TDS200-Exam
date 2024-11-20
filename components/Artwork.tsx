@@ -203,7 +203,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 									<View style={styles.profilePicContainer}>
 										{userData?.profileImageUrl ? (
 											<Image
-												resizeMode="center"
+												resizeMode="cover"
 												source={{ uri: userData?.profileImageUrl! }}
 												style={{ width: 24, height: 24, borderRadius: 50 }}
 											/>
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
 		marginBottom: 12,
 	},
 	hashtags: {
-		marginBottom: 20,
+		marginBottom: 6,
 		textAlign: "center",
 		color: "blue",
 	},
@@ -358,9 +358,10 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	hashtagsContainer: {
+		marginBottom: 20,
 		flexDirection: "row",
 		flexWrap: "wrap",
-		gap: 12,
+		columnGap: 12,
 	},
 	mapContainer: {
 		width: "100%",

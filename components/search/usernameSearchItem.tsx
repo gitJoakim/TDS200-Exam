@@ -28,6 +28,7 @@ export default function UsernameSearchItem({
 							<Image
 								source={{ uri: userData.profileImageUrl }}
 								style={styles.profilePic}
+								resizeMode="cover"
 							/>
 						) : (
 							<FontAwesome

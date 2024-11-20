@@ -37,6 +37,7 @@ export default function Search() {
 	const navigation = useNavigation();
 
 	async function searchUsernames() {
+		setUserData(null);
 		// Fetch users based on search text
 		const usersResultFromDb = await getUsersBySearch(searchText);
 
@@ -59,6 +60,7 @@ export default function Search() {
 	async function searchTitleOrDescription() {
 		await getAllArtworksAndFilter();
 	}
+
 	async function getAllArtworksAndFilter() {
 		const artworks = await artworkAPI.getAllArtworks();
 		// Filter artworks by title or description matching the search term
@@ -72,11 +74,11 @@ export default function Search() {
 				: false; // Ensure description exists before checking
 
 			return matchesTitle || matchesDescription; // Return artwork if either matches
-			setIsSearching(false);
 		});
 
 		// Set the filtered artworks state
 		setArtworks(filteredArtworks);
+		setIsSearching(false);
 	}
 
 	// Handle search based on search type
