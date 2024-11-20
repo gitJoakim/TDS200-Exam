@@ -82,6 +82,9 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 
 	return (
 		<View style={styles.container}>
+			<Text style={styles.commentsCounter}>
+				Comments: {commentsData?.comments.length}
+			</Text>
 			<ScrollView style={styles.scrollContainer} nestedScrollEnabled={true}>
 				{commentsData?.comments.length! > 0 ? (
 					commentsData?.comments.map((comment) => {
@@ -175,6 +178,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 24,
+		marginTop: 16,
 	},
 	scrollContainer: {
 		width: "100%",
@@ -186,11 +190,15 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		paddingHorizontal: 8,
 		paddingVertical: 8,
-		marginVertical: 12,
+		marginBottom: 12,
 		backgroundColor: "white",
 	},
 	commentContainer: {
 		width: "100%",
+	},
+	commentsCounter: {
+		color: Colors.ArtVistaRed,
+		fontSize: 16,
 	},
 	comment: {
 		marginBottom: 12,
@@ -236,7 +244,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.ArtVistaRed,
 		borderRadius: 8,
 		paddingHorizontal: 12,
-		paddingVertical: 14,
+		paddingVertical: 10,
 	},
 	addButtonText: {
 		color: "white",

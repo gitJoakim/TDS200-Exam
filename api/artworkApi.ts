@@ -13,6 +13,7 @@ import {
 	doc,
 	getDoc,
 	getDocs,
+	orderBy,
 	query,
 	updateDoc,
 	where,
@@ -122,6 +123,23 @@ export const addComment = async (artworkId: string, comment: Comment) => {
 export const getAllArtworks = async () => {
 	try {
 		const result = await getDocs(collection(db, "artworks"));
+		return result.docs.map((doc) => {
+			return { ...doc.data(), id: doc.id } as ArtworkData; // replaces artwork id (which we set to null on creation) with its id from firebase
+		});
+	} catch (error) {
+		console.log("Error fetching all posts:", error);
+		return [];
+	}
+};
+
+export const getAllArtworksByOrder = async (newest: boolean) => {
+	try {
+		const result = await getDocs(
+			query(
+				collection(db, "artworks"),
+				orderBy("date", newest ? "desc" : "asc")
+			)
+		);
 		return result.docs.map((doc) => {
 			return { ...doc.data(), id: doc.id } as ArtworkData; // replaces artwork id (which we set to null on creation) with its id from firebase
 		});

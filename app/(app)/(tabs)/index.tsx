@@ -5,8 +5,10 @@ import {
 	RefreshControl,
 	Pressable,
 	Platform,
+	TouchableOpacity,
+	ActivityIndicator,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import * as artworkAPI from "@/api/artworkApi";
@@ -18,23 +20,29 @@ import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
 	const [gridDisplay, setGridDisplay] = useState(false);
-	const [refreshing, setRefreshing] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [orderByNewest, setOrderByNewest] = useState(true);
 
 	async function getArtworks() {
-		setRefreshing(true);
-		const artworks = await artworkAPI.getAllArtworks();
+		setArtworks([]);
+		setIsLoading(true);
+		const artworks = await artworkAPI.getAllArtworksByOrder(orderByNewest);
 		setArtworks(artworks);
-		setRefreshing(false);
+		setIsLoading(false);
 	}
 
-	const handleRefresh = useCallback(() => {
-		console.log("refreshing");
+	function handleOrderChange(order: boolean) {
+		setOrderByNewest(order);
+	}
+
+	useEffect(() => {
 		getArtworks();
-	}, []);
+	}, [orderByNewest]);
 
 	useEffect(() => {
 		getArtworks();
@@ -48,7 +56,7 @@ export default function HomeScreen() {
 						<Pressable
 							style={{ paddingLeft: 12 }}
 							onPress={async () => {
-								handleRefresh();
+								getArtworks();
 							}}
 						>
 							<MaterialCommunityIcons
@@ -61,7 +69,7 @@ export default function HomeScreen() {
 					headerTitle: () => (
 						<Pressable
 							onPress={() => {
-								handleRefresh();
+								getArtworks();
 							}}
 						>
 							<Text style={styles.headerTitle}>ArtVista</Text>
@@ -84,6 +92,37 @@ export default function HomeScreen() {
 				}}
 			/>
 
+			{/* Search Type Selector */}
+			<View style={styles.orderContainer}>
+				<TouchableOpacity
+					style={[styles.orderButton, orderByNewest && styles.activeButton]}
+					onPress={() => handleOrderChange(true)}
+				>
+					<Text
+						style={[
+							styles.orderText,
+							orderByNewest === true && styles.activeText,
+						]}
+					>
+						Newest
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[styles.orderButton, !orderByNewest && styles.activeButton]}
+					onPress={() => handleOrderChange(false)}
+				>
+					<Text
+						style={[
+							styles.orderText,
+							orderByNewest === false && styles.activeText,
+						]}
+					>
+						Oldest
+					</Text>
+				</TouchableOpacity>
+			</View>
+
+			{isLoading && <ActivityIndicator />}
 			{gridDisplay ? (
 				<MasonryList
 					style={{ marginVertical: 6 }}
@@ -96,8 +135,7 @@ export default function HomeScreen() {
 					renderItem={({ item }) => (
 						<ArtworkImage artwork={item as ArtworkData} />
 					)}
-					refreshing={refreshing} // Controls the loading spinner when refreshing
-					onRefresh={handleRefresh}
+					onRefresh={getArtworks}
 				/>
 			) : Platform.OS === "web" ? (
 				<ArtworkWebCarousel artworks={artworks} />
@@ -122,5 +160,26 @@ const styles = StyleSheet.create({
 		fontFamily: "Dancing-Script",
 		fontSize: 36,
 		color: Colors.ArtVistaRed,
+	},
+	orderContainer: {
+		marginVertical: 8,
+		width: "100%",
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+	},
+	orderButton: {
+		paddingVertical: 5,
+		paddingHorizontal: 10,
+		borderRadius: 5,
+	},
+	activeButton: {
+		backgroundColor: Colors.ArtVistaRed,
+	},
+	orderText: {
+		fontSize: 14,
+		color: Colors.ArtVistaRed,
+	},
+	activeText: {
+		color: "white",
 	},
 });
