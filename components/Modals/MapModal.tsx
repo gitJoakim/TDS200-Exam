@@ -59,6 +59,23 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 		}
 	}, [selectedCoords]);
 
+	// fetch user position and set that as location if permission granted
+	useEffect(() => {
+		if (Platform.OS !== "web") {
+			const requestLocationPermission = async () => {
+				const { status } = await Location.requestForegroundPermissionsAsync();
+				if (status === "granted") {
+					const location = await Location.getCurrentPositionAsync();
+					setSelectedCoords({
+						latitude: location.coords.latitude,
+						longitude: location.coords.longitude,
+					} as Location.LocationObjectCoords);
+				}
+			};
+			requestLocationPermission();
+		}
+	}, []);
+
 	return (
 		<View style={styles.modalContainer}>
 			<View style={styles.modalContent}>

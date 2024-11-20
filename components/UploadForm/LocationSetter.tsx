@@ -48,10 +48,7 @@ export default function LocationSetter({
 	return (
 		<View style={styles.locationContainer}>
 			{/* Location Icon and Text */}
-			<Pressable
-				onPress={() => setIsMapModalOpen(true)} // Open the map modal when the map is clicked
-				style={styles.locationIconContainer}
-			>
+			<View style={styles.locationIconContainer}>
 				<Ionicons
 					name="location-outline"
 					size={30}
@@ -60,9 +57,9 @@ export default function LocationSetter({
 				<Text style={styles.locationText}>
 					{location
 						? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
-						: "Click map to set location"}
+						: "Click the map to set location"}
 				</Text>
-			</Pressable>
+			</View>
 			{/* Map */}
 			<Pressable
 				onPress={() => {
