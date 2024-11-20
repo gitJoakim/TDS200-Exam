@@ -29,25 +29,20 @@ export default function Search() {
 		null
 	);
 	const [userData, setUserData] = useState<UserData[] | null>(null);
-	const [refreshing, setRefreshing] = useState(false);
 	const handleSearchTypeChange = (type: string) => {
 		setSearchType(type);
 	};
 	const navigation = useNavigation();
 
-	const handleRefresh = () => {
-		// Implement refresh logic
-		console.log("Refreshing artworks...");
-	};
-
 	async function searchUsernames() {
 		// Fetch users based on search text
-		const usersResultFromDb = await getUsersBySearch(searchText.toLowerCase());
+		const usersResultFromDb = await getUsersBySearch(searchText);
 
 		// Fetch all artworks from the database
 		const artworksFromDb = await artworkAPI.getAllArtworks();
 
 		setUserData(usersResultFromDb); // Set users without artworksCount for now
+		console.log(userData);
 		setArtworksToCount(artworksFromDb); // Set all artworks
 	}
 
@@ -221,9 +216,7 @@ export default function Search() {
 					</Text>
 				</TouchableOpacity>
 			</View>
-			<Pressable onPress={handleSearch}>
-				<Text>aaaaaa</Text>
-			</Pressable>
+
 			{searchType === "usernames" && (
 				<View>
 					{userData && userData.length > 0 ? (
@@ -252,8 +245,6 @@ export default function Search() {
 						renderItem={({ item }) => (
 							<ArtworkImage artwork={item as ArtworkData} /> // Replace with your artwork display component
 						)}
-						refreshing={refreshing}
-						onRefresh={handleRefresh}
 					/>
 				) : (
 					artworks !== null && (

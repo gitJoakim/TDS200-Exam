@@ -158,155 +158,159 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollContainer}>
-				{/* Artwork Title and Artist */}
-				<View>
-					<Text style={styles.title}>{artworkData!.title}</Text>
+				<View style={styles.innerContainer}>
+					{/* Artwork Title and Artist */}
+					<View>
+						<Text style={styles.title}>{artworkData!.title}</Text>
 
-					{/* Artwork Image */}
+						{/* Artwork Image */}
 
-					<Image
-						resizeMode="contain"
-						style={[styles.artworkImage, imageDimensionsStyle]}
-						source={{ uri: artworkData!.imageURL }}
-					/>
-				</View>
-				{/* Date */}
-				<Text style={styles.dateText}>
-					{dateFormatter(artworkData!.date as Timestamp)}
-				</Text>
-				<View style={styles.textContainer}>
+						<Image
+							resizeMode="contain"
+							style={[styles.artworkImage, imageDimensionsStyle]}
+							source={{ uri: artworkData!.imageURL }}
+						/>
+					</View>
+					{/* Date */}
+					<Text style={styles.dateText}>
+						{dateFormatter(artworkData!.date as Timestamp)}
+					</Text>
+					<View style={styles.textContainer}>
+						<View
+							style={{
+								width: "100%",
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								marginVertical: 12, // Vertical margin
+							}}
+						>
+							<Link
+								href={{
+									pathname: "/userProfile/[id]",
+									params: { id: artworkData!.userId },
+								}}
+							>
+								<View
+									style={{
+										width: "100%", // Ensure the container takes full width
+										flexDirection: "row", // Horizontal layout
+										alignItems: "center", // Vertically center items within the row
+										justifyContent: "flex-start", // Align the items to the left
+										columnGap: 6, // Space between image and text
+									}}
+								>
+									<View style={styles.profilePicContainer}>
+										{userData?.profileImageUrl ? (
+											<Image
+												resizeMode="center"
+												source={{ uri: userData?.profileImageUrl! }}
+												style={{ width: 24, height: 24, borderRadius: 50 }}
+											/>
+										) : (
+											<FontAwesome name="user-circle" size={24} color="black" />
+										)}
+									</View>
+									<Text style={styles.artistName}>{artworkData!.artist}</Text>
+								</View>
+							</Link>
+							<Pressable
+								onPress={() => {
+									console.log("clicked like");
+									handleLikeClick(artworkData!.id, user!.uid);
+								}}
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									alignItems: "center",
+									columnGap: 6,
+								}}
+							>
+								<Text style={{ color: Colors.ArtVistaRed }}>
+									{likesData?.userIds.length}
+								</Text>
+								<FontAwesome
+									name={userHasLiked ? "heart" : "heart-o"} // Conditionally render heart or heart-o
+									size={28}
+									color={Colors.ArtVistaRed}
+								/>
+							</Pressable>
+						</View>
+
+						{/* Artwork Description */}
+						<Text style={styles.description}>{artworkData!.description}</Text>
+
+						{/* Hashtags */}
+						<View style={styles.hashtagsContainer}>
+							{renderHashtags(artworkData!.hashtags)}
+						</View>
+					</View>
+
+					{/* Location */}
 					<View
 						style={{
-							width: "100%",
 							flexDirection: "row",
 							justifyContent: "space-between",
 							alignItems: "center",
-							marginVertical: 12, // Vertical margin
+							width: "100%",
+							marginBottom: 8,
 						}}
 					>
-						<Link
-							href={{
-								pathname: "/userProfile/[id]",
-								params: { id: artworkData!.userId },
-							}}
-						>
-							<View
-								style={{
-									width: "100%", // Ensure the container takes full width
-									flexDirection: "row", // Horizontal layout
-									alignItems: "center", // Vertically center items within the row
-									justifyContent: "flex-start", // Align the items to the left
-									columnGap: 6, // Space between image and text
-								}}
-							>
-								<View style={styles.profilePicContainer}>
-									{userData?.profileImageUrl ? (
-										<Image
-											resizeMode="center"
-											source={{ uri: userData?.profileImageUrl! }}
-											style={{ width: 24, height: 24, borderRadius: 50 }}
-										/>
-									) : (
-										<FontAwesome name="user-circle" size={24} color="black" />
-									)}
-								</View>
-								<Text style={styles.artistName}>{artworkData!.artist}</Text>
-							</View>
-						</Link>
-						<Pressable
-							onPress={() => {
-								console.log("clicked like");
-								handleLikeClick(artworkData!.id, user!.uid);
-							}}
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								alignItems: "center",
-								columnGap: 6,
-							}}
-						>
-							<Text style={{ color: Colors.ArtVistaRed }}>
-								{likesData?.userIds.length}
+						<View style={styles.locationTextContainer}>
+							<Text style={styles.locationTextStyle}>Location:</Text>
+							<Text style={styles.locationTextStyle}>
+								{artworkData!.artworkCoords
+									? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
+									: "Unknown"}
 							</Text>
-							<FontAwesome
-								name={userHasLiked ? "heart" : "heart-o"} // Conditionally render heart or heart-o
-								size={28}
-								color={Colors.ArtVistaRed}
-							/>
-						</Pressable>
+						</View>
 					</View>
-
-					{/* Artwork Description */}
-					<Text style={styles.description}>{artworkData!.description}</Text>
-
-					{/* Hashtags */}
-					<View style={styles.hashtagsContainer}>
-						{renderHashtags(artworkData!.hashtags)}
+					{/* Map Container */}
+					<View style={styles.mapContainer}>
+						{/* Conditionally render WebMapWithOl for Web or MapView for Mobile */}
+						{Platform.OS === "web" ? (
+							<WebMapWithOl region={location} />
+						) : (
+							<MapView
+								style={styles.tinyMap}
+								region={regionForMobileView} // Make sure `region` is correctly defined before using
+								zoomEnabled={true}
+								scrollEnabled={true}
+								rotateEnabled={false}
+								pitchEnabled={false}
+							>
+								{artworkData?.artworkCoords && (
+									<Marker coordinate={artworkData.artworkCoords} />
+								)}
+							</MapView>
+						)}
+						{/* Overlay to grey out the map if no location */}
+						{!location && <View style={styles.greyOverlay} />}
 					</View>
+					<CommentSection artworkId={artworkData!.id} />
 				</View>
-
-				{/* Location */}
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						alignItems: "center",
-						width: "100%",
-						marginBottom: 8,
-					}}
-				>
-					<View style={styles.locationTextContainer}>
-						<Text style={styles.locationTextStyle}>Location:</Text>
-						<Text style={styles.locationTextStyle}>
-							{artworkData!.artworkCoords
-								? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
-								: "Unknown"}
-						</Text>
-					</View>
-				</View>
-				{/* Map Container */}
-				<View style={styles.mapContainer}>
-					{/* Conditionally render WebMapWithOl for Web or MapView for Mobile */}
-					{Platform.OS === "web" ? (
-						<WebMapWithOl region={location} />
-					) : (
-						<MapView
-							style={styles.tinyMap}
-							region={regionForMobileView} // Make sure `region` is correctly defined before using
-							zoomEnabled={true}
-							scrollEnabled={true}
-							rotateEnabled={false}
-							pitchEnabled={false}
-						>
-							{artworkData?.artworkCoords && (
-								<Marker coordinate={artworkData.artworkCoords} />
-							)}
-						</MapView>
-					)}
-					{/* Overlay to grey out the map if no location */}
-					{!location && <View style={styles.greyOverlay} />}
-				</View>
-				<CommentSection artworkId={artworkData!.id} />
 			</ScrollView>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	scrollContainer: {
-		flex: 1,
-		width: "100%", // Ensure the container takes full width
-		...(Platform.OS === "web" && {
-			width: "50%", // Adjust width for web
-			marginHorizontal: "auto", // Center content in web
-		}),
-	},
 	container: {
 		backgroundColor: "white",
 		flex: 1,
 		justifyContent: "flex-start", // Keep it at the top
 		alignItems: "center", // Align all children horizontally at the center
+	},
+	scrollContainer: {
+		flex: 1,
+		width: "100%", // Ensure the container takes full width
+	},
+	innerContainer: {
 		paddingHorizontal: 24,
+		...(Platform.OS === "web" && {
+			width: "50%", // Adjust width for web
+			marginHorizontal: "auto", // Center content in web
+		}),
 	},
 	artistName: {
 		textAlign: "center",

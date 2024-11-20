@@ -138,9 +138,10 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 					onChangeText={setCommentText}
 					placeholder="Write a comment..."
 					maxLength={200}
+					autoCapitalize="none"
 				/>
 				<Pressable
-					style={[styles.addButton]} // Apply disabled style if submitting or text is empty
+					style={[styles.addButton]}
 					onPress={handlePostComment}
 					disabled={isSubmitting || !commentText.trim()} // Disable button if submitting or text is empty
 				>

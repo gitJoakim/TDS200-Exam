@@ -29,7 +29,6 @@ export default function HomeScreen() {
 		const artworks = await artworkAPI.getAllArtworks();
 		setArtworks(artworks);
 		setRefreshing(false);
-		console.log(artworks[0]!.date);
 	}
 
 	const handleRefresh = useCallback(() => {

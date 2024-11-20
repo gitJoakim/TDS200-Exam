@@ -93,6 +93,7 @@ export default function EditProfileModal({
 					multiline
 					placeholder="Write something about yourself..."
 					maxLength={200}
+					textAlignVertical="top" // had to set this for android, its auto top on web and ios
 				/>
 				<Text style={styles.charCount}>{editedBioText.length}/200</Text>
 

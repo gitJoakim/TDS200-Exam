@@ -53,17 +53,21 @@ export const getUserInfoById = async (userId: string) => {
 
 export const getUsersBySearch = async (searchInput: string) => {
 	try {
-		const endString = searchInput + "\uf8ff";
-		const querySnapshot = await getDocs(
-			query(
-				collection(db, "users"),
-				where("username", ">=", searchInput),
-				where("username", "<=", endString)
-			)
-		);
-		return querySnapshot.docs.map((doc) => {
-			return { ...doc.data(), userId: doc.id } as UserData;
-		});
+		// Fetch all users from Firestore (no query restrictions)
+		const querySnapshot = await getDocs(collection(db, "users"));
+
+		// Filter users locally by checking if the lowercase username matches the search input
+		const filteredUsers = querySnapshot.docs
+			.map((doc) => {
+				return { ...doc.data(), userId: doc.id } as UserData;
+			})
+			.filter(
+				(user) =>
+					user.username &&
+					user.username.toLowerCase().includes(searchInput.toLowerCase())
+			);
+
+		return filteredUsers;
 	} catch (error) {
 		console.log("Error getting searched users");
 		return [];

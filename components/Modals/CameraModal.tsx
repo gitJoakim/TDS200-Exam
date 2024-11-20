@@ -1,6 +1,17 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 
-import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import {
+	Text,
+	View,
+	StyleSheet,
+	Button,
+	TouchableOpacity,
+	Platform,
+} from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import { useState } from "react";
 
 type CameraModalProps = {
 	closeModal: () => void;
@@ -12,6 +23,7 @@ export default function CameraModal({
 	setImage,
 }: CameraModalProps) {
 	const [permission, requestPermission] = useCameraPermissions();
+	const [facing, setFacing] = useState<CameraType>("back");
 
 	if (!permission) {
 		return <View />;
@@ -40,22 +52,40 @@ export default function CameraModal({
 		}
 	};
 
+	function toggleCameraFacing() {
+		setFacing((current) => (current === "back" ? "front" : "back"));
+	}
+
 	return (
 		<View style={styles.container}>
 			<CameraView
 				style={styles.camera}
-				facing={"back"}
+				facing={facing}
 				ref={(r) => (camera = r)}
 			>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
 						style={styles.button}
+						onPress={() => toggleCameraFacing()}
+					>
+						{Platform.OS === "android" ? (
+							<MaterialIcons
+								name="flip-camera-android"
+								size={30}
+								color="white"
+							/>
+						) : (
+							<MaterialIcons name="flip-camera-ios" size={24} color="white" />
+						)}
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.button}
 						onPress={() => captureImage()}
 					>
-						<Text style={styles.text}>Capture</Text>
+						<Entypo name="camera" size={32} color="white" />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.button} onPress={() => closeModal()}>
-						<Text style={styles.text}>Back</Text>
+						<AntDesign name="back" size={30} color="white" />
 					</TouchableOpacity>
 				</View>
 			</CameraView>
