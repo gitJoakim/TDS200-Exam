@@ -61,7 +61,18 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 
 	// fetch user position and set that as location if permission granted
 	useEffect(() => {
-		if (Platform.OS !== "web") {
+		// web for OpenLayers application
+		if (Platform.OS === "web") {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition((position) => {
+					setSelectedCoords({
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+					} as Location.LocationObjectCoords);
+				});
+			}
+		} else {
+			//
 			const requestLocationPermission = async () => {
 				const { status } = await Location.requestForegroundPermissionsAsync();
 				if (status === "granted") {
