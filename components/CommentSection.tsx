@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 	},
 	comment: {
 		marginBottom: 12,
-		backgroundColor: "#ccc",
+		backgroundColor: "#D3D3D3",
 		borderRadius: 6,
 		padding: 12,
 		width: "100%",

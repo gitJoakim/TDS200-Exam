@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 		fontStyle: "italic",
 	},
 	image: {
-		marginBottom: 48,
+		marginBottom: 36,
 	},
 	imageContainer: {
 		justifyContent: "center",

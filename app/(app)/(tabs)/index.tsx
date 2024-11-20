@@ -8,7 +8,7 @@ import {
 	TouchableOpacity,
 	ActivityIndicator,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
 import * as artworkAPI from "@/api/artworkApi";
@@ -20,7 +20,6 @@ import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function HomeScreen() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
@@ -104,7 +103,7 @@ export default function HomeScreen() {
 							orderByNewest === true && styles.activeText,
 						]}
 					>
-						Newest
+						Newest first
 					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
@@ -117,7 +116,7 @@ export default function HomeScreen() {
 							orderByNewest === false && styles.activeText,
 						]}
 					>
-						Oldest
+						Oldest first
 					</Text>
 				</TouchableOpacity>
 			</View>
