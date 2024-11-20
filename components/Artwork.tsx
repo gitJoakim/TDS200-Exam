@@ -24,6 +24,7 @@ import { getUserInfoById } from "@/api/userApi";
 import { Colors } from "@/constants/Colors";
 import * as artworkAPI from "@/api/artworkApi";
 import CommentSection from "./CommentSection";
+import { Timestamp } from "firebase/firestore";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -100,6 +101,18 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 		});
 	};
 
+	const dateFormatter = (artworkDate: Timestamp) => {
+		const dateOfArtwork = artworkDate.toDate();
+		const formattedDate = dateOfArtwork.toLocaleDateString("en-GB", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		});
+
+		const [day, month, year] = formattedDate.split(" ");
+		return `${month} ${day}, ${year}`;
+	};
+
 	useEffect(() => {
 		if (artworkData?.artworkCoords) {
 			const { latitude, longitude } = artworkData.artworkCoords;
@@ -158,7 +171,9 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					/>
 				</View>
 				{/* Date */}
-				<Text style={styles.dateText}>{artworkData!.date}</Text>
+				<Text style={styles.dateText}>
+					{dateFormatter(artworkData!.date as Timestamp)}
+				</Text>
 				<View style={styles.textContainer}>
 					<View
 						style={{

@@ -25,6 +25,9 @@ export default function Search() {
 	const [searchType, setSearchType] = useState("title or description");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [artworks, setArtworks] = useState<ArtworkData[] | null>(null);
+	const [artworksToCount, setArtworksToCount] = useState<ArtworkData[] | null>(
+		null
+	);
 	const [userData, setUserData] = useState<UserData[] | null>(null);
 	const [refreshing, setRefreshing] = useState(false);
 	const handleSearchTypeChange = (type: string) => {
@@ -38,8 +41,14 @@ export default function Search() {
 	};
 
 	async function searchUsernames() {
-		const resultFromDb = await getUsersBySearch(searchText.toLowerCase());
-		setUserData(resultFromDb);
+		// Fetch users based on search text
+		const usersResultFromDb = await getUsersBySearch(searchText.toLowerCase());
+
+		// Fetch all artworks from the database
+		const artworksFromDb = await artworkAPI.getAllArtworks();
+
+		setUserData(usersResultFromDb); // Set users without artworksCount for now
+		setArtworksToCount(artworksFromDb); // Set all artworks
 	}
 
 	async function searchHashtags() {
@@ -90,7 +99,14 @@ export default function Search() {
 	}
 
 	const renderUsernameSearchResults = ({ item }: { item: UserData }) => {
-		return <UsernameSearchItem userData={item} />;
+		// Dynamically calculate artworksCount
+		const numberOfArtworks =
+			artworksToCount?.filter((artwork) => artwork.userId === item.userId)
+				.length ?? 0;
+
+		return (
+			<UsernameSearchItem userData={item} numberOfArtworks={numberOfArtworks} />
+		);
 	};
 
 	// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers

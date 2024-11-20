@@ -6,10 +6,12 @@ import { Colors } from "@/constants/Colors";
 
 type UsernameSearchItemProps = {
 	userData: UserData;
+	numberOfArtworks: number;
 };
 
 export default function UsernameSearchItem({
 	userData,
+	numberOfArtworks,
 }: UsernameSearchItemProps) {
 	return (
 		<View style={styles.cardContainer}>
@@ -39,7 +41,7 @@ export default function UsernameSearchItem({
 
 					<View>
 						<Text style={styles.username}>{userData.username}</Text>
-						<Text style={styles.postsCount}>12 posts</Text>
+						<Text style={styles.postsCount}>{numberOfArtworks} artworks</Text>
 					</View>
 				</View>
 			</Link>

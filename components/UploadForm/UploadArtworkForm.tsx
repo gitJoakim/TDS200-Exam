@@ -16,7 +16,6 @@ import { Platform } from "react-native";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import CameraModal from "../Modals/CameraModal";
 import GalleryModal from "../Modals/GalleryModal";
-import { dateFormatter } from "@/utils/dateFormatter";
 import { ArtworkData } from "@/utils/artworkData";
 import { BlurView } from "expo-blur";
 import { Colors } from "@/constants/Colors";
@@ -90,7 +89,7 @@ export default function UploadArtworkForm() {
 			description: description,
 			imageURL: image!,
 			hashtags: hashtagsArray,
-			date: dateFormatter(),
+			date: new Date(),
 			artworkCoords: location,
 		};
 

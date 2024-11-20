@@ -1,4 +1,5 @@
 import { LocationObjectCoords } from "expo-location";
+import { Timestamp } from "firebase/firestore";
 
 export interface ArtworkData {
 	id: string; // artwork id
@@ -8,7 +9,7 @@ export interface ArtworkData {
 	description: string;
 	imageURL: string;
 	hashtags: string[];
-	date: string;
+	date: Date | Timestamp;
 	artworkCoords: LocationObjectCoords | null;
 }
 
