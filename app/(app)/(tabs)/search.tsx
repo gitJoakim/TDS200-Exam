@@ -8,6 +8,7 @@ import {
 	Pressable,
 	FlatList,
 	Platform,
+	ActivityIndicator,
 } from "react-native";
 import MasonryList from "@react-native-seoul/masonry-list";
 import { Colors } from "@/constants/Colors";
@@ -28,6 +29,7 @@ export default function Search() {
 	const [artworksToCount, setArtworksToCount] = useState<ArtworkData[] | null>(
 		null
 	);
+	const [isSearching, setIsSearching] = useState(false);
 	const [userData, setUserData] = useState<UserData[] | null>(null);
 	const handleSearchTypeChange = (type: string) => {
 		setSearchType(type);
@@ -42,8 +44,8 @@ export default function Search() {
 		const artworksFromDb = await artworkAPI.getAllArtworks();
 
 		setUserData(usersResultFromDb); // Set users without artworksCount for now
-		console.log(userData);
 		setArtworksToCount(artworksFromDb); // Set all artworks
+		setIsSearching(false);
 	}
 
 	async function searchHashtags() {
@@ -51,6 +53,7 @@ export default function Search() {
 			searchText.toLowerCase()
 		);
 		setArtworks(resultFromDb);
+		setIsSearching(false);
 	}
 
 	async function searchTitleOrDescription() {
@@ -69,6 +72,7 @@ export default function Search() {
 				: false; // Ensure description exists before checking
 
 			return matchesTitle || matchesDescription; // Return artwork if either matches
+			setIsSearching(false);
 		});
 
 		// Set the filtered artworks state
@@ -77,6 +81,7 @@ export default function Search() {
 
 	// Handle search based on search type
 	function handleSearch() {
+		setIsSearching(true);
 		setSearchQuery(searchText);
 		switch (searchType) {
 			case "usernames":
@@ -120,10 +125,13 @@ export default function Search() {
 	};
 
 	useEffect(() => {
-		const delayDebounce = setTimeout(() => {}, 1000);
-		if (searchText.trim() !== "") {
-			handleSearch();
-		}
+		// Delay search execution by 0.8 sec after user stops typing
+		const delayDebounce = setTimeout(() => {
+			if (searchText.trim() !== "") {
+				handleSearch();
+			}
+		}, 800);
+
 		return () => clearTimeout(delayDebounce);
 	}, [searchText]);
 
@@ -216,6 +224,13 @@ export default function Search() {
 					</Text>
 				</TouchableOpacity>
 			</View>
+
+			{isSearching && (
+				<View style={styles.loadingIndicator}>
+					<Text>Searching...</Text>
+					{isSearching && <ActivityIndicator />}
+				</View>
+			)}
 
 			{searchType === "usernames" && (
 				<View>
@@ -320,5 +335,10 @@ const styles = StyleSheet.create({
 		color: "#888",
 		textAlign: "center",
 		marginTop: 20,
+	},
+	loadingIndicator: {
+		marginTop: 24,
+		flex: 1,
+		alignItems: "center",
 	},
 });
