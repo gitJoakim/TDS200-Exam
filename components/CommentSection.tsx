@@ -1,7 +1,7 @@
 import * as artworkAPI from "@/api/artworkApi";
 import { Colors } from "@/constants/Colors";
 import { useAuthSession } from "@/providers/AuthContextProvider";
-import { Comment, CommentData } from "@/utils/artworkData";
+import { ArtworkData, Comment, CommentData } from "@/utils/artworkData";
 import { useEffect, useState } from "react";
 import {
 	View,
@@ -28,6 +28,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 	const { user } = useAuthSession();
 	const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
 	const fetchUsersData = async (userIds: string[]) => {
 		const usersDataMap: { [key: string]: string } = {};
@@ -38,8 +39,9 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 		setUsersData(usersDataMap);
 	};
 
-	function handleDeleteComment() {
-		console.log("DELETE!!!");
+	async function handleDeleteComment() {
+		await artworkAPI.deleteComment(artworkId, commentToDelete!);
+		fetchCommentsData();
 	}
 
 	async function fetchCommentsData() {
@@ -105,6 +107,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 										<Pressable
 											style={styles.deleteButton}
 											onPress={() => {
+												setCommentToDelete(comment.commentId);
 												setIsDeleteModalOpen(true);
 											}}
 										>
@@ -149,7 +152,12 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 					prompt="Are you sure you want to delete your comment?"
 					optionYes="Delete"
 					optionNo="Cancel"
-					onConfirm={handleDeleteComment}
+					onConfirm={() => {
+						if (commentToDelete) {
+							handleDeleteComment();
+						}
+						setIsDeleteModalOpen(false);
+					}}
 					onCancel={() => {
 						setIsDeleteModalOpen(false);
 					}}
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: 16,
+		marginBottom: 24,
 	},
 	scrollContainer: {
 		width: "100%",

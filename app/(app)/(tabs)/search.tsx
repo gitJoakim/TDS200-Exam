@@ -18,6 +18,7 @@ import UsernameSearchItem from "@/components/search/usernameSearchItem";
 import { UserData } from "@/utils/userData";
 import { getUsersBySearch } from "@/api/userApi";
 import * as artworkAPI from "@/api/artworkApi";
+import { useNavigation } from "expo-router";
 
 export default function Search() {
 	const [searchText, setSearchText] = useState("");
@@ -29,6 +30,7 @@ export default function Search() {
 	const handleSearchTypeChange = (type: string) => {
 		setSearchType(type);
 	};
+	const navigation = useNavigation();
 
 	const handleRefresh = () => {
 		// Implement refresh logic
@@ -79,7 +81,7 @@ export default function Search() {
 			case "hashtags":
 				searchHashtags();
 				break;
-			case "title":
+			case "title or description":
 				searchTitleOrDescription();
 				break;
 			default:
@@ -108,8 +110,8 @@ export default function Search() {
 
 	useEffect(() => {
 		const delayDebounce = setTimeout(() => {}, 1000);
-		if (searchType === "title or description" && searchText.trim() !== "") {
-			searchTitleOrDescription();
+		if (searchText.trim() !== "") {
+			handleSearch();
 		}
 		return () => clearTimeout(delayDebounce);
 	}, [searchText]);
@@ -119,6 +121,15 @@ export default function Search() {
 		setUserData(null);
 		setSearchText("");
 	}, [searchType]);
+
+	useEffect(() => {
+		navigation.setOptions({
+			headerStyle: {
+				borderBottomWidth: 1,
+				borderBottomColor: Colors.ArtVistaRed,
+			},
+		});
+	}, []);
 
 	return (
 		<View style={styles.container}>
@@ -244,8 +255,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "white",
-		borderTopWidth: 1,
-		borderTopColor: Colors.ArtVistaRed,
 		paddingVertical: 16,
 		paddingHorizontal: 16,
 		...(Platform.OS === "web" && {

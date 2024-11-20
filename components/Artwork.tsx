@@ -10,7 +10,7 @@ import {
 	Pressable,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { ArtworkData, LikeData } from "@/utils/artworkData";
 import "ol/ol.css";
 import WebMapWithOl from "./WebMap/WebMapWithOl";
@@ -47,6 +47,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	const [likesData, setLikesData] = useState<LikeData | null>(null);
 	const [userHasLiked, setUserHasLiked] = useState(false);
 	const { user } = useAuthSession();
+	const navigation = useNavigation();
 
 	// Fetch the user data
 	async function fetchUserData() {
@@ -131,6 +132,15 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 			}
 		}
 	}, [location]);
+
+	useEffect(() => {
+		navigation.setOptions({
+			headerStyle: {
+				borderBottomWidth: 1,
+				borderBottomColor: Colors.ArtVistaRed,
+			},
+		});
+	}, []);
 
 	return (
 		<View style={styles.container}>
@@ -270,6 +280,11 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 const styles = StyleSheet.create({
 	scrollContainer: {
 		flex: 1,
+		width: "100%", // Ensure the container takes full width
+		...(Platform.OS === "web" && {
+			width: "50%", // Adjust width for web
+			marginHorizontal: "auto", // Center content in web
+		}),
 	},
 	container: {
 		backgroundColor: "white",
@@ -277,14 +292,6 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start", // Keep it at the top
 		alignItems: "center", // Align all children horizontally at the center
 		paddingHorizontal: 24,
-		paddingBottom: 24,
-		width: "100%", // Ensure the container takes full width
-		...(Platform.OS === "web" && {
-			width: "50%", // Adjust width for web
-			marginHorizontal: "auto", // Center content in web
-		}),
-		borderTopWidth: 1,
-		borderTopColor: Colors.ArtVistaRed,
 	},
 	artistName: {
 		textAlign: "center",
@@ -294,15 +301,18 @@ const styles = StyleSheet.create({
 	dateText: {
 		fontSize: 14,
 		marginBottom: 20,
+		alignSelf: "center",
 	},
 	artworkImage: {
 		marginVertical: 12,
+		alignSelf: "center",
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
 		textAlign: "center",
 		marginBottom: 12,
+		marginTop: 16,
 	},
 	description: {
 		fontSize: 16,

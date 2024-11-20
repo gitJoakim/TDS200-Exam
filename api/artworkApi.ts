@@ -7,6 +7,7 @@ import {
 } from "@/utils/artworkData";
 import {
 	addDoc,
+	arrayRemove,
 	collection,
 	deleteDoc,
 	doc,
@@ -290,10 +291,45 @@ export const toggleLike = async (artworkId: string, userId: string) => {
 
 export const deleteArtwork = async (id: string) => {
 	try {
-		const artworkToBeDeleted = doc(db, "posts", id);
+		const artworkToBeDeleted = doc(db, "artworks", id);
 		await deleteDoc(artworkToBeDeleted);
 		console.log(`Artwork with ID: ${id} has been deleted`);
 	} catch (error) {
 		console.log(`Error deleting artwork with ID: ${id}, \n ERROR: `, error);
+	}
+};
+
+export const deleteComment = async (artworkId: string, commentId: string) => {
+	try {
+		const querySnapshot = await getDocs(
+			query(collection(db, "comments"), where("artworkId", "==", artworkId))
+		);
+
+		if (!querySnapshot.empty) {
+			const docSnap = querySnapshot.docs[0];
+			const commentsArray = docSnap.data().comments;
+			const commentToRemove = commentsArray.find(
+				(comment: { commentId: string }) => comment.commentId === commentId
+			);
+
+			if (!commentToRemove) {
+				console.log("Comment with ID", commentId, "not found.");
+				return null;
+			}
+
+			const artworkRef = doc(db, "comments", docSnap.id);
+			await updateDoc(artworkRef, {
+				comments: arrayRemove(commentToRemove),
+			});
+
+			console.log("Successfully deleted comment with ID:", commentId);
+			return; // Successfully deleted, no need to return any data
+		} else {
+			console.log("No matching document found for artworkId:", artworkId);
+			return null; // Return null if no matching document found
+		}
+	} catch (error) {
+		console.log("Error deleting comment:", error);
+		return null;
 	}
 };

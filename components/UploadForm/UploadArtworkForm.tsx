@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	View,
 	Text,
@@ -24,7 +24,7 @@ import FormActionButtons from "./FormActionButtons";
 import HashtagsInput from "./HashtagsInput";
 import ImagePicker from "./ImagePicker";
 import * as Location from "expo-location";
-
+import { useNavigation } from "expo-router";
 import MapModal from "../Modals/MapModal";
 import LocationSetter from "./LocationSetter";
 
@@ -45,6 +45,7 @@ export default function UploadArtworkForm() {
 	const { width, height } = Dimensions.get("window");
 
 	const [isUploading, setIsUploading] = useState(false);
+	const navigation = useNavigation();
 
 	function clearForm() {
 		setTitle("");
@@ -104,6 +105,15 @@ export default function UploadArtworkForm() {
 			clearForm();
 		}, 3500);
 	}
+
+	useEffect(() => {
+		navigation.setOptions({
+			headerStyle: {
+				borderBottomWidth: 1,
+				borderBottomColor: Colors.ArtVistaRed,
+			},
+		});
+	}, []);
 
 	return (
 		<SafeAreaView style={[styles.contentContainer]}>
@@ -218,8 +228,6 @@ export default function UploadArtworkForm() {
 const styles = StyleSheet.create({
 	contentContainer: {
 		flex: 1,
-		borderTopColor: Colors.ArtVistaRed,
-		borderTopWidth: 1,
 		backgroundColor: "white",
 		...(Platform.OS === "web" && {
 			width: "50%",

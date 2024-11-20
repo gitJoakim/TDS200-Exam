@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		padding: 8,
 		marginBottom: 32,
-		borderRadius: 12,
+		borderRadius: 8,
 		width: "100%",
 	},
 	hashtagsContainer: {
