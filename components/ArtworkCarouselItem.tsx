@@ -125,5 +125,6 @@ const styles = StyleSheet.create({
 	artistName: {
 		textAlign: "center",
 		fontSize: 16,
+		fontWeight: "bold",
 	},
 });
