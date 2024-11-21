@@ -17,7 +17,6 @@ import { useAuthSession } from "@/providers/AuthContextProvider";
 import CameraModal from "../Modals/CameraModal";
 import GalleryModal from "../Modals/GalleryModal";
 import { ArtworkData } from "@/utils/artworkData";
-import { BlurView } from "expo-blur";
 import { Colors } from "@/constants/Colors";
 import FormActionButtons from "./FormActionButtons";
 import HashtagsInput from "./HashtagsInput";
@@ -43,7 +42,7 @@ export default function UploadArtworkForm() {
 
 	const { width, height } = Dimensions.get("window");
 
-	const [isUploading, setIsUploading] = useState(false);
+	const [isUploading, setIsUploading] = useState(true);
 	const navigation = useNavigation();
 
 	function clearForm() {
@@ -122,11 +121,12 @@ export default function UploadArtworkForm() {
 				automaticallyAdjustKeyboardInsets
 			>
 				<View style={{ paddingHorizontal: 24, marginVertical: 12 }}>
-					<Text style={styles.textStyle}>Title</Text>
+					<Text style={styles.textStyle}>Title *</Text>
 					<TextInput
 						style={styles.textInput}
 						value={title}
 						onChangeText={setTitle}
+						placeholder="Give the artwork a neat title"
 					/>
 
 					{/*  Upload image from camera or gallery	*/}
@@ -139,7 +139,7 @@ export default function UploadArtworkForm() {
 						height={height * 0.4}
 					/>
 
-					<Text style={styles.textStyle}>Description</Text>
+					<Text style={styles.textStyle}>Description *</Text>
 					<TextInput
 						style={[styles.textInput, styles.descriptionTextField]}
 						value={description}
@@ -197,10 +197,7 @@ export default function UploadArtworkForm() {
 
 			{/*  Blurs screen during upload		*/}
 			{isUploading && (
-				<BlurView
-					intensity={20}
-					style={[styles.blurContainer, { height: height, width: width }]}
-				>
+				<View style={styles.blurContainer}>
 					<ActivityIndicator />
 					<Text style={{ textAlign: "center", marginTop: 12, fontSize: 18 }}>
 						Uploading your masterpiece to{" "}
@@ -218,7 +215,7 @@ export default function UploadArtworkForm() {
 					<Text style={{ textAlign: "center", marginTop: 6, fontSize: 18 }}>
 						Please wait a moment!
 					</Text>
-				</BlurView>
+				</View>
 			)}
 		</SafeAreaView>
 	);
@@ -266,9 +263,15 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 0,
 		left: 0,
+		right: 0,
+		bottom: 0,
+		width: "100%",
+		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: "rgba(255, 255, 255, 0.9)",
 	},
+
 	locationContainer: {
 		marginBottom: 32,
 		alignItems: "center",

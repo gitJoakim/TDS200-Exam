@@ -51,7 +51,7 @@ export default function HashtagsInput({
 			<Text
 				style={{
 					textAlign: "center",
-					color: "gray",
+					color: "black",
 					marginTop: 6,
 				}}
 			>

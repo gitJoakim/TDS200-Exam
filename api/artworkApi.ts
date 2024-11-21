@@ -20,14 +20,6 @@ import {
 } from "firebase/firestore";
 import { uploadImageToFirebase } from "./imageApi";
 
-/*
-*************************************************
-
-This is heavily inspired by lecture code
-
-*************************************************
-*/
-
 //**************************************
 // CREATE
 //**************************************
