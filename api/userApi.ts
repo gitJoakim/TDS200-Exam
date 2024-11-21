@@ -10,7 +10,7 @@ import {
 	where,
 	collection,
 } from "firebase/firestore";
-import { uploadImageToFirebase } from "./imageApi";
+import { uploadImage } from "./imageApi";
 
 export const createUserInDb = async (
 	userId: string,
@@ -93,7 +93,7 @@ export const updateUserProfilePicture = async (
 	newProfilePictureUri: string // Pass the local URI here
 ) => {
 	try {
-		const firebaseImagePath = await uploadImageToFirebase(newProfilePictureUri);
+		const firebaseImagePath = await uploadImage(newProfilePictureUri);
 		if (firebaseImagePath === "ERROR") {
 			console.error("Failed to upload profile picture");
 			return;

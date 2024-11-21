@@ -16,7 +16,7 @@ import React from "react";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
 import MasonryList from "@react-native-seoul/masonry-list";
 import ArtworkImage from "@/components/ArtworkGridImage";
-import { Stack } from "expo-router";
+import { Stack, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ArtworkWebCarousel from "@/components/ArtworkWebCarousel";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -38,6 +38,12 @@ export default function HomeScreen() {
 	function handleOrderChange(order: boolean) {
 		setOrderByNewest(order);
 	}
+
+	useFocusEffect(
+		useCallback(() => {
+			getArtworks();
+		}, [])
+	);
 
 	useEffect(() => {
 		getArtworks();

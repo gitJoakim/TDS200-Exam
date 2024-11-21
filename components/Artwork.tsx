@@ -266,27 +266,29 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						</View>
 					</View>
 					{/* Map Container */}
-					<View style={styles.mapContainer}>
-						{/* Conditionally render Openlayers map for Web or MapView for Mobile */}
-						{Platform.OS === "web" ? (
-							<SingleArtworkWebMap region={location} />
-						) : (
-							<MapView
-								style={styles.tinyMap}
-								region={regionForMobileView} // Make sure `region` is correctly defined before using
-								zoomEnabled={true}
-								scrollEnabled={true}
-								rotateEnabled={false}
-								pitchEnabled={false}
-							>
-								{artworkData?.artworkCoords && (
-									<Marker coordinate={artworkData.artworkCoords} />
-								)}
-							</MapView>
-						)}
-						{/* Overlay to grey out the map if no location */}
-						{!location && <View style={styles.greyOverlay} />}
-					</View>
+					{location && (
+						<View style={styles.mapContainer}>
+							{/* Conditionally render Openlayers map for Web or MapView for Mobile */}
+							{Platform.OS === "web" ? (
+								<SingleArtworkWebMap region={location} />
+							) : (
+								<MapView
+									style={styles.tinyMap}
+									region={regionForMobileView} // Make sure `region` is correctly defined before using
+									zoomEnabled={true}
+									scrollEnabled={true}
+									rotateEnabled={false}
+									pitchEnabled={false}
+								>
+									{artworkData?.artworkCoords && (
+										<Marker coordinate={artworkData.artworkCoords} />
+									)}
+								</MapView>
+							)}
+							{/* Overlay to grey out the map if no location */}
+							{!location && <View style={styles.greyOverlay} />}
+						</View>
+					)}
 					<CommentSection artworkId={artworkData!.id} />
 				</View>
 			</ScrollView>
@@ -389,7 +391,7 @@ const styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent grey overlay
+		backgroundColor: "rgba(0, 0, 0, 0.6)", // Semi-transparent grey overlay
 		borderRadius: 8,
 	},
 });

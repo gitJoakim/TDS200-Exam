@@ -1,5 +1,5 @@
 import { getStorageRef } from "@/firebaseConfig";
-import { uploadBytesResumable } from "firebase/storage";
+import { deleteObject, ref, uploadBytesResumable } from "firebase/storage";
 import uuid from "react-native-uuid";
 
 /*
@@ -10,7 +10,7 @@ THIS IS TAKEN FROM LECTURE CODE
 *************************************************
 */
 
-export const uploadImageToFirebase = async (uri: string) => {
+export const uploadImage = async (uri: string) => {
 	const fetchResponse = await fetch(uri);
 	const blob = await fetchResponse.blob();
 

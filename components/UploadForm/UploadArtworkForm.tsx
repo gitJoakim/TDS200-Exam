@@ -42,8 +42,9 @@ export default function UploadArtworkForm() {
 
 	const { width, height } = Dimensions.get("window");
 
-	const [isUploading, setIsUploading] = useState(true);
+	const [isUploading, setIsUploading] = useState(false);
 	const navigation = useNavigation();
+	const scrollViewRef = useRef<ScrollView>(null);
 
 	function clearForm() {
 		setTitle("");
@@ -83,7 +84,7 @@ export default function UploadArtworkForm() {
 		const artwork: ArtworkData = {
 			id: "", // we grab the id from firebase when we get the post so we don't need it yet
 			userId: user!.uid,
-			artist: user?.displayName!,
+			artist: user!.displayName!,
 			title: title,
 			description: description,
 			imageURL: image!,
@@ -92,7 +93,7 @@ export default function UploadArtworkForm() {
 			artworkCoords: location,
 		};
 
-		console.log(artwork);
+		//console.log(artwork);
 		return artwork;
 	}
 
@@ -101,6 +102,7 @@ export default function UploadArtworkForm() {
 		setTimeout(() => {
 			setIsUploading(false);
 			clearForm();
+			scrollViewRef.current?.scrollTo({ y: 0, animated: true });
 		}, 3500);
 	}
 
@@ -116,6 +118,7 @@ export default function UploadArtworkForm() {
 	return (
 		<SafeAreaView style={[styles.contentContainer]}>
 			<ScrollView
+				ref={scrollViewRef}
 				style={{ flex: 1 }}
 				keyboardDismissMode="interactive"
 				automaticallyAdjustKeyboardInsets
@@ -126,7 +129,7 @@ export default function UploadArtworkForm() {
 						style={styles.textInput}
 						value={title}
 						onChangeText={setTitle}
-						placeholder="Give the artwork a neat title"
+						placeholder="Give the artwork a title..."
 					/>
 
 					{/*  Upload image from camera or gallery	*/}
@@ -269,7 +272,7 @@ const styles = StyleSheet.create({
 		height: "100%",
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(255, 255, 255, 0.9)",
+		backgroundColor: "rgba(255, 255, 255, 0.8)",
 	},
 
 	locationContainer: {

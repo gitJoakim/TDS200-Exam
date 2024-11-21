@@ -3,8 +3,12 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { getArtworkById } from "@/api/artworkApi";
 import Artwork from "@/components/Artwork";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, Pressable, Modal } from "react-native";
 import { Colors } from "@/constants/Colors";
+import Feather from "@expo/vector-icons/Feather";
+import { useAuthSession } from "@/providers/AuthContextProvider";
+import * as artworkAPI from "@/api/artworkApi";
+import AlertModal from "@/components/Modals/AlertModal";
 
 export default function ArtworkDetails() {
 	const { id } = useLocalSearchParams();
@@ -12,6 +16,8 @@ export default function ArtworkDetails() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigation = useNavigation();
+	const [isDeletingPost, setIsDeletingPost] = useState(false);
+	const { user } = useAuthSession();
 
 	async function getSelectedArtworkFromDb() {
 		try {
@@ -27,6 +33,32 @@ export default function ArtworkDetails() {
 			setLoading(false);
 		}
 	}
+
+	async function handleDeletePost() {
+		// an extra check just to be sure
+		if (user!.uid === artwork!.userId) {
+			setLoading(true);
+			await artworkAPI.deleteArtwork(artwork!.id);
+			setLoading(false);
+			setIsDeletingPost(false);
+			navigation.goBack();
+		}
+	}
+
+	useEffect(() => {
+		navigation.setOptions({
+			headerRight: () =>
+				user?.uid === artwork?.userId ? ( // Conditional rendering
+					<Pressable
+						onPress={() => setIsDeletingPost(true)}
+						style={{ marginRight: 16 }}
+					>
+						<Feather name="trash-2" size={24} color={Colors.ArtVistaRed} />
+					</Pressable>
+				) : null,
+		});
+		console.log("aaaaaaaaaa", artwork?.imageURL);
+	}, [artwork]);
 
 	useEffect(() => {
 		getSelectedArtworkFromDb();
@@ -72,5 +104,23 @@ export default function ArtworkDetails() {
 	}
 
 	// If artwork is available, render it
-	return <Artwork artworkData={artwork} />;
+	return (
+		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+			<Artwork artworkData={artwork} />
+			<Modal visible={isDeletingPost}>
+				{loading && <ActivityIndicator />}
+				<AlertModal
+					prompt={
+						"Are you sure you want to permanently delete this artwork? This action cannot be undone."
+					}
+					optionYes={"Yes, Delete "}
+					optionNo={"No, Cancel"}
+					onConfirm={handleDeletePost}
+					onCancel={() => {
+						setIsDeletingPost(false);
+					}}
+				/>
+			</Modal>
+		</View>
+	);
 }

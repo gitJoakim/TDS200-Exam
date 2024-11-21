@@ -18,7 +18,7 @@ import {
 	updateDoc,
 	where,
 } from "firebase/firestore";
-import { uploadImageToFirebase } from "./imageApi";
+import { uploadImage } from "./imageApi";
 
 //**************************************
 // CREATE
@@ -27,7 +27,7 @@ import { uploadImageToFirebase } from "./imageApi";
 // create an artwork
 export const createArtwork = async (artwork: ArtworkData) => {
 	try {
-		const firebaseImage = await uploadImageToFirebase(artwork.imageURL);
+		const firebaseImage = await uploadImage(artwork.imageURL);
 		if (firebaseImage === "ERROR") {
 			return;
 		}
@@ -47,6 +47,7 @@ export const createArtwork = async (artwork: ArtworkData) => {
 		await createCommentsData(artworkId);
 	} catch (error) {
 		console.log("Error adding document:", error);
+		throw error;
 	}
 };
 
@@ -272,13 +273,16 @@ export const toggleLike = async (artworkId: string, userId: string) => {
 // DELETE
 //**************************************
 
-export const deleteArtwork = async (id: string) => {
+export const deleteArtwork = async (artworkId: string) => {
 	try {
-		const artworkToBeDeleted = doc(db, "artworks", id);
+		const artworkToBeDeleted = doc(db, "artworks", artworkId);
 		await deleteDoc(artworkToBeDeleted);
-		console.log(`Artwork with ID: ${id} has been deleted`);
+		console.log(`Artwork with ID: ${artworkId} has been deleted`);
 	} catch (error) {
-		console.log(`Error deleting artwork with ID: ${id}, \n ERROR: `, error);
+		console.log(
+			`Error deleting artwork with ID: ${artworkId}, \n ERROR: `,
+			error
+		);
 	}
 };
 
