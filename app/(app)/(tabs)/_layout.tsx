@@ -16,19 +16,6 @@ export default function TabLayout() {
 			}}
 		>
 			<Tabs.Screen
-				name="personalProfile"
-				options={{
-					title: "Your Profile",
-					tabBarIcon: ({ focused }) => (
-						<Feather
-							name="user"
-							size={24}
-							color={focused ? Colors.ArtVistaRed : "gray"}
-						/>
-					),
-				}}
-			/>
-			<Tabs.Screen
 				name="index"
 				options={{
 					title: "Home",
@@ -40,6 +27,7 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+
 			<Tabs.Screen
 				name="artworkMap"
 				options={{
@@ -53,6 +41,21 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+
+			<Tabs.Screen
+				name="upload"
+				options={{
+					title: "Upload",
+					tabBarIcon: ({ focused }) => (
+						<Feather
+							name="plus-square"
+							size={24}
+							color={focused ? Colors.ArtVistaRed : "gray"}
+						/>
+					),
+				}}
+			/>
+
 			<Tabs.Screen
 				name="search"
 				options={{
@@ -66,13 +69,14 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+
 			<Tabs.Screen
-				name="upload"
+				name="personalProfile"
 				options={{
-					title: "Upload",
+					title: "Your Profile",
 					tabBarIcon: ({ focused }) => (
 						<Feather
-							name="plus-square"
+							name="user"
 							size={24}
 							color={focused ? Colors.ArtVistaRed : "gray"}
 						/>
