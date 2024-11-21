@@ -92,6 +92,8 @@ export default function ArtworkMap() {
 									// When a marker is pressed, set the selected artwork id
 									setSelectedArtworkId(artwork.id);
 								}}
+								accessibilityLabel={`Artwork titled ${artwork.title}`}
+								accessibilityHint={`Tap to view details of ${artwork.title}`}
 							>
 								<Callout tooltip>
 									<View style={styles.calloutContainer}>

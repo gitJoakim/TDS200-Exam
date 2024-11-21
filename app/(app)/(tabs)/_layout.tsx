@@ -23,7 +23,9 @@ export default function TabLayout() {
 						<Feather
 							name="user"
 							size={24}
-							color={focused ? Colors.ArtVistaRed : "gray"}
+							color={focused ? Colors.ArtVistaRed : "#707070"}
+							accessibilityLabel="Profile"
+							accessibilityHint="Go to your profile"
 						/>
 					),
 				}}
@@ -36,7 +38,9 @@ export default function TabLayout() {
 						<FontAwesome6
 							name="map-location-dot"
 							size={24}
-							color={focused ? Colors.ArtVistaRed : "gray"}
+							color={focused ? Colors.ArtVistaRed : "#707070"}
+							accessibilityLabel="Map of artworks"
+							accessibilityHint="View the map of artworks"
 						/>
 					),
 				}}
@@ -49,7 +53,9 @@ export default function TabLayout() {
 					tabBarIcon: ({ focused }) => (
 						<TabBarIcon
 							name={focused ? "home" : "home-outline"}
-							color={focused ? Colors.ArtVistaRed : "gray"}
+							color={focused ? Colors.ArtVistaRed : "#707070"}
+							accessibilityLabel="Home"
+							accessibilityHint="Navigate to the home screen"
 						/>
 					),
 				}}
@@ -63,7 +69,9 @@ export default function TabLayout() {
 						<Feather
 							name="search"
 							size={24}
-							color={focused ? Colors.ArtVistaRed : "gray"}
+							color={focused ? Colors.ArtVistaRed : "#707070"}
+							accessibilityLabel="Search"
+							accessibilityHint="Search for artworks or usersnames"
 						/>
 					),
 				}}
@@ -77,7 +85,9 @@ export default function TabLayout() {
 						<Feather
 							name="plus-square"
 							size={24}
-							color={focused ? Colors.ArtVistaRed : "gray"}
+							color={focused ? Colors.ArtVistaRed : "#707070"}
+							accessibilityLabel="Upload"
+							accessibilityHint="Upload a new artwork"
 						/>
 					),
 				}}

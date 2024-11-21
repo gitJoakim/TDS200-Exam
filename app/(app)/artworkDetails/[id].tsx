@@ -24,8 +24,12 @@ export default function ArtworkDetails() {
 			const artworkFromDb = await getArtworkById(id as string);
 			if (artworkFromDb) {
 				setArtwork(artworkFromDb);
+			} else {
+				// If no artwork is found, set an error message
+				setErrorMessage("Artwork not found. Please exit and try again.");
 			}
 		} catch (error) {
+			// If there's an error fetching, show the error message
 			setErrorMessage(
 				"Uh oh, something went wrong. Please exit and try again."
 			);
@@ -46,9 +50,17 @@ export default function ArtworkDetails() {
 	}
 
 	useEffect(() => {
+		getSelectedArtworkFromDb();
+		navigation.setOptions({
+			title: "Artwork",
+			headerTitleAlign: "center",
+		});
+	}, []);
+
+	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () =>
-				user?.uid === artwork?.userId ? ( // Conditional rendering
+				user?.uid === artwork?.userId ? (
 					<Pressable
 						onPress={() => setIsDeletingPost(true)}
 						style={{ marginRight: 16 }}
@@ -57,16 +69,7 @@ export default function ArtworkDetails() {
 					</Pressable>
 				) : null,
 		});
-		console.log("aaaaaaaaaa", artwork?.imageURL);
 	}, [artwork]);
-
-	useEffect(() => {
-		getSelectedArtworkFromDb();
-		navigation.setOptions({
-			title: "Artwork",
-			headerTitleAlign: "center",
-		});
-	}, []);
 
 	if (loading) {
 		// While loading, show the ActivityIndicator
@@ -86,8 +89,8 @@ export default function ArtworkDetails() {
 		);
 	}
 
-	if (errorMessage) {
-		// If there's an error, show the error message
+	// Show error message if artwork is not found
+	if (!artwork || errorMessage) {
 		return (
 			<View
 				style={{

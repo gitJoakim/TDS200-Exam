@@ -144,6 +144,7 @@ export default function AllArtworksWebMap({
 							pathname: "/artworkDetails/[id]",
 							params: { id: selectedArtwork.id },
 						}}
+						aria-label={`View details of ${selectedArtwork.title}`}
 					>
 						<View style={styles.innerInfoContainer}>
 							<Text style={styles.title}>{selectedArtwork.title}</Text>

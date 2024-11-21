@@ -6,7 +6,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 type ImagePickerProps = {
 	image: string | null;
-	setImage: React.Dispatch<React.SetStateAction<string | null>>;
 	setIsGalleryModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setIsCameraModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	width: number;
@@ -15,7 +14,6 @@ type ImagePickerProps = {
 
 export default function ImagePicker({
 	image,
-	setImage,
 	setIsGalleryModalOpen,
 	setIsCameraModalOpen,
 	width,
