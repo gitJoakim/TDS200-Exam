@@ -10,8 +10,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Colors } from "@/constants/Colors";
 
-// Define the prop types for your WebMapWithOl component
-type WebMapWithOlProps = {
+type SmallWebMapProps = {
 	region: { latitude: number; longitude: number } | null; // Center of the map (can be null)
 	onMapClick?: ({
 		latitude,
@@ -22,10 +21,7 @@ type WebMapWithOlProps = {
 	}) => void;
 };
 
-export default function WebMapWithOl({
-	region,
-	onMapClick,
-}: WebMapWithOlProps) {
+export default function SmallWebMap({ region, onMapClick }: SmallWebMapProps) {
 	const mapRef = useRef<HTMLDivElement | null>(null);
 	const mapInstance = useRef<Map | null>(null);
 

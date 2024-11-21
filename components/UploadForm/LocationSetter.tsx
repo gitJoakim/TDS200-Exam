@@ -7,8 +7,8 @@ import { Colors } from "@/constants/Colors"; // Adjust this to your project setu
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
 import WebMap from "@teovilla/react-native-web-maps";
 import googleConfig from "../../googlemapsEnv";
-import WebMapWithOl from "../WebMap/WebMapWithOl";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
+import SmallWebMap from "../MapsForWeb/SingleArtworkWebMap";
 
 interface LocationSetterProps {
 	location: Location.LocationObjectCoords | null;
@@ -70,7 +70,7 @@ export default function LocationSetter({
 			>
 				{Platform.OS === "web" ? (
 					// @ts-ignore
-					<WebMapWithOl region={location} />
+					<SmallWebMap region={location} />
 				) : (
 					<MapView
 						style={styles.tinyMap}

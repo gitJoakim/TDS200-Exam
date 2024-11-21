@@ -13,7 +13,6 @@ import MapView, { Marker } from "react-native-maps";
 import { Link, useNavigation } from "expo-router";
 import { ArtworkData, LikeData } from "@/utils/artworkData";
 import "ol/ol.css";
-import WebMapWithOl from "./WebMap/WebMapWithOl";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 import * as Location from "expo-location";
@@ -25,6 +24,7 @@ import { Colors } from "@/constants/Colors";
 import * as artworkAPI from "@/api/artworkApi";
 import CommentSection from "./CommentSection";
 import { Timestamp } from "firebase/firestore";
+import SmallWebMap from "./MapsForWeb/SingleArtworkWebMap";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -267,9 +267,9 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					</View>
 					{/* Map Container */}
 					<View style={styles.mapContainer}>
-						{/* Conditionally render WebMapWithOl for Web or MapView for Mobile */}
+						{/* Conditionally render Openlayers map for Web or MapView for Mobile */}
 						{Platform.OS === "web" ? (
-							<WebMapWithOl region={location} />
+							<SmallWebMap region={location} />
 						) : (
 							<MapView
 								style={styles.tinyMap}
