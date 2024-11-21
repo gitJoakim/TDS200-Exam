@@ -8,6 +8,7 @@ import {
 	ScrollView,
 	Image,
 	Pressable,
+	ActivityIndicator,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Link, useNavigation } from "expo-router";
@@ -47,6 +48,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	const [userData, setUserData] = useState<UserData | null>(null);
 	const [likesData, setLikesData] = useState<LikeData | null>(null);
 	const [userHasLiked, setUserHasLiked] = useState(false);
+	const [likeClickLoading, setLikeClickLoading] = useState(false);
 	const { user } = useAuthSession();
 	const navigation = useNavigation();
 
@@ -69,11 +71,14 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 	}
 
 	async function handleLikeClick(artworkId: string, userId: string) {
+		setLikeClickLoading(true);
 		try {
 			await artworkAPI.toggleLike(artworkId, userId); // Toggle the like on Firestore
 			fetchLikesData(); // Fetch updated like data after the operation
+			setLikeClickLoading(false);
 		} catch (error) {
 			console.error("Error toggling like:", error);
+			setLikeClickLoading(false);
 		}
 	}
 
@@ -161,7 +166,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				<View style={styles.innerContainer}>
 					{/* Artwork Title and Artist */}
 					<View>
-						<Text style={styles.title} accessibilityRole="header">
+						<Text style={styles.title} accessibilityRole="text">
 							{artworkData!.title}
 						</Text>
 
@@ -250,11 +255,15 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 								<Text style={{ color: Colors.ArtVistaRed }}>
 									{likesData?.userIds.length}
 								</Text>
-								<FontAwesome
-									name={userHasLiked ? "heart" : "heart-o"} // Conditionally render heart or heart-o
-									size={28}
-									color={Colors.ArtVistaRed}
-								/>
+								{likeClickLoading ? (
+									<ActivityIndicator color={Colors.ArtVistaRed} />
+								) : (
+									<FontAwesome
+										name={userHasLiked ? "heart" : "heart-o"} // Conditionally render heart or heart-o
+										size={28}
+										color={Colors.ArtVistaRed}
+									/>
+								)}
 							</Pressable>
 						</View>
 

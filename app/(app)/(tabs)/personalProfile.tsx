@@ -7,8 +7,8 @@ import { Colors } from "@/constants/Colors";
 import { useAuthSession } from "@/providers/AuthContextProvider";
 import { ArtworkData } from "@/utils/artworkData";
 import { UserData } from "@/utils/userData";
-import { useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AlertModal from "@/components/Modals/AlertModal";
@@ -35,6 +35,13 @@ export default function PersonalProfile() {
 		const artworksFromDb = await getArtworksByUserId(userId);
 		setArtworks(artworksFromDb);
 	}
+
+	useFocusEffect(
+		useCallback(() => {
+			fetchUserData();
+			getSelectedArtworkFromDb();
+		}, [])
+	);
 
 	useEffect(() => {
 		fetchUserData();

@@ -55,7 +55,6 @@ export default function ArtworkCarouselItem({
 						style={[styles.image, imageDimensionsStyle]}
 						source={{ uri: artwork.imageURL }}
 						contentFit="contain"
-						accessibilityRole="image"
 						accessibilityLabel={`Image of artwork titled '${artwork.title}'`}
 					/>
 				</View>
@@ -86,7 +85,6 @@ export default function ArtworkCarouselItem({
 							<Image
 								source={{ uri: userData.profileImageUrl }}
 								style={styles.profilePic}
-								accessibilityRole="image"
 								accessibilityLabel={`${artwork.artist} profile picture`}
 							/>
 						) : (
@@ -94,7 +92,6 @@ export default function ArtworkCarouselItem({
 								name="user-circle"
 								size={24}
 								color="black"
-								accessibilityRole="image"
 								accessibilityLabel={`Default profile picture for ${artwork.artist}`}
 							/>
 						)}
