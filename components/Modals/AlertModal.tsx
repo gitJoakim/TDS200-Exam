@@ -18,22 +18,38 @@ export default function AlertModal({
 	onCancel,
 }: AlertModalProps) {
 	return (
-		<View style={styles.modalOverlay}>
+		<View
+			style={styles.modalOverlay}
+			accessible={true}
+			accessibilityLabel="Alert modal"
+		>
 			<View style={styles.modalContent}>
 				{/* Prompt message */}
-				<Text style={styles.promptText}>{prompt}</Text>
+				<Text
+					style={styles.promptText}
+					accessible={true}
+					accessibilityLabel={prompt} // Make sure prompt text is accessible
+				>
+					{prompt}
+				</Text>
 
 				{/* Yes and No buttons */}
 				<View style={styles.buttonsContainer}>
 					<Pressable
 						style={[styles.button, styles.noButton]}
 						onPress={onCancel}
+						accessible={true}
+						accessibilityLabel={optionNo} // Label for "No" button
+						accessibilityRole="button"
 					>
 						<Text style={styles.noText}>{optionNo}</Text>
 					</Pressable>
 					<Pressable
 						style={[styles.button, styles.yesButton]}
 						onPress={onConfirm}
+						accessible={true}
+						accessibilityLabel={optionYes} // Label for "Yes" button
+						accessibilityRole="button"
 					>
 						<Text style={styles.yesText}>{optionYes}</Text>
 					</Pressable>

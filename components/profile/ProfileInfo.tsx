@@ -10,7 +10,11 @@ type ProfileInfoProps = {
 export default function ProfileInfo({ userData }: ProfileInfoProps) {
 	if (!userData) {
 		return (
-			<View style={styles.mainContainer}>
+			<View
+				style={styles.mainContainer}
+				accessible={true}
+				accessibilityLabel="Profile data unavailable"
+			>
 				<Text>An error occurred. No profile data available.</Text>
 			</View>
 		);
@@ -24,21 +28,46 @@ export default function ProfileInfo({ userData }: ProfileInfoProps) {
 					<Image
 						source={{ uri: userData.profileImageUrl }}
 						style={styles.profilePic}
+						accessible={true}
+						accessibilityLabel={`Profile picture of ${userData.username}`}
 					/>
 				) : (
-					<FontAwesome name="user-circle" size={64} color="black" />
+					<FontAwesome
+						name="user-circle"
+						size={64}
+						color="black"
+						accessible={true}
+						accessibilityLabel={`Default profile picture for ${userData.username}`}
+					/>
 				)}
 			</View>
 
 			{/* Username */}
-			<Text style={styles.username}>{userData.username}</Text>
+			<Text
+				style={styles.username}
+				accessible={true}
+				accessibilityLabel={`Username: ${userData.username}`}
+			>
+				{userData.username}
+			</Text>
 
 			{/* Bio */}
 			<View style={styles.bioContainer}>
 				{userData.bio ? (
-					<Text style={styles.bio}>{userData.bio}</Text>
+					<Text
+						style={styles.bio}
+						accessible={true}
+						accessibilityLabel={`Bio: ${userData.bio}`}
+					>
+						{userData.bio}
+					</Text>
 				) : (
-					<Text>This user has no bio yet.</Text>
+					<Text
+						accessible={true}
+						accessibilityLabel="This user has no bio yet."
+					>
+						This user has no bio yet.
+					</Text>
 				)}
 			</View>
 		</View>

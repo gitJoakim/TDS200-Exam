@@ -119,9 +119,16 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 							longitudeDelta: 0.1,
 						}}
 						onPress={handleMapPress}
+						accessibilityLabel="Map for selecting a location"
+						accessibilityHint="Tap on the map to choose a location"
 					>
 						{/* Display Marker if a location is selected */}
-						{selectedCoords && <Marker coordinate={selectedCoords} />}
+						{selectedCoords && (
+							<Marker
+								coordinate={selectedCoords}
+								accessibilityLabel="Selected location marker"
+							/>
+						)}
 					</MapView>
 				)}
 
@@ -129,7 +136,10 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 					style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
 				>
 					{/* Display Address */}
-					<Text style={styles.addressText}>
+					<Text
+						style={styles.addressText}
+						accessibilityLabel="Address of selected location"
+					>
 						{addressCoords
 							? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
 							: "Select a location"}
@@ -137,16 +147,33 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 
 					{/* Button Row */}
 					<View style={styles.buttonContainer}>
-						<Pressable style={styles.cancelButton} onPress={closeModal}>
+						<Pressable
+							style={styles.cancelButton}
+							onPress={closeModal}
+							accessibilityLabel="Cancel location selection"
+							accessibilityHint="Tap to close the map without saving"
+							accessible={true}
+						>
 							<Text style={styles.buttonText}>Cancel</Text>
 						</Pressable>
-						<Pressable style={styles.saveButton} onPress={handleSaveLocation}>
+						<Pressable
+							style={styles.saveButton}
+							onPress={handleSaveLocation}
+							accessibilityLabel="Save selected location"
+							accessibilityHint="Tap to save the location and close the map"
+							accessible={true}
+						>
 							<Text style={styles.buttonText}>Save Location</Text>
 						</Pressable>
 					</View>
 				</View>
 				{/* Close Button */}
-				<Pressable style={styles.closeButton} onPress={closeModal}>
+				<Pressable
+					style={styles.closeButton}
+					onPress={closeModal}
+					accessibilityLabel="Close map modal"
+					accessibilityHint="Tap to close the map modal"
+				>
 					<Ionicons name="close" size={30} color={Colors.ArtVistaRed} />
 				</Pressable>
 			</View>

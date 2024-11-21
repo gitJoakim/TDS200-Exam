@@ -71,11 +71,23 @@ export default function EditProfileModal({
 				<TouchableOpacity
 					onPress={openImagePicker}
 					style={styles.profilePicContainer}
+					accessibilityRole="button"
+					accessibilityLabel="Change profile picture"
+					accessibilityHint="Tap to select a new profile picture"
 				>
 					{selectedImage ? (
-						<Image source={{ uri: selectedImage }} style={styles.profilePic} />
+						<Image
+							source={{ uri: selectedImage }}
+							style={styles.profilePic}
+							accessibilityLabel="Your profile picture"
+						/>
 					) : (
-						<FontAwesome name="user-circle" size={104} color="black" />
+						<FontAwesome
+							name="user-circle"
+							size={104}
+							color="black"
+							accessibilityLabel="Default profile picture"
+						/>
 					)}
 					<View style={styles.cameraIconOverlay}>
 						<FontAwesome name="camera" size={24} color="white" />
@@ -83,7 +95,9 @@ export default function EditProfileModal({
 				</TouchableOpacity>
 
 				{/* Username */}
-				<Text style={styles.username}>{userData?.username}</Text>
+				<Text style={styles.username} accessibilityLabel="Username">
+					{userData?.username}
+				</Text>
 
 				{/* Bio */}
 				<TextInput
@@ -94,6 +108,8 @@ export default function EditProfileModal({
 					placeholder="Write something about yourself..."
 					maxLength={200}
 					textAlignVertical="top" // had to set this for android, its auto top on web and ios
+					accessibilityLabel="Edit bio"
+					accessibilityHint="Tap to edit your biography"
 				/>
 				<Text style={styles.charCount}>{editedBioText.length}/200</Text>
 
@@ -102,10 +118,19 @@ export default function EditProfileModal({
 					<Pressable
 						style={[styles.button, styles.cancelButton]}
 						onPress={handleCancel}
+						accessibilityRole="button"
+						accessibilityLabel="Cancel editing"
+						accessibilityHint="Tap to cancel the changes and close the modal"
 					>
 						<Text style={styles.cancelButtonText}>Cancel</Text>
 					</Pressable>
-					<Pressable style={styles.button} onPress={handleSave}>
+					<Pressable
+						style={styles.button}
+						onPress={handleSave}
+						accessibilityRole="button"
+						accessibilityLabel="Save changes"
+						accessibilityHint="Tap to save your changes and update your profile"
+					>
 						<Text style={styles.buttonText}>Save</Text>
 					</Pressable>
 				</View>
@@ -113,7 +138,12 @@ export default function EditProfileModal({
 
 			{/* Image Picker Modal */}
 			{isImageModalOpen && (
-				<Modal transparent={true} animationType="slide">
+				<Modal
+					transparent={true}
+					animationType="slide"
+					accessibilityViewIsModal={true}
+					accessibilityLabel="Image selection modal"
+				>
 					<GalleryModal
 						closeModal={() => setIsImageModalOpen(false)}
 						setImage={(imageUri: string) => {

@@ -51,6 +51,8 @@ export default function PersonalProfile() {
 					style={{
 						marginLeft: 16,
 					}}
+					accessible={true}
+					accessibilityLabel="Log out"
 				>
 					<MaterialIcons name="logout" size={24} color={Colors.ArtVistaRed} />
 				</Pressable>
@@ -61,6 +63,8 @@ export default function PersonalProfile() {
 						setIsEditProfileModalOpen(true);
 					}}
 					style={{ marginRight: 16 }}
+					accessible={true}
+					accessibilityLabel="Profile settings"
 				>
 					<MaterialIcons name="settings" size={24} color={Colors.ArtVistaRed} />
 				</Pressable>
@@ -82,14 +86,24 @@ export default function PersonalProfile() {
 			<ProfileArtGrid artworks={artworks} />
 
 			{/* Edit Profile Modal */}
-			<Modal visible={isEditProfileModalOpen}>
+			<Modal
+				visible={isEditProfileModalOpen}
+				accessible={true}
+				accessibilityViewIsModal={true}
+				accessibilityLabel="Edit profile modal"
+			>
 				<EditProfileModal
 					closeModal={() => setIsEditProfileModalOpen(false)}
 					userData={userData} // Ensure userData is passed correctly
 					onSave={fetchUserData}
 				/>
 			</Modal>
-			<Modal visible={isLogOutModalOpen}>
+			<Modal
+				visible={isLogOutModalOpen}
+				accessible={true}
+				accessibilityViewIsModal={true}
+				accessibilityLabel="Log out Confirmation"
+			>
 				<AlertModal
 					prompt="Are you sure you want to log out?"
 					optionNo="No, cancel"

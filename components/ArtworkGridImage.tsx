@@ -35,7 +35,14 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 		// was taught to use Link from expo-router here, but that failed to load the images
 		// on iOs and Android (guessing because of the way ive dealt with image sizing)
 		// so I´ve restorted to using pressable and handling the router through a function instead.
-		<Pressable onPress={handleImagePress} style={styles.container}>
+		<Pressable
+			onPress={handleImagePress}
+			style={styles.container}
+			accessible={true} // Ensure the Pressable is accessible
+			accessibilityRole="link" // Indicate that this element is a clickable link
+			accessibilityLabel={`Artwork titled ${artwork.title}`} // Descriptive label for screen readers
+			accessibilityHint={`Opens details for ${artwork.title}`}
+		>
 			{imageWidth && imageHeight ? (
 				<Image
 					source={{ uri: artwork.imageURL }}
@@ -44,6 +51,8 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 						height: getImageHeight(),
 					}}
 					resizeMode="contain"
+					accessible={true}
+					accessibilityLabel={artwork.title}
 				/>
 			) : null}
 		</Pressable>

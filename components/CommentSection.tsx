@@ -82,7 +82,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.commentsCounter}>
+			<Text style={styles.commentsCounter} accessibilityRole="text">
 				Comments: {commentsData?.comments.length}
 			</Text>
 			<ScrollView style={styles.scrollContainer} nestedScrollEnabled={true}>
@@ -98,7 +98,13 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 											params: { id: comment.commentAuthor },
 										}}
 									>
-										<Text style={styles.commentAuthor}>
+										<Text
+											style={styles.commentAuthor}
+											accessibilityRole="link"
+											accessibilityLabel={`Go to profile of ${
+												username || comment.commentAuthor
+											}`}
+										>
 											{username ? username : comment.commentAuthor}
 										</Text>
 									</Link>
@@ -113,6 +119,9 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 												setCommentToDelete(comment.commentId);
 												setIsDeleteModalOpen(true);
 											}}
+											accessible={true}
+											accessibilityLabel="Delete this comment"
+											accessibilityHint="Deletes your comment from this artwork's comment section"
 										>
 											<Feather
 												name="trash-2"

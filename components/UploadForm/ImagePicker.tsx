@@ -43,12 +43,14 @@ export default function ImagePicker({
 						source={{ uri: image }}
 						contentFit="contain"
 						style={imageDimensionsStyle}
+						accessibilityLabel="Selected artwork image"
 					/>
 				) : (
 					<MaterialCommunityIcons
 						name="image-off-outline"
 						size={200}
 						color="black"
+						accessibilityLabel="No image selected"
 					/>
 				)}
 			</View>
@@ -72,6 +74,8 @@ export default function ImagePicker({
 						onPress={() => {
 							setIsCameraModalOpen(true);
 						}}
+						accessibilityLabel="Open camera to capture an image"
+						accessibilityRole="button"
 					>
 						<Feather name="camera" size={32} color={Colors.ArtVistaRed} />
 					</Pressable>
@@ -86,6 +90,8 @@ export default function ImagePicker({
 					onPress={() => {
 						setIsGalleryModalOpen(true);
 					}}
+					accessibilityLabel="Open gallery to select an image"
+					accessibilityRole="button"
 				>
 					<MaterialCommunityIcons
 						name="file-image-plus"

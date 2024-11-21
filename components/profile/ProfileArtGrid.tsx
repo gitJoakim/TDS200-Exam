@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Dimensions,
 	Platform,
+	Text,
 } from "react-native";
 import { ArtworkData } from "@/utils/artworkData";
 import { Link } from "expo-router";
@@ -17,21 +18,45 @@ type ProfileArtGridProps = {
 
 export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
 	const renderItem = ({ item }: { item: ArtworkData }) => (
-		<View style={styles.itemContainer}>
+		<View
+			style={styles.itemContainer}
+			accessible={true}
+			accessibilityRole="image"
+		>
 			{item.imageURL && (
 				<Link
 					href={{
 						pathname: "/artworkDetails/[id]",
 						params: { id: item.id },
 					}}
+					accessible={true}
+					accessibilityLabel={`View details for artwork titled "${item.title}"`}
 				>
 					<View>
-						<Image source={{ uri: item.imageURL }} style={styles.image} />
+						<Image
+							source={{ uri: item.imageURL }}
+							style={styles.image}
+							accessible={true}
+							accessibilityLabel={`Artwork titled ${item.title}`}
+						/>
 					</View>
 				</Link>
 			)}
 		</View>
 	);
+
+	if (artworks.length === 0) {
+		return (
+			<View style={styles.mainContainer}>
+				<Text
+					accessible={true}
+					accessibilityLabel="No artworks available to display"
+				>
+					No artworks available.
+				</Text>
+			</View>
+		);
+	}
 
 	return (
 		<View style={styles.mainContainer}>

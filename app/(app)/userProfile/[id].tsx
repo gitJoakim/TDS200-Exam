@@ -80,7 +80,13 @@ export default function UserProfile() {
 	return (
 		<View style={styles.mainContainer}>
 			{errorMessage ? (
-				<Text>{errorMessage}</Text>
+				<Text
+					accessibilityRole="alert"
+					accessibilityLiveRegion="assertive"
+					accessibilityLabel={errorMessage}
+				>
+					{errorMessage}
+				</Text>
 			) : (
 				<>
 					<ProfileInfo userData={userData} />

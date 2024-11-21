@@ -47,18 +47,30 @@ export default function ArtworkCarouselItem({
 		<SafeAreaView style={styles.imageContainer}>
 			<Link
 				href={{ pathname: "/artworkDetails/[id]", params: { id: artwork.id } }}
+				accessibilityRole="link"
+				accessibilityLabel={`Go to details of artwork titled '${artwork.title}'`}
 			>
 				<View>
 					<Image
 						style={[styles.image, imageDimensionsStyle]}
 						source={{ uri: artwork.imageURL }}
 						contentFit="contain"
+						accessibilityRole="image"
+						accessibilityLabel={`Image of artwork titled '${artwork.title}'`}
 					/>
 				</View>
 			</Link>
-			<Text style={styles.artworkTitle}>'{artwork.title}'</Text>
+			<Text
+				style={styles.artworkTitle}
+				accessibilityRole="text"
+				accessibilityLabel={`Artwork title: ${artwork.title}`}
+			>
+				'{artwork.title}'
+			</Text>
 			<Link
 				href={{ pathname: "/userProfile/[id]", params: { id: artwork.userId } }}
+				accessibilityRole="link"
+				accessibilityLabel={`Go to artist profile of ${artwork.artist}`}
 			>
 				<View
 					style={{
@@ -74,12 +86,26 @@ export default function ArtworkCarouselItem({
 							<Image
 								source={{ uri: userData.profileImageUrl }}
 								style={styles.profilePic}
+								accessibilityRole="image"
+								accessibilityLabel={`${artwork.artist} profile picture`}
 							/>
 						) : (
-							<FontAwesome name="user-circle" size={24} color="black" />
+							<FontAwesome
+								name="user-circle"
+								size={24}
+								color="black"
+								accessibilityRole="image"
+								accessibilityLabel={`Default profile picture for ${artwork.artist}`}
+							/>
 						)}
 					</View>
-					<Text style={styles.artistName}>{artwork.artist}</Text>
+					<Text
+						style={styles.artistName}
+						accessibilityRole="text"
+						accessibilityLabel={`Artist: ${artwork.artist}`}
+					>
+						{artwork.artist}
+					</Text>
 				</View>
 			</Link>
 		</SafeAreaView>

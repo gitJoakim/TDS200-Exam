@@ -40,6 +40,8 @@ export default function HashtagsInput({
 				key={index}
 				style={styles.hashtag}
 				onPress={() => removeHashtag(index)}
+				accessibilityLabel={`Remove hashtag ${hashtag}`}
+				accessibilityRole="button"
 			>
 				<Text style={styles.hashtagTextColor}>{hashtag}</Text>
 			</Pressable>
@@ -54,6 +56,7 @@ export default function HashtagsInput({
 					color: "black",
 					marginTop: 6,
 				}}
+				accessibilityLiveRegion="assertive"
 			>
 				{hashtagsArray.length === 0
 					? "Type a hashtag and press Enter to add it (you can add multiple)"
@@ -79,6 +82,8 @@ export default function HashtagsInput({
 						event.preventDefault();
 					}}
 					blurOnSubmit={false} // keeps focus after user has submitted a hashtag
+					accessibilityLabel="Enter a hashtag"
+					accessibilityHint="Type a hashtag and press Enter to add it."
 				/>
 			</View>
 		</View>

@@ -64,6 +64,9 @@ export default function ArtworkDetails() {
 					<Pressable
 						onPress={() => setIsDeletingPost(true)}
 						style={{ marginRight: 16 }}
+						accessibilityLabel="Delete Artwork"
+						accessibilityHint="Deletes the artwork permanently"
+						accessibilityRole="button"
 					>
 						<Feather name="trash-2" size={24} color={Colors.ArtVistaRed} />
 					</Pressable>
@@ -101,7 +104,9 @@ export default function ArtworkDetails() {
 					borderTopWidth: 1,
 				}}
 			>
-				<Text>{errorMessage}</Text>
+				<Text accessibilityRole="alert" style={{ color: Colors.ArtVistaRed }}>
+					{errorMessage}
+				</Text>
 			</View>
 		);
 	}
@@ -110,8 +115,10 @@ export default function ArtworkDetails() {
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
 			<Artwork artworkData={artwork} />
-			<Modal visible={isDeletingPost}>
-				{loading && <ActivityIndicator />}
+			<Modal visible={isDeletingPost} accessibilityViewIsModal={true}>
+				{loading && (
+					<ActivityIndicator accessibilityLabel="Deleting artwork..." />
+				)}
 				<AlertModal
 					prompt={
 						"Are you sure you want to permanently delete this artwork? This action cannot be undone."

@@ -32,10 +32,18 @@ export default function CameraModal({
 	if (!permission.granted) {
 		return (
 			<View style={styles.container}>
-				<Text style={styles.message}>
+				<Text
+					style={styles.message}
+					accessibilityRole="text"
+					accessibilityLabel="Permission needed to use camera"
+				>
 					We need your permission to use the camera
 				</Text>
-				<Button onPress={requestPermission} title="Grant Permission" />
+				<Button
+					onPress={requestPermission}
+					title="Grant Permission"
+					accessibilityLabel="Grant camera permission"
+				/>
 			</View>
 		);
 	}
@@ -62,11 +70,15 @@ export default function CameraModal({
 				style={styles.camera}
 				facing={facing}
 				ref={(r) => (camera = r)}
+				accessibilityLabel="Camera view"
 			>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => toggleCameraFacing()}
+						accessibilityRole="button"
+						accessibilityLabel="Flip camera"
+						accessibilityHint="Tap to flip between front and back camera"
 					>
 						{Platform.OS === "android" ? (
 							<MaterialIcons
@@ -81,10 +93,19 @@ export default function CameraModal({
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => captureImage()}
+						accessibilityRole="button"
+						accessibilityLabel="Capture photo"
+						accessibilityHint="Tap to take a photo"
 					>
 						<Entypo name="camera" size={32} color="white" />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={() => closeModal()}>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => closeModal()}
+						accessibilityRole="button"
+						accessibilityLabel="Close camera"
+						accessibilityHint="Tap to close the camera modal"
+					>
 						<AntDesign name="back" size={30} color="white" />
 					</TouchableOpacity>
 				</View>

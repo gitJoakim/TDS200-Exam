@@ -71,6 +71,7 @@ const Authentication = () => {
 					onChangeText={setEmail}
 					autoCapitalize="none"
 					placeholder="Enter your email"
+					accessibilityLabel="Email input"
 				/>
 
 				{/* Conditional rendering for Sign Up */}
@@ -83,6 +84,7 @@ const Authentication = () => {
 							onChangeText={setUsername}
 							autoCapitalize="none"
 							placeholder="Choose a username"
+							accessibilityLabel="Username input"
 						/>
 					</View>
 				)}
@@ -96,6 +98,7 @@ const Authentication = () => {
 					autoCapitalize="none"
 					secureTextEntry
 					placeholder="Enter your password"
+					accessibilityLabel="Password input"
 				/>
 
 				{/* Display error message if there is one */}
@@ -107,6 +110,7 @@ const Authentication = () => {
 				<Pressable
 					style={[styles.button, styles.submitButton]}
 					onPress={isSignUp ? handleSignUp : handleLogIn}
+					accessibilityLabel={isSignUp ? "Sign Up" : "Log In"}
 				>
 					<Text style={styles.buttonText}>
 						{isSignUp ? "Sign Up" : "Log In"}
@@ -118,7 +122,10 @@ const Authentication = () => {
 					<Text>
 						{isSignUp ? "Already have an account?" : "Don't have an account?"}
 					</Text>
-					<Pressable onPress={toggleMode}>
+					<Pressable
+						onPress={toggleMode}
+						accessibilityLabel="Toggle between log in and sign up"
+					>
 						<Text style={styles.toggleText}>
 							{isSignUp ? "Log In" : "Sign Up"}
 						</Text>

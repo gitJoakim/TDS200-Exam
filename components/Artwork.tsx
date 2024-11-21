@@ -161,7 +161,9 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 				<View style={styles.innerContainer}>
 					{/* Artwork Title and Artist */}
 					<View>
-						<Text style={styles.title}>{artworkData!.title}</Text>
+						<Text style={styles.title} accessibilityRole="header">
+							{artworkData!.title}
+						</Text>
 
 						{/* Artwork Image */}
 
@@ -169,10 +171,12 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 							resizeMode="contain"
 							style={[styles.artworkImage, imageDimensionsStyle]}
 							source={{ uri: artworkData!.imageURL }}
+							accessible={true}
+							accessibilityLabel={`Artwork titled ${artworkData!.title}`}
 						/>
 					</View>
 					{/* Date */}
-					<Text style={styles.dateText}>
+					<Text style={styles.dateText} accessibilityRole="text">
 						{dateFormatter(artworkData!.date as Timestamp)}
 					</Text>
 					<View style={styles.textContainer}>
@@ -199,6 +203,9 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 										justifyContent: "flex-start", // Align the items to the left
 										columnGap: 6, // Space between image and text
 									}}
+									accessible={true}
+									accessibilityRole="link"
+									accessibilityLabel={`Go to ${artworkData!.artist}'s profile`}
 								>
 									<View style={styles.profilePicContainer}>
 										{userData?.profileImageUrl ? (
@@ -206,12 +213,22 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 												resizeMode="cover"
 												source={{ uri: userData?.profileImageUrl! }}
 												style={{ width: 24, height: 24, borderRadius: 50 }}
+												accessible={true}
+												accessibilityLabel={`Profile image of ${artworkData?.artist}`}
 											/>
 										) : (
-											<FontAwesome name="user-circle" size={24} color="black" />
+											<FontAwesome
+												name="user-circle"
+												size={24}
+												color="black"
+												accessible={true}
+												accessibilityLabel={`Default profile image of ${artworkData?.artist}`}
+											/>
 										)}
 									</View>
-									<Text style={styles.artistName}>{artworkData!.artist}</Text>
+									<Text style={styles.artistName} accessibilityRole="text">
+										{artworkData!.artist}
+									</Text>
 								</View>
 							</Link>
 							<Pressable
@@ -225,6 +242,10 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 									alignItems: "center",
 									columnGap: 6,
 								}}
+								accessible={true}
+								accessibilityRole="button"
+								accessibilityLabel="Like this artwork"
+								accessibilityHint="Toggles like status"
 							>
 								<Text style={{ color: Colors.ArtVistaRed }}>
 									{likesData?.userIds.length}
@@ -238,7 +259,9 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 						</View>
 
 						{/* Artwork Description */}
-						<Text style={styles.description}>{artworkData!.description}</Text>
+						<Text style={styles.description} accessibilityRole="text">
+							{artworkData!.description}
+						</Text>
 
 						{/* Hashtags */}
 						<View style={styles.hashtagsContainer}>
@@ -279,9 +302,17 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 									scrollEnabled={true}
 									rotateEnabled={false}
 									pitchEnabled={false}
+									accessibilityLabel={`Map showing the location of ${
+										artworkData!.title
+									}`}
 								>
 									{artworkData?.artworkCoords && (
-										<Marker coordinate={artworkData.artworkCoords} />
+										<Marker
+											coordinate={artworkData.artworkCoords}
+											title={artworkData!.artist}
+											description={artworkData!.title}
+											accessibilityLabel="Artwork location"
+										/>
 									)}
 								</MapView>
 							)}

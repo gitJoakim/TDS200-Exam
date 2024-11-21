@@ -19,6 +19,9 @@ export default function FormActionButtons({
 			<Pressable
 				style={[styles.button, styles.clearButton]}
 				onPress={() => clearForm()}
+				accessibilityLabel="Clear Form"
+				accessibilityHint="Clears all input fields in the form"
+				accessibilityRole="button"
 			>
 				<Text style={styles.clearButtonText}>Clear Form</Text>
 			</Pressable>
@@ -31,6 +34,9 @@ export default function FormActionButtons({
 						blurDuringUpload();
 					}
 				}}
+				accessibilityLabel="Upload Artwork"
+				accessibilityHint="Uploads the artwork and submits the form"
+				accessibilityRole="button"
 			>
 				<Text style={styles.buttonText}>Upload Artwork</Text>
 			</Pressable>

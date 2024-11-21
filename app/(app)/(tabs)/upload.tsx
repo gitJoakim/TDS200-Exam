@@ -130,6 +130,8 @@ export default function UploadArtworkForm() {
 						value={title}
 						onChangeText={setTitle}
 						placeholder="Give the artwork a title..."
+						accessibilityLabel="Artwork title input"
+						accessibilityHint="Enter a title for the artwork"
 					/>
 
 					{/*  Upload image from camera or gallery	*/}
@@ -149,6 +151,8 @@ export default function UploadArtworkForm() {
 						multiline={true}
 						placeholder="Describe the artwork.."
 						textAlignVertical="top" // had to set this for android, its auto top on web and ios
+						accessibilityLabel="Artwork description input"
+						accessibilityHint="Describe your artwork in a few words"
 					/>
 
 					{/*  Hashtags component		*/}
@@ -172,7 +176,12 @@ export default function UploadArtworkForm() {
 				</View>
 			</ScrollView>
 
-			<Modal visible={isMapModalOpen} animationType="slide">
+			<Modal
+				visible={isMapModalOpen}
+				animationType="slide"
+				accessibilityViewIsModal={true}
+				accessibilityLabel="Map modal to select artwork location"
+			>
 				<MapModal
 					closeModal={() => setIsMapModalOpen(false)}
 					setLocation={setLocation}
@@ -180,7 +189,11 @@ export default function UploadArtworkForm() {
 			</Modal>
 
 			{/*	Camera and gallery modals 	*/}
-			<Modal visible={isGalleryModalOpen}>
+			<Modal
+				visible={isGalleryModalOpen}
+				accessibilityViewIsModal={true}
+				accessibilityLabel="Gallery Modal"
+			>
 				<GalleryModal
 					closeModal={() => {
 						setIsGalleryModalOpen(false);
@@ -188,7 +201,11 @@ export default function UploadArtworkForm() {
 					setImage={setImage}
 				/>
 			</Modal>
-			<Modal visible={isCameraModalOpen}>
+			<Modal
+				visible={isCameraModalOpen}
+				accessibilityViewIsModal={true}
+				accessibilityLabel="Camera Modal"
+			>
 				<CameraModal
 					closeModal={() => {
 						setIsCameraModalOpen(false);
@@ -199,7 +216,12 @@ export default function UploadArtworkForm() {
 
 			{/*  Blurs screen during upload		*/}
 			{isUploading && (
-				<View style={styles.blurContainer}>
+				<View
+					style={styles.blurContainer}
+					accessibilityLiveRegion="assertive"
+					accessibilityRole="alert"
+					accessibilityLabel="Uploading artwork, please wait."
+				>
 					<ActivityIndicator />
 					<Text style={{ textAlign: "center", marginTop: 12, fontSize: 18 }}>
 						Uploading your masterpiece to{" "}

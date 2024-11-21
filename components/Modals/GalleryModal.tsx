@@ -48,15 +48,27 @@ export default function GalleryModal({
 		// If permission is denied, show the request permission UI
 		return (
 			<View style={styles.container}>
-				<Text style={styles.message}>
+				<Text
+					style={styles.message}
+					accessibilityLabel="Permission required to access gallery"
+				>
 					We need your permission to access your gallery
 				</Text>
 				<View style={styles.buttonContainer}>
 					<View style={styles.buttonSpacing}>
-						<Button title="Grant Permission" onPress={requestPermission} />
+						<Button
+							title="Grant Permission"
+							onPress={requestPermission}
+							accessibilityLabel="Grant permission to access gallery"
+						/>
 					</View>
 					<View style={styles.buttonSpacing}>
-						<Button color="red" title="Exit" onPress={closeModal} />
+						<Button
+							color="red"
+							title="Exit"
+							onPress={closeModal}
+							accessibilityLabel="Deny permission to access gallery and Close modal"
+						/>
 					</View>
 				</View>
 			</View>
@@ -64,19 +76,39 @@ export default function GalleryModal({
 	}
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.message}>Select an image from your gallery</Text>
+		<View
+			style={styles.container}
+			accessibilityViewIsModal={true}
+			accessible={true}
+		>
+			<Text style={styles.message} accessibilityLabel="Image picker modal">
+				Select an image from your gallery
+			</Text>
 			<View style={styles.buttonContainer}>
 				<View style={styles.buttonSpacing}>
-					<Button title="Pick Image" onPress={pickImage} />
+					<Button
+						title="Pick Image"
+						onPress={pickImage}
+						accessibilityLabel="Pick an image from the gallery"
+					/>
 				</View>
 
 				<View style={styles.buttonSpacing}>
-					<Button title="Go Back" onPress={closeModal} color="red" />
+					<Button
+						title="Go Back"
+						onPress={closeModal}
+						color="red"
+						accessibilityLabel="Exit and Close modal"
+					/>
 				</View>
 			</View>
 			{selectedImage && (
-				<Image source={{ uri: selectedImage }} style={styles.selectedImage} />
+				<Image
+					source={{ uri: selectedImage }}
+					style={styles.selectedImage}
+					accessibilityLabel="Selected image preview"
+					accessibilityHint="This is the image you selected from the gallery"
+				/>
 			)}
 		</View>
 	);

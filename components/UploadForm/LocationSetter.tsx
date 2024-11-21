@@ -51,8 +51,9 @@ export default function LocationSetter({
 					name="location-outline"
 					size={30}
 					color={Colors.ArtVistaRed}
+					accessibilityLabel="Location icon"
 				/>
-				<Text style={styles.locationText}>
+				<Text style={styles.locationText} accessibilityLiveRegion="assertive">
 					{location
 						? `${addressCoords?.[0]?.city}, ${addressCoords?.[0]?.country}`
 						: "Click the map to set location"}
@@ -65,6 +66,9 @@ export default function LocationSetter({
 					console.log("Map pressed");
 				}}
 				style={styles.mapWrapper}
+				accessibilityLabel="Tap to set location"
+				accessibilityHint="Opens a map to allow you to set your location"
+				accessibilityRole="button"
 			>
 				{Platform.OS === "web" ? (
 					// @ts-ignore

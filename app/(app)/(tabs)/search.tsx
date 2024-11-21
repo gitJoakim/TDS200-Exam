@@ -161,6 +161,8 @@ export default function Search() {
 					size={20}
 					color={Colors.ArtVistaRed}
 					style={styles.searchIcon}
+					accessible={true}
+					accessibilityLabel="Search Icon"
 				/>
 				<TextInput
 					style={[
@@ -172,6 +174,9 @@ export default function Search() {
 					placeholder={`Search by ${searchType}...`}
 					placeholderTextColor="#888"
 					autoCapitalize="none"
+					accessible={true}
+					accessibilityLabel="Search Input"
+					accessibilityHint={`Enter a search query to find ${searchType}...`}
 				/>
 			</View>
 
@@ -183,6 +188,9 @@ export default function Search() {
 						searchType === "title or description" && styles.activeButton,
 					]}
 					onPress={() => handleSearchTypeChange("title or description")}
+					accessible={true}
+					accessibilityLabel="Search by title or description"
+					accessibilityRole="button"
 				>
 					<Text
 						style={[
@@ -199,6 +207,9 @@ export default function Search() {
 						searchType === "hashtags" && styles.activeButton,
 					]}
 					onPress={() => handleSearchTypeChange("hashtags")}
+					accessible={true}
+					accessibilityLabel="Search by hashtag"
+					accessibilityRole="button"
 				>
 					<Text
 						style={[
@@ -215,6 +226,9 @@ export default function Search() {
 						searchType === "usernames" && styles.activeButton,
 					]}
 					onPress={() => handleSearchTypeChange("usernames")}
+					accessible={true}
+					accessibilityLabel="Search by username"
+					accessibilityRole="button"
 				>
 					<Text
 						style={[
@@ -241,10 +255,15 @@ export default function Search() {
 							data={userData} // Array of UserData objects
 							renderItem={renderUsernameSearchResults} // For each item, render UsernameSearchItem
 							keyExtractor={(item) => item.userId} // Assuming userId is unique
+							accessible={true}
 						/>
 					) : (
 						userData !== null && ( // Only show "No results" if userData has been set
-							<Text style={styles.noResultsText}>
+							<Text
+								style={styles.noResultsText}
+								accessible={true}
+								accessibilityLabel={`No results found for ${searchQuery.trim()}`}
+							>
 								No results found for "{searchQuery.trim()}".
 							</Text>
 						)

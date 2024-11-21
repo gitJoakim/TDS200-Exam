@@ -20,6 +20,9 @@ export default function UsernameSearchItem({
 					pathname: "/userProfile/[id]",
 					params: { id: userData.userId },
 				}}
+				accessible={true}
+				accessibilityRole="link"
+				accessibilityLabel={`Go to ${userData.username}'s profile`}
 			>
 				<View style={styles.cardContent}>
 					{/* Profile picture with red border if available */}
@@ -29,6 +32,8 @@ export default function UsernameSearchItem({
 								source={{ uri: userData.profileImageUrl }}
 								style={styles.profilePic}
 								resizeMode="cover"
+								accessible={true}
+								accessibilityLabel={`${userData.username}'s profile picture`}
 							/>
 						) : (
 							<FontAwesome
@@ -36,13 +41,29 @@ export default function UsernameSearchItem({
 								size={47}
 								color="black"
 								style={styles.icon}
+								accessible={true}
+								accessibilityLabel={`${userData.username}'s profile picture`}
 							/>
 						)}
 					</View>
 
 					<View>
-						<Text style={styles.username}>{userData.username}</Text>
-						<Text style={styles.postsCount}>{numberOfArtworks} artworks</Text>
+						<Text
+							style={styles.username}
+							accessible={true}
+							accessibilityRole="text"
+							accessibilityLabel={`Username: ${userData.username}`}
+						>
+							{userData.username}
+						</Text>
+						<Text
+							style={styles.postsCount}
+							accessible={true}
+							accessibilityRole="text"
+							accessibilityLabel={`${numberOfArtworks} artworks`}
+						>
+							{numberOfArtworks} artworks
+						</Text>
 					</View>
 				</View>
 			</Link>
