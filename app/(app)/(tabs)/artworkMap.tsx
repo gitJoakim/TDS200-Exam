@@ -1,33 +1,54 @@
 import { Colors } from "@/constants/Colors";
 import { ArtworkData } from "@/utils/artworkData";
-import { router } from "expo-router"; // Use this for navigation
+import { router, useNavigation } from "expo-router"; // Use this for navigation
 import { useEffect, useState } from "react";
-import {
-	Text,
-	View,
-	StyleSheet,
-	Pressable,
-	TouchableWithoutFeedback,
-	Platform,
-} from "react-native";
+import { Text, View, StyleSheet, Platform, Pressable } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import * as artworkAPI from "@/api/artworkApi";
 import { Image } from "expo-image";
-import BigWebMap from "@/components/MapsForWeb/AllArtworksWebMap";
+import AllArtworksWebMap from "@/components/MapsForWeb/AllArtworksWebMap";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function ArtworkMap() {
 	const [artworks, setArtworks] = useState<ArtworkData[]>([]);
 	const [selectedArtworkId, setSelectedArtworkId] = useState<string | null>(
 		null
 	);
+	const navigation = useNavigation();
 
 	async function getArtworks() {
-		const artworks = await artworkAPI.getAllArtworks();
-		setArtworks(artworks);
+		console.log(artworks);
+		setArtworks([]);
+		console.log(artworks);
+
+		const artworksFromDb = await artworkAPI.getAllArtworks();
+		setArtworks(artworksFromDb);
+		console.log(artworks);
 	}
 
 	useEffect(() => {
 		getArtworks();
+		navigation.setOptions({
+			headerLeft: () => (
+				<Pressable
+					onPress={() => {
+						console.log("refreshing");
+						console.log(artworks);
+						getArtworks();
+						console.log(artworks);
+					}}
+					style={{
+						marginLeft: 16,
+					}}
+				>
+					<MaterialCommunityIcons
+						name="refresh"
+						size={24}
+						color={Colors.ArtVistaRed}
+					/>
+				</Pressable>
+			),
+		});
 	}, []);
 
 	// Handle the press of the callout by getting the artwork id
@@ -43,7 +64,7 @@ export default function ArtworkMap() {
 	return (
 		<View style={styles.mainContainer}>
 			{Platform.OS === "web" ? (
-				<BigWebMap artworks={artworks} />
+				<AllArtworksWebMap artworks={artworks} />
 			) : (
 				<MapView
 					initialRegion={{

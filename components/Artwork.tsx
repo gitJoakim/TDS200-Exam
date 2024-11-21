@@ -24,7 +24,7 @@ import { Colors } from "@/constants/Colors";
 import * as artworkAPI from "@/api/artworkApi";
 import CommentSection from "./CommentSection";
 import { Timestamp } from "firebase/firestore";
-import SmallWebMap from "./MapsForWeb/SingleArtworkWebMap";
+import SingleArtworkWebMap from "./MapsForWeb/SingleArtworkWebMap";
 
 type ArtworkProps = {
 	artworkData: ArtworkData | null;
@@ -269,7 +269,7 @@ export default function Artwork({ artworkData }: ArtworkProps) {
 					<View style={styles.mapContainer}>
 						{/* Conditionally render Openlayers map for Web or MapView for Mobile */}
 						{Platform.OS === "web" ? (
-							<SmallWebMap region={location} />
+							<SingleArtworkWebMap region={location} />
 						) : (
 							<MapView
 								style={styles.tinyMap}

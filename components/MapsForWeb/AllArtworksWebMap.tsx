@@ -13,11 +13,13 @@ import { ArtworkData } from "@/utils/artworkData";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 
-type BigWebMapProps = {
+type AllArtworksWebMapProps = {
 	artworks: ArtworkData[]; // Array of artworks with coordinates
 };
 
-export default function BigWebMap({ artworks }: BigWebMapProps) {
+export default function AllArtworksWebMap({
+	artworks,
+}: AllArtworksWebMapProps) {
 	const mapRef = useRef<HTMLDivElement | null>(null);
 	const mapInstance = useRef<Map | null>(null);
 

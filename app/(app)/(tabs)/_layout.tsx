@@ -43,7 +43,7 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="artworkMap"
 				options={{
-					title: "Map",
+					title: "Map of Artworks",
 					tabBarIcon: ({ focused }) => (
 						<FontAwesome6
 							name="map-location-dot"

@@ -5,10 +5,8 @@ import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors"; // Adjust this to your project setup
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
-import WebMap from "@teovilla/react-native-web-maps";
-import googleConfig from "../../googlemapsEnv";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
-import SmallWebMap from "../MapsForWeb/SingleArtworkWebMap";
+import SingleArtworkWebMap from "../MapsForWeb/SingleArtworkWebMap";
 
 interface LocationSetterProps {
 	location: Location.LocationObjectCoords | null;
@@ -70,7 +68,7 @@ export default function LocationSetter({
 			>
 				{Platform.OS === "web" ? (
 					// @ts-ignore
-					<SmallWebMap region={location} />
+					<SingleArtworkWebMap region={location} />
 				) : (
 					<MapView
 						style={styles.tinyMap}

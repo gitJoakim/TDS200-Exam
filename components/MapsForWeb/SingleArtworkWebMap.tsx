@@ -10,7 +10,7 @@ import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import { Colors } from "@/constants/Colors";
 
-type SmallWebMapProps = {
+type SingleArtworkWebMapProps = {
 	region: { latitude: number; longitude: number } | null; // Center of the map (can be null)
 	onMapClick?: ({
 		latitude,
@@ -21,7 +21,10 @@ type SmallWebMapProps = {
 	}) => void;
 };
 
-export default function SmallWebMap({ region, onMapClick }: SmallWebMapProps) {
+export default function SingleArtworkWebMap({
+	region,
+	onMapClick,
+}: SingleArtworkWebMapProps) {
 	const mapRef = useRef<HTMLDivElement | null>(null);
 	const mapInstance = useRef<Map | null>(null);
 

@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
-import SmallWebMap from "../MapsForWeb/SingleArtworkWebMap";
+import SingleArtworkWebMap from "../MapsForWeb/SingleArtworkWebMap";
 
 interface MapModalProps {
 	setLocation: (location: Location.LocationObjectCoords | null) => void; // Passes only latitude & longitude
@@ -97,7 +97,7 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 							width: "100%",
 						}}
 					>
-						<SmallWebMap
+						<SingleArtworkWebMap
 							region={selectedCoords}
 							onMapClick={({ latitude, longitude }) => {
 								setSelectedCoords({
