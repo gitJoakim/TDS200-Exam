@@ -24,11 +24,12 @@ export default function AlertModal({
 			accessibilityLabel="Alert modal"
 		>
 			<View style={styles.modalContent}>
+				
 				{/* Prompt message */}
 				<Text
 					style={styles.promptText}
 					accessible={true}
-					accessibilityLabel={prompt} // Make sure prompt text is accessible
+					accessibilityLabel={prompt}
 				>
 					{prompt}
 				</Text>
@@ -39,7 +40,7 @@ export default function AlertModal({
 						style={[styles.button, styles.noButton]}
 						onPress={onCancel}
 						accessible={true}
-						accessibilityLabel={optionNo} // Label for "No" button
+						accessibilityLabel={optionNo}
 						accessibilityRole="button"
 					>
 						<Text style={styles.noText}>{optionNo}</Text>
@@ -48,7 +49,7 @@ export default function AlertModal({
 						style={[styles.button, styles.yesButton]}
 						onPress={onConfirm}
 						accessible={true}
-						accessibilityLabel={optionYes} // Label for "Yes" button
+						accessibilityLabel={optionYes}
 						accessibilityRole="button"
 					>
 						<Text style={styles.yesText}>{optionYes}</Text>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent background
+		backgroundColor: "rgba(0, 0, 0, 0.2)",
 	},
 	modalContent: {
 		backgroundColor: "white",
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
 		color: "grey",
 	},
 	yesButton: {
-		backgroundColor: Colors.ArtVistaRed, // Yes button color (red)
+		backgroundColor: Colors.ArtVistaRed,
 	},
 	noButton: {
 		borderColor: "grey",

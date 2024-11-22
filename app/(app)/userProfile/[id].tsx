@@ -25,9 +25,11 @@ export default function UserProfile() {
 			if (userInfoFromDb) {
 				setUserData(userInfoFromDb);
 			} else {
+				// If no user is found, set an error message
 				setErrorMessage("User not found");
 			}
 		} catch (error) {
+			// If there's an error fetching, show the error message
 			setErrorMessage(
 				"Uh oh, something went wrong. Please exit and try again."
 			);
@@ -42,13 +44,13 @@ export default function UserProfile() {
 			setErrorMessage("User ID is missing");
 			return;
 		}
-
 		try {
 			const artworksFromDb = await getArtworksByUserId(id as string);
 			if (artworksFromDb) {
 				setArtworks(artworksFromDb);
 			}
 		} catch (error) {
+			// If there's an error fetching, show the error message
 			setErrorMessage(
 				"Uh oh, something went wrong. Please exit and try again."
 			);
@@ -67,7 +69,7 @@ export default function UserProfile() {
 		}
 	}, [userData]);
 
-	// useEffect for fetching data
+	// fetch userData and artworks on init
 	useEffect(() => {
 		if (id) {
 			getUserDataById();
@@ -89,7 +91,10 @@ export default function UserProfile() {
 				</Text>
 			) : (
 				<>
+					{/* Profile header info */}
 					<ProfileInfo userData={userData} />
+
+					{/* Profile artowkrs grid */}
 					<ProfileArtGrid artworks={artworks} />
 				</>
 			)}

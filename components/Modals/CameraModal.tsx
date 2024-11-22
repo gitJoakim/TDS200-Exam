@@ -66,13 +66,19 @@ export default function CameraModal({
 
 	return (
 		<View style={styles.container}>
+			
+			{/* Camera View */}
 			<CameraView
 				style={styles.camera}
 				facing={facing}
 				ref={(r) => (camera = r)}
 				accessibilityLabel="Camera view"
 			>
+
+				{/* Camera buttons container */}
 				<View style={styles.buttonContainer}>
+
+					{/* flip camera button */}
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => toggleCameraFacing()}
@@ -90,6 +96,8 @@ export default function CameraModal({
 							<MaterialIcons name="flip-camera-ios" size={24} color="white" />
 						)}
 					</TouchableOpacity>
+
+					{/* Take picture button */}
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => captureImage()}
@@ -99,6 +107,8 @@ export default function CameraModal({
 					>
 						<Entypo name="camera" size={32} color="white" />
 					</TouchableOpacity>
+
+					{/* Go back button */}
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => closeModal()}

@@ -25,26 +25,30 @@ export default function ArtworkCarouselItem({
 	artwork,
 }: ArtworkCarouselItemProps) {
 	const { width, height } = Dimensions.get("window");
+	const [userData, setUserData] = useState<UserData | null>(null);
+
 	// setting it slightly bigger for web
 	const imageDimensionsStyle =
 		Platform.OS === "web"
 			? { width, height: height * 0.6 }
 			: { width: width - 64, height: height * 0.4 };
-	const [userData, setUserData] = useState<UserData | null>(null);
 
-	// Fetch the user data
+	// Fetch the user data based on artwork artist
 	async function fetchUserData() {
 		const artistId = artwork.userId;
 		const userInfoFromDb = await getUserInfoById(artistId);
 		setUserData(userInfoFromDb);
 	}
 
+	// fetch user data when artwork has been set
 	useEffect(() => {
 		fetchUserData();
 	}, [artwork]);
 
 	return (
 		<SafeAreaView style={styles.imageContainer}>
+
+			{ /* Artwork Image and Link to the artworkDetails*/ }
 			<Link
 				href={{ pathname: "/artworkDetails/[id]", params: { id: artwork.id } }}
 				accessibilityRole="link"
@@ -59,6 +63,8 @@ export default function ArtworkCarouselItem({
 					/>
 				</View>
 			</Link>
+
+			{ /* Artwork Title */ }
 			<Text
 				style={styles.artworkTitle}
 				accessibilityRole="text"
@@ -66,6 +72,8 @@ export default function ArtworkCarouselItem({
 			>
 				'{artwork.title}'
 			</Text>
+
+			{ /* Artist picture and username with link to profileDetails */ }
 			<Link
 				href={{ pathname: "/userProfile/[id]", params: { id: artwork.userId } }}
 				accessibilityRole="link"
@@ -79,7 +87,7 @@ export default function ArtworkCarouselItem({
 						gap: 6,
 					}}
 				>
-					{/* Profile picture with red border if available */}
+					{/* Profile picture / default icon */}
 					<View style={styles.profilePicContainer}>
 						{userData?.profileImageUrl ? (
 							<Image
@@ -96,6 +104,8 @@ export default function ArtworkCarouselItem({
 							/>
 						)}
 					</View>
+
+					{ /* Artist name */ }
 					<Text
 						style={styles.artistName}
 						accessibilityRole="text"
@@ -133,10 +143,10 @@ const styles = StyleSheet.create({
 	profilePicContainer: {
 		width: 30,
 		height: 30,
-		borderRadius: 50, // Circle shape
+		borderRadius: 50,
 		borderWidth: 3,
-		borderColor: Colors.ArtVistaRed, // Assuming you have a color constant for the red
-		overflow: "hidden", // Ensures the image fits within the circular border
+		borderColor: Colors.ArtVistaRed,
+		overflow: "hidden", 
 		justifyContent: "center",
 		alignItems: "center",
 	},

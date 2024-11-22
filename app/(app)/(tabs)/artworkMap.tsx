@@ -16,26 +16,20 @@ export default function ArtworkMap() {
 	);
 	const navigation = useNavigation();
 
+	// fetches artworks
 	async function getArtworks() {
-		console.log(artworks);
-		setArtworks([]);
-		console.log(artworks);
-
 		const artworksFromDb = await artworkAPI.getAllArtworks();
 		setArtworks(artworksFromDb);
-		console.log(artworks);
 	}
 
+	// fetches and sets header on first init
 	useEffect(() => {
 		getArtworks();
 		navigation.setOptions({
 			headerLeft: () => (
 				<Pressable
 					onPress={() => {
-						console.log("refreshing");
-						console.log(artworks);
 						getArtworks();
-						console.log(artworks);
 					}}
 					style={{
 						marginLeft: 16,
@@ -63,6 +57,7 @@ export default function ArtworkMap() {
 
 	return (
 		<View style={styles.mainContainer}>
+			{/* OpenLayers map component for web, MapView for the rest */}
 			{Platform.OS === "web" ? (
 				<AllArtworksWebMap artworks={artworks} />
 			) : (
@@ -134,14 +129,14 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
-		width: 250, // Ensures consistent sizing
+		width: 250,
 	},
 	artworkTitle: {
 		fontWeight: "bold",
 		fontSize: 16,
-		color: Colors.ArtVistaRed, // Red color for contrast
+		color: Colors.ArtVistaRed,
 		textAlign: "center",
-		marginBottom: 8, // Space between title and image
+		marginBottom: 8,
 	},
 	artworkImage: {
 		width: 200,

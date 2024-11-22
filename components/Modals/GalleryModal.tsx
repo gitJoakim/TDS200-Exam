@@ -15,8 +15,8 @@ export default function GalleryModal({
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [permission, requestPermission] = useMediaLibraryPermissions();
 
+	// Open the image picker if permission is granted
 	const pickImage = async () => {
-		// Open the image picker if permission is granted
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
 			allowsEditing: true,
@@ -54,6 +54,8 @@ export default function GalleryModal({
 				>
 					We need your permission to access your gallery
 				</Text>
+
+				{/* button container */}
 				<View style={styles.buttonContainer}>
 					<View style={styles.buttonSpacing}>
 						<Button
@@ -84,6 +86,8 @@ export default function GalleryModal({
 			<Text style={styles.message} accessibilityLabel="Image picker modal">
 				Select an image from your gallery
 			</Text>
+
+			{/* Button container */}
 			<View style={styles.buttonContainer}>
 				<View style={styles.buttonSpacing}>
 					<Button
@@ -102,6 +106,8 @@ export default function GalleryModal({
 					/>
 				</View>
 			</View>
+			
+			{/* Selected image */}
 			{selectedImage && (
 				<Image
 					source={{ uri: selectedImage }}

@@ -15,6 +15,7 @@ export default function TabLayout() {
 				headerTitleAlign: "center",
 			}}
 		>
+			{/* Profile tab */}
 			<Tabs.Screen
 				name="personalProfile"
 				options={{
@@ -30,6 +31,8 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+
+			{/* Map of all Artworks */}
 			<Tabs.Screen
 				name="artworkMap"
 				options={{
@@ -46,6 +49,7 @@ export default function TabLayout() {
 				}}
 			/>
 
+			{/* Home Page (index) */}
 			<Tabs.Screen
 				name="index"
 				options={{
@@ -61,6 +65,7 @@ export default function TabLayout() {
 				}}
 			/>
 
+			{/* Search Page */}
 			<Tabs.Screen
 				name="search"
 				options={{
@@ -77,6 +82,7 @@ export default function TabLayout() {
 				}}
 			/>
 
+			{/* Upload Page */}
 			<Tabs.Screen
 				name="upload"
 				options={{

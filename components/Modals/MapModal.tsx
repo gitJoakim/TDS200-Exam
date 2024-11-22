@@ -16,7 +16,7 @@ import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 import SingleArtworkWebMap from "../MapsForWeb/SingleArtworkWebMap";
 
 interface MapModalProps {
-	setLocation: (location: Location.LocationObjectCoords | null) => void; // Passes only latitude & longitude
+	setLocation: (location: Location.LocationObjectCoords | null) => void;
 	closeModal: () => void;
 }
 
@@ -27,41 +27,46 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 	const [selectedCoords, setSelectedCoords] =
 		useState<Location.LocationObjectCoords | null>(null);
 
+	// setting coords when map is pressed
 	const handleMapPress = useCallback((event: MapPressEvent) => {
 		const location = event.nativeEvent.coordinate;
-		setSelectedCoords(location as Location.LocationObjectCoords); // Directly setting coords without additional processing
+		setSelectedCoords(location as Location.LocationObjectCoords);
 	}, []);
 
+	// sets location and closes modal
 	function handleSaveLocation() {
 		setLocation(selectedCoords);
 		closeModal();
 	}
 
-	const fetchAddressInfoFromCoords = async () => {
+	// gets address info form coords with reverseGeocodeAsync() from expo-location
+	const getAddressInfoFromCoords = async () => {
 		if (selectedCoords) {
 			const address = await getAddressFromCoords(selectedCoords);
 			setAddressCoords(address);
 		}
 	};
 
-	const fetchAddressInfoFromGoogle = async () => {
+	// uses google location api to hand in coords and get back location
+	const getAddressInfoFromGoogle = async () => {
 		if (selectedCoords) {
 			const address = await fetchAddressWithGoogleAPI(selectedCoords);
 			setAddressCoords(address);
 		}
 	};
 
+	// use google api for web and android, use expo-location for iOS when selectedCoords is set
 	useEffect(() => {
 		if (Platform.OS === "web" || "android") {
-			fetchAddressInfoFromGoogle();
+			getAddressInfoFromGoogle();
 		} else {
-			fetchAddressInfoFromCoords();
+			getAddressInfoFromCoords();
 		}
 	}, [selectedCoords]);
 
 	// fetch user position and set that as location if permission granted
 	useEffect(() => {
-		// web for OpenLayers application
+		// uses browser for web
 		if (Platform.OS === "web") {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition((position) => {
@@ -72,7 +77,7 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 				});
 			}
 		} else {
-			//
+			// uses device gps for mobile
 			const requestLocationPermission = async () => {
 				const { status } = await Location.requestForegroundPermissionsAsync();
 				if (status === "granted") {
@@ -90,6 +95,8 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 	return (
 		<View style={styles.modalContainer}>
 			<View style={styles.modalContent}>
+
+				{ /* Openlayers for web */ }
 				{Platform.OS === "web" ? (
 					<View
 						style={{
@@ -108,6 +115,8 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 						/>
 					</View>
 				) : (
+
+					//MapView for android and ios
 					<MapView
 						style={styles.map}
 						zoomEnabled={true}
@@ -135,7 +144,8 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 				<View
 					style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
 				>
-					{/* Display Address */}
+
+					{/* Displays Address */}
 					<Text
 						style={styles.addressText}
 						accessibilityLabel="Address of selected location"
@@ -145,7 +155,7 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 							: "Select a location"}
 					</Text>
 
-					{/* Button Row */}
+					{/* Button container */}
 					<View style={styles.buttonContainer}>
 						<Pressable
 							style={styles.cancelButton}
@@ -167,7 +177,8 @@ export default function MapModal({ setLocation, closeModal }: MapModalProps) {
 						</Pressable>
 					</View>
 				</View>
-				{/* Close Button */}
+
+				{/* Close Button Top Right */}
 				<Pressable
 					style={styles.closeButton}
 					onPress={closeModal}
@@ -209,10 +220,10 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		flexDirection: "row",
-		justifyContent: "space-between", // Spreads buttons horizontally
+		justifyContent: "space-between",
 		alignItems: "center",
-		width: "90%", // Makes the button container a bit narrower than the modal
-		marginVertical: 16, // Adds spacing at the bottom
+		width: "90%",
+		marginVertical: 16,
 		...(Platform.OS === "web" && {
 			gap: 64,
 		}),

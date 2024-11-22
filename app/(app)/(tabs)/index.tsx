@@ -27,6 +27,7 @@ export default function HomeScreen() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [orderByNewest, setOrderByNewest] = useState(true);
 
+	// fetch artworks by newest or oldest depending on whats set
 	async function getArtworks() {
 		setArtworks([]);
 		setIsLoading(true);
@@ -35,14 +36,12 @@ export default function HomeScreen() {
 		setIsLoading(false);
 	}
 
-	function handleOrderChange(order: boolean) {
-		setOrderByNewest(order);
-	}
-
+	// fetch artworks whenever either one of the buttons are selected
 	useEffect(() => {
 		getArtworks();
 	}, [orderByNewest]);
 
+	// fetches artworks on launch
 	useEffect(() => {
 		getArtworks();
 	}, []);
@@ -95,7 +94,7 @@ export default function HomeScreen() {
 			<View style={styles.orderContainer}>
 				<TouchableOpacity
 					style={[styles.orderButton, orderByNewest && styles.activeButton]}
-					onPress={() => handleOrderChange(true)}
+					onPress={() => setOrderByNewest(true)}
 				>
 					<Text
 						style={[
@@ -108,7 +107,7 @@ export default function HomeScreen() {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.orderButton, !orderByNewest && styles.activeButton]}
-					onPress={() => handleOrderChange(false)}
+					onPress={() => setOrderByNewest(false)}
 				>
 					<Text
 						style={[
@@ -121,8 +120,10 @@ export default function HomeScreen() {
 				</TouchableOpacity>
 			</View>
 
+			{/* artwork feed either individual or grid */}
 			{isLoading && <ActivityIndicator />}
 			{gridDisplay ? (
+				// MasonryList if grid is chosen
 				<MasonryList
 					style={{ marginVertical: 6 }}
 					numColumns={2}
@@ -136,6 +137,8 @@ export default function HomeScreen() {
 					)}
 					onRefresh={getArtworks}
 				/>
+			// carousel if individual image is chosen
+			// Special one for web.
 			) : Platform.OS === "web" ? (
 				<ArtworkWebCarousel artworks={artworks} />
 			) : (

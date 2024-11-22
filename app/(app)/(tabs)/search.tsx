@@ -36,47 +36,44 @@ export default function Search() {
 	};
 	const navigation = useNavigation();
 
+	// fetch users by search username input
 	async function searchUsernames() {
 		setUserData(null);
-		// Fetch users based on search text
 		const usersResultFromDb = await getUsersBySearch(searchText);
-
-		// Fetch all artworks from the database
 		const artworksFromDb = await artworkAPI.getAllArtworks();
-
-		setUserData(usersResultFromDb); // Set users without artworksCount for now
-		setArtworksToCount(artworksFromDb); // Set all artworks
+		setUserData(usersResultFromDb);
+		setArtworksToCount(artworksFromDb);
 		setIsSearching(false);
 	}
 
+	// fetches artworks based on hashtag search input
 	async function searchHashtags() {
 		const resultFromDb = await artworkAPI.getArtworkByHashtagSearch(
 			searchText.toLowerCase()
 		);
+
 		setArtworks(resultFromDb);
 		setIsSearching(false);
 	}
 
-	async function searchTitleOrDescription() {
-		await getAllArtworksAndFilter();
-	}
-
+	// get all artworks and filter locally (shows that I can do it both through api and locally)
 	async function getAllArtworksAndFilter() {
+		// fetching all artworks
 		const artworks = await artworkAPI.getAllArtworks();
+
 		// Filter artworks by title or description matching the search term
 		const filteredArtworks = artworks.filter((artwork) => {
-			const searchTerm = searchText.toLowerCase(); // Assuming searchText is your search input
+			const searchTerm = searchText.toLowerCase();
 
 			// Check if title or description contains the search term
 			const matchesTitle = artwork.title.toLowerCase().includes(searchTerm);
 			const matchesDescription = artwork.description
-				? artwork.description.toLowerCase().includes(searchTerm)
-				: false; // Ensure description exists before checking
+				.toLowerCase()
+				.includes(searchTerm);
 
-			return matchesTitle || matchesDescription; // Return artwork if either matches
+			return matchesTitle || matchesDescription;
 		});
 
-		// Set the filtered artworks state
 		setArtworks(filteredArtworks);
 		setIsSearching(false);
 	}
@@ -93,19 +90,19 @@ export default function Search() {
 				searchHashtags();
 				break;
 			case "title or description":
-				searchTitleOrDescription();
+				getAllArtworksAndFilter();
 				break;
 			default:
 				break;
 		}
 	}
 
+	// renders users for username search results
 	const renderUsernameSearchResults = ({ item }: { item: UserData }) => {
 		// Dynamically calculate artworksCount
 		const numberOfArtworks =
 			artworksToCount?.filter((artwork) => artwork.userId === item.userId)
 				.length ?? 0;
-
 		return (
 			<UsernameSearchItem userData={item} numberOfArtworks={numberOfArtworks} />
 		);
@@ -126,6 +123,7 @@ export default function Search() {
 		}
 	};
 
+	// executes search when search text changes
 	useEffect(() => {
 		// Delay search execution by 0.8 sec after user stops typing
 		const delayDebounce = setTimeout(() => {
@@ -133,16 +131,18 @@ export default function Search() {
 				handleSearch();
 			}
 		}, 800);
-
+		// clean up
 		return () => clearTimeout(delayDebounce);
 	}, [searchText]);
 
+	// reset search when user changes type
 	useEffect(() => {
 		setArtworks(null);
 		setUserData(null);
 		setSearchText("");
 	}, [searchType]);
 
+	// setup header on first launch
 	useEffect(() => {
 		navigation.setOptions({
 			headerStyle: {
@@ -170,7 +170,7 @@ export default function Search() {
 						searchType === "hashtags" && { color: "blue" },
 					]}
 					value={searchText}
-					onChangeText={handleTextChange} // Update based on searchType
+					onChangeText={handleTextChange}
 					placeholder={`Search by ${searchType}...`}
 					placeholderTextColor="#888"
 					autoCapitalize="none"
@@ -241,6 +241,7 @@ export default function Search() {
 				</TouchableOpacity>
 			</View>
 
+			{/* Loading spinner */}
 			{isSearching && (
 				<View style={styles.loadingIndicator}>
 					<Text>Searching...</Text>
@@ -248,17 +249,18 @@ export default function Search() {
 				</View>
 			)}
 
+			{/* flatlist of profile pictures, usernames and amount of artworks */}
 			{searchType === "usernames" && (
 				<View>
 					{userData && userData.length > 0 ? (
 						<FlatList
-							data={userData} // Array of UserData objects
-							renderItem={renderUsernameSearchResults} // For each item, render UsernameSearchItem
-							keyExtractor={(item) => item.userId} // Assuming userId is unique
+							data={userData}
+							renderItem={renderUsernameSearchResults}
+							keyExtractor={(item) => item.userId}
 							accessible={true}
 						/>
 					) : (
-						userData !== null && ( // Only show "No results" if userData has been set
+						userData !== null && ( // only show "No results" if userData has been set
 							<Text
 								style={styles.noResultsText}
 								accessible={true}
@@ -270,8 +272,9 @@ export default function Search() {
 					)}
 				</View>
 			)}
+
+			{/* MasonryList for search by Title/Description and Hashtags */}
 			<View style={styles.masonryContainer}>
-				{/* Masonry List */}
 				{artworks && artworks.length > 0 ? (
 					<MasonryList
 						style={styles.masonryList}
@@ -279,7 +282,7 @@ export default function Search() {
 						data={artworks}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) => (
-							<ArtworkImage artwork={item as ArtworkData} /> // Replace with your artwork display component
+							<ArtworkImage artwork={item as ArtworkData} />
 						)}
 					/>
 				) : (

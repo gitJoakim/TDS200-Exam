@@ -14,7 +14,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 
 type AllArtworksWebMapProps = {
-	artworks: ArtworkData[]; // Array of artworks with coordinates
+	artworks: ArtworkData[];
 };
 
 export default function AllArtworksWebMap({
@@ -22,8 +22,6 @@ export default function AllArtworksWebMap({
 }: AllArtworksWebMapProps) {
 	const mapRef = useRef<HTMLDivElement | null>(null);
 	const mapInstance = useRef<Map | null>(null);
-
-	// State to keep track of the selected artwork
 	const [selectedArtwork, setSelectedArtwork] = useState<ArtworkData | null>(
 		null
 	);
@@ -32,9 +30,9 @@ export default function AllArtworksWebMap({
 	const markerStyle = () =>
 		new Style({
 			image: new Circle({
-				radius: 10, // Increase the radius for selected artwork
+				radius: 10,
 				fill: new Fill({
-					color: Colors.ArtVistaRed, // Change color to blue if selected
+					color: Colors.ArtVistaRed,
 				}),
 				stroke: new Stroke({
 					color: "black",
@@ -54,7 +52,6 @@ export default function AllArtworksWebMap({
 			geometry: new Point(fromLonLat([coords.longitude, coords.latitude])),
 		});
 
-		// Set the default marker style
 		marker.setStyle(markerStyle());
 
 		const vectorSource = new VectorSource({
@@ -66,8 +63,6 @@ export default function AllArtworksWebMap({
 		});
 
 		mapInstance.current.addLayer(vectorLayer);
-
-		// Store the marker and its associated artwork in the map instance
 		marker.set("artwork", artwork);
 	}
 
@@ -104,7 +99,7 @@ export default function AllArtworksWebMap({
 		}
 	}
 
-	// Add markers for all artworks
+	// Add markers for all artworks when artworks is set
 	useEffect(() => {
 		if (artworks.length > 0 && mapInstance.current) {
 			artworks.forEach((artwork) => {
@@ -134,9 +129,11 @@ export default function AllArtworksWebMap({
 
 	return (
 		<View style={styles.container}>
-			{/* Map takes full width and height */}
+			
+			{/* Map */}
 			<div ref={mapRef} style={styles.map} />
-			{/* Info container on top of the map, occupying 40% height on the right */}
+
+			{/* Artwork info container  */}
 			<View style={styles.infoContainer}>
 				{selectedArtwork ? (
 					<Link
@@ -170,23 +167,23 @@ export default function AllArtworksWebMap({
 
 const styles = StyleSheet.create({
 	container: {
-		flexDirection: "row", // Align the map and the info container side by side
-		height: "100%", // Full height for the container
-		width: "100%", // Full width for the container
-		position: "relative", // To allow the info container to overlay
+		flexDirection: "row",
+		height: "100%",
+		width: "100%",
+		position: "relative",
 	},
 	map: {
-		width: "100%", // Map takes up full width
-		height: "100%", // Map takes up full height
+		width: "100%",
+		height: "100%",
 	},
 	infoContainer: {
 		margin: 16,
-		position: "absolute", // Position over the map
-		right: 0, // Align to the right
-		top: 0, // Align to the top
-		width: "20%", // Info container occupies 20% of the width
-		height: "auto", // Info container takes up auto height
-		backgroundColor: "white", // White background for the info container
+		position: "absolute",
+		right: 0,
+		top: 0,
+		width: "20%",
+		height: "auto",
+		backgroundColor: "white",
 		padding: 12,
 		borderWidth: 2,
 		borderColor: Colors.ArtVistaRed,
@@ -217,6 +214,6 @@ const styles = StyleSheet.create({
 	noSelection: {
 		fontSize: 16,
 		color: "#888",
-		textAlign: "center", // Center the noSelection text
+		textAlign: "center",
 	},
 });

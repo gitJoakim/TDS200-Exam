@@ -16,6 +16,7 @@ export default function FormActionButtons({
 }: FormActionButtonsProps) {
 	return (
 		<View style={styles.buttonsContainer}>
+			{ /* Clear all fields button */ }
 			<Pressable
 				style={[styles.button, styles.clearButton]}
 				onPress={() => clearForm()}
@@ -25,6 +26,8 @@ export default function FormActionButtons({
 			>
 				<Text style={styles.clearButtonText}>Clear Form</Text>
 			</Pressable>
+
+			{ /* Upload artworks button */ }
 			<Pressable
 				style={styles.button}
 				onPress={() => {
@@ -47,14 +50,14 @@ export default function FormActionButtons({
 const styles = StyleSheet.create({
 	buttonsContainer: {
 		flexDirection: "row",
-		justifyContent: "space-between", // Spaces out buttons
-		alignItems: "center", // Centers vertically
-		marginTop: 28, // Optional margin for spacing
+		justifyContent: "space-between", 
+		alignItems: "center",
+		marginTop: 28, 
 		paddingHorizontal: 20,
 		marginBottom: 20,
 	},
 	button: {
-		backgroundColor: Colors.ArtVistaRed, // Red color for the Upload button
+		backgroundColor: Colors.ArtVistaRed,
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
@@ -62,14 +65,14 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	buttonText: {
-		color: "#fff", // White text color for the Upload button
+		color: "#fff", 
 		fontSize: 16,
 		fontWeight: "bold",
 	},
 	clearButton: {
-		backgroundColor: "transparent", // Transparent background for the Clear button
-		borderColor: "gray", // Grey border
-		borderWidth: 2, // Border width
+		backgroundColor: "transparent",
+		borderColor: "gray",
+		borderWidth: 2, 
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	clearButtonText: {
-		color: "gray", // Gray text color for the Clear button
+		color: "gray", 
 		fontSize: 16,
 		fontWeight: "bold",
 	},

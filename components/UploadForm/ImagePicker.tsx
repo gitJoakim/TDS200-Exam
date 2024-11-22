@@ -19,7 +19,9 @@ export default function ImagePicker({
 	width,
 	height,
 }: ImagePickerProps) {
+	// dimensions of image
 	const imageDimensionsStyle = { width: width, height: height };
+
 	return (
 		<View
 			style={{
@@ -29,6 +31,7 @@ export default function ImagePicker({
 				marginVertical: 28,
 			}}
 		>
+			{/* Image if the user has set one, else image icon to hint */}
 			<View
 				style={{
 					width: "100%",
@@ -55,6 +58,7 @@ export default function ImagePicker({
 				)}
 			</View>
 
+			{/* Camera and gallery buttons */}
 			<View
 				style={{
 					flexDirection: "row",
@@ -62,7 +66,7 @@ export default function ImagePicker({
 					marginBottom: 24,
 				}}
 			>
-				{/* check platform and dont render camera modal button for web */}
+				{/* check platform and dont render camera button for web */}
 				{Platform.OS !== "web" && (
 					<Pressable
 						style={{

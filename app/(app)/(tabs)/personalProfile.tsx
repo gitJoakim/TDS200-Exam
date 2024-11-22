@@ -22,20 +22,22 @@ export default function PersonalProfile() {
 	const navigation = useNavigation();
 	const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
 
-	// Fetch the user data
+	// Fetch the users personal data with the user id
 	async function fetchUserData() {
 		const userId = user!.uid;
 		const userInfoFromDb = await getUserInfoById(userId);
 		setUserData(userInfoFromDb);
 	}
 
-	// Fetch artworks by user ID
+	// Fetch all the users artworks by user id
 	async function getSelectedArtworkFromDb() {
 		const userId = user!.uid;
 		const artworksFromDb = await getArtworksByUserId(userId);
 		setArtworks(artworksFromDb);
 	}
 
+	// refetch automaitcally on focus
+	// (to make sure it fetches the new data after upload or deletion of a post)
 	useFocusEffect(
 		useCallback(() => {
 			fetchUserData();
@@ -43,10 +45,10 @@ export default function PersonalProfile() {
 		}, [])
 	);
 
+	// fetches relevant data and sets up header on initial launch
 	useEffect(() => {
 		fetchUserData();
 		getSelectedArtworkFromDb();
-
 		navigation.setOptions({
 			title: "Your Profile",
 			headerTitleAlign: "center",
@@ -77,7 +79,7 @@ export default function PersonalProfile() {
 				</Pressable>
 			),
 		});
-	}, [navigation]);
+	}, []);
 
 	return (
 		<View
@@ -89,7 +91,10 @@ export default function PersonalProfile() {
 				borderTopWidth: 1,
 			}}
 		>
+			{/* Header info on profile page */}
 			<ProfileInfo userData={userData} />
+
+			{/* Grid of all artworks on profile */}
 			<ProfileArtGrid artworks={artworks} />
 
 			{/* Edit Profile Modal */}
@@ -105,12 +110,15 @@ export default function PersonalProfile() {
 					onSave={fetchUserData}
 				/>
 			</Modal>
+
+			{/* Log out "are u sure" modal*/}
 			<Modal
 				visible={isLogOutModalOpen}
 				accessible={true}
 				accessibilityViewIsModal={true}
 				accessibilityLabel="Log out Confirmation"
 			>
+				{/* Uses alert modal component to prompt */}
 				<AlertModal
 					prompt="Are you sure you want to log out?"
 					optionNo="No, cancel"

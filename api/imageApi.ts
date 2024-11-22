@@ -10,12 +10,13 @@ THIS IS TAKEN FROM LECTURE CODE
 *************************************************
 */
 
+// upload image to firebase storage folder named images
 export const uploadImage = async (uri: string) => {
 	const fetchResponse = await fetch(uri);
 	const blob = await fetchResponse.blob();
 
-	// Use UUID for a unique name
-	const imagePath = uuid.v4(); // Generates a unique ID each time
+	// uses react-native-uuid for a unique id (name)
+	const imagePath = uuid.v4();
 
 	const uploadPath = `images/${imagePath}`;
 
@@ -23,10 +24,10 @@ export const uploadImage = async (uri: string) => {
 
 	try {
 		await uploadBytesResumable(imageRef, blob);
-		console.log("Uploading image to", uploadPath);
+		//console.log("Uploading image to", uploadPath);
 		return uploadPath;
 	} catch (e) {
-		console.error("error uploading image", e);
+		//console.error("error uploading image", e);
 		return "ERROR";
 	}
 };

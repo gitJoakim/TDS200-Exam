@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View, StyleSheet } from "react-native";
-import * as authenticationAPI from "@/api/authenticationApi"; // Assuming this API handles sign up
+import * as authenticationAPI from "@/api/authenticationApi";
 import { Colors } from "@/constants/Colors";
 
 const Authentication = () => {
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const [isSignUp, setIsSignUp] = useState(false); // State to toggle between Log In and Sign Up
-	const [errorMessage, setErrorMessage] = useState(""); // State to hold error messages
+	const [isSignUp, setIsSignUp] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
-	// Handle Log In
+	// Log in function
 	const handleLogIn = async () => {
 		if (!email || !password) {
 			setErrorMessage("Please enter both email and password.");
@@ -26,7 +26,7 @@ const Authentication = () => {
 		}
 	};
 
-	// Handle Sign Up
+	// Sign up function
 	const handleSignUp = async () => {
 		if (!username.trim() || !email.trim() || !password.trim()) {
 			setErrorMessage("Please fill out all fields.");
@@ -43,24 +43,19 @@ const Authentication = () => {
 	};
 
 	// Toggle between Sign Up and Log In forms
-	const toggleMode = () => {
-		setIsSignUp((prev) => !prev); // Toggle between Log In and Sign Up
+	// and reset fields
+	function toggleMode() {
+		setIsSignUp((prev) => !prev);
 		setEmail("");
 		setPassword("");
-		setUsername(""); // Reset username field when toggling
-		setErrorMessage(""); // Clear any previous error message
-	};
-
-	/*
-	 * --------------------------------------------------------
-	 *	Very nice UI design by ChatGPT, altered by me to fit
-	 *  the ArtVista Application! I can't take all the credit.
-	 * --------------------------------------------------------
-	 */
+		setUsername("");
+		setErrorMessage("");
+	}
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.formContainer}>
+				{/* Title ArtVista */}
 				<Text style={styles.title}>ArtVista</Text>
 
 				{/* Email Field */}
@@ -74,7 +69,7 @@ const Authentication = () => {
 					accessibilityLabel="Email input"
 				/>
 
-				{/* Conditional rendering for Sign Up */}
+				{/* Conditional rendering  username field for Sign Up */}
 				{isSignUp && (
 					<View>
 						<Text>Username</Text>

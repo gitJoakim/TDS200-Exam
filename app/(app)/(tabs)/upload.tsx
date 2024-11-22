@@ -33,19 +33,16 @@ export default function UploadArtworkForm() {
 	const [description, setDescription] = useState<string>("");
 	const [location, setLocation] =
 		useState<Location.LocationObjectCoords | null>(null);
-
 	const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 	const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
 	const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-
 	const { user } = useAuthSession();
-
 	const { width, height } = Dimensions.get("window");
-
 	const [isUploading, setIsUploading] = useState(false);
 	const navigation = useNavigation();
 	const scrollViewRef = useRef<ScrollView>(null);
 
+	// clear all form fields
 	function clearForm() {
 		setTitle("");
 		setDescription("");
@@ -55,7 +52,8 @@ export default function UploadArtworkForm() {
 	}
 
 	// checks if the title, description, and image are valid
-	// hashtags aren't mandatory
+	// hashtags and location aren't mandatory
+	// gives alerts when mandatory fields are not filled
 	function validateArtworkInputs() {
 		if (!title.trim()) {
 			alert("Please add a valid title to your artwork.");
@@ -75,6 +73,7 @@ export default function UploadArtworkForm() {
 		return true;
 	}
 
+	// creating artwork
 	function createArtwork() {
 		// If validation fails, we just stop creation
 		if (!validateArtworkInputs()) {
@@ -92,11 +91,11 @@ export default function UploadArtworkForm() {
 			date: new Date(),
 			artworkCoords: location,
 		};
-
-		//console.log(artwork);
 		return artwork;
 	}
 
+	// blur/whiten out background during upload to minimize potential bugs
+	// this also gives a good indicator to the user that we are uploading
 	function blurDuringUpload() {
 		setIsUploading(true);
 		setTimeout(() => {
@@ -106,6 +105,7 @@ export default function UploadArtworkForm() {
 		}, 3500);
 	}
 
+	// setup header on init
 	useEffect(() => {
 		navigation.setOptions({
 			headerStyle: {
@@ -124,6 +124,7 @@ export default function UploadArtworkForm() {
 				automaticallyAdjustKeyboardInsets
 			>
 				<View style={{ paddingHorizontal: 24, marginVertical: 12 }}>
+					{/* Title input field */}
 					<Text style={styles.textStyle}>Title *</Text>
 					<TextInput
 						style={styles.textInput}
@@ -134,7 +135,7 @@ export default function UploadArtworkForm() {
 						accessibilityHint="Enter a title for the artwork"
 					/>
 
-					{/*  Upload image from camera or gallery	*/}
+					{/*  Upload image from camera or gallery component	*/}
 					<ImagePicker
 						image={image}
 						setIsGalleryModalOpen={setIsGalleryModalOpen}
@@ -143,6 +144,7 @@ export default function UploadArtworkForm() {
 						height={height * 0.4}
 					/>
 
+					{/* Description input field */}
 					<Text style={styles.textStyle}>Description *</Text>
 					<TextInput
 						style={[styles.textInput, styles.descriptionTextField]}
@@ -155,13 +157,13 @@ export default function UploadArtworkForm() {
 						accessibilityHint="Describe your artwork in a few words"
 					/>
 
-					{/*  Hashtags component		*/}
+					{/*  Hashtags component	*/}
 					<HashtagsInput
 						hashtagsArray={hashtagsArray}
 						setHashtagsArray={setHashtagsArray}
 					/>
 
-					{/* Location setter */}
+					{/* Location setter component */}
 					<LocationSetter
 						location={location}
 						setIsMapModalOpen={setIsMapModalOpen}
@@ -176,6 +178,7 @@ export default function UploadArtworkForm() {
 				</View>
 			</ScrollView>
 
+			{/* Modal for map to set location */}
 			<Modal
 				visible={isMapModalOpen}
 				animationType="slide"
@@ -188,7 +191,7 @@ export default function UploadArtworkForm() {
 				/>
 			</Modal>
 
-			{/*	Camera and gallery modals 	*/}
+			{/*	Gallery modal 	*/}
 			<Modal
 				visible={isGalleryModalOpen}
 				accessibilityViewIsModal={true}
@@ -201,6 +204,8 @@ export default function UploadArtworkForm() {
 					setImage={setImage}
 				/>
 			</Modal>
+
+			{/* Camera modal */}
 			<Modal
 				visible={isCameraModalOpen}
 				accessibilityViewIsModal={true}

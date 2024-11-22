@@ -8,6 +8,8 @@ type ProfileInfoProps = {
 };
 
 export default function ProfileInfo({ userData }: ProfileInfoProps) {
+
+	{ /* Render error message if no userData */ }
 	if (!userData) {
 		return (
 			<View
@@ -19,9 +21,11 @@ export default function ProfileInfo({ userData }: ProfileInfoProps) {
 			</View>
 		);
 	}
-	console.log(userData.profileImageUrl);
+
+
 	return (
 		<View style={styles.mainContainer}>
+
 			{/* Profile Picture */}
 			<View style={styles.profilePicContainer}>
 				{userData.profileImageUrl ? (
@@ -32,6 +36,7 @@ export default function ProfileInfo({ userData }: ProfileInfoProps) {
 						accessibilityLabel={`Profile picture of ${userData.username}`}
 					/>
 				) : (
+					// Default icon if no profile pic
 					<FontAwesome
 						name="user-circle"
 						size={64}
@@ -62,6 +67,7 @@ export default function ProfileInfo({ userData }: ProfileInfoProps) {
 						{userData.bio}
 					</Text>
 				) : (
+					// default bio if user has none
 					<Text
 						accessible={true}
 						accessibilityLabel="This user has no bio yet."
@@ -78,8 +84,8 @@ const styles = StyleSheet.create({
 	mainContainer: {
 		alignItems: "center",
 		justifyContent: "flex-start",
-		width: "100%", // Ensure the container spans full width
-		paddingVertical: 10, // Add some vertical padding for spacing
+		width: "100%",
+		paddingVertical: 10,
 		backgroundColor: "white",
 	},
 	profilePicContainer: {

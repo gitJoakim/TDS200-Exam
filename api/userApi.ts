@@ -6,12 +6,13 @@ import {
 	setDoc,
 	updateDoc,
 	getDocs,
-	query,
-	where,
 	collection,
 } from "firebase/firestore";
 import { uploadImage } from "./imageApi";
 
+//**************************************
+// CREATE
+//**************************************
 export const createUserInDb = async (
 	userId: string,
 	username: string,
@@ -29,11 +30,15 @@ export const createUserInDb = async (
 		};
 		const userRef = doc(db, "users", userId);
 		await setDoc(userRef, userProfile);
-		console.log("User Document written with ID:", userId);
+		//console.log("User Document written with ID:", userId);
 	} catch (error) {
-		console.log("Error creating userdocument:", error);
+		//console.log("Error creating userdocument:", error);
 	}
 };
+
+//**************************************
+// READ
+//**************************************
 
 export const getUserInfoById = async (userId: string) => {
 	try {
@@ -46,14 +51,13 @@ export const getUserInfoById = async (userId: string) => {
 			userId: specificUser.id,
 		} as UserData;
 	} catch (error) {
-		console.log("Error fetching userinfo by ID:", error);
+		//console.log("Error fetching userinfo by ID:", error);
 		return null;
 	}
 };
 
 export const getUsersBySearch = async (searchInput: string) => {
 	try {
-		// Fetch all users from Firestore (no query restrictions)
 		const querySnapshot = await getDocs(collection(db, "users"));
 
 		// Filter users locally by checking if the lowercase username matches the search input
@@ -69,33 +73,37 @@ export const getUsersBySearch = async (searchInput: string) => {
 
 		return filteredUsers;
 	} catch (error) {
-		console.log("Error getting searched users");
+		//console.log("Error getting searched users");
 		return [];
 	}
 };
 
-// Update bio function
+//**************************************
+// UPDATE
+//**************************************
+
+// Update user profile bio
 export const updateUserBio = async (userId: string, newBio: string) => {
 	try {
 		const userRef = doc(db, "users", userId);
 		await updateDoc(userRef, {
 			bio: newBio,
 		});
-		console.log("User bio updated");
+		//console.log("User bio updated");
 	} catch (error) {
-		console.log("Error updating bio:", error);
+		//console.log("Error updating bio:", error);
 	}
 };
 
-// Update profile picture function
+// Update profile picture
 export const updateUserProfilePicture = async (
 	userId: string,
-	newProfilePictureUri: string // Pass the local URI here
+	newProfilePictureUri: string
 ) => {
 	try {
-		const firebaseImagePath = await uploadImage(newProfilePictureUri);
+		const firebaseImagePath = await uploadImage(newProfilePictureUri); // upload image from imageApi.ts
 		if (firebaseImagePath === "ERROR") {
-			console.error("Failed to upload profile picture");
+			//console.error("Failed to upload profile picture");
 			return;
 		}
 
@@ -103,11 +111,11 @@ export const updateUserProfilePicture = async (
 
 		const userRef = doc(db, "users", userId);
 		await updateDoc(userRef, {
-			profileImageUrl: newProfilePictureUrl, // Save the Firebase Storage URL
+			profileImageUrl: newProfilePictureUrl,
 		});
 
-		console.log("User profile picture updated");
+		//console.log("User profile picture updated");
 	} catch (error) {
-		console.log("Error updating profile picture:", error);
+		//console.log("Error updating profile picture:", error);
 	}
 };

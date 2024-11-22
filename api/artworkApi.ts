@@ -41,17 +41,17 @@ export const createArtwork = async (artwork: ArtworkData) => {
 			collection(db, "artworks"),
 			artworkWithImageData
 		);
-		console.log("Document written with ID:", docRef);
+		//console.log("Document written with ID:", docRef);
 		const artworkId = docRef.id;
 		await createLikesData(artworkId);
 		await createCommentsData(artworkId);
 	} catch (error) {
-		console.log("Error adding document:", error);
+		//console.log("Error adding document:", error);
 		throw error;
 	}
 };
 
-// creates likes collection
+// creates likes document
 export const createLikesData = async (artworkId: string) => {
 	try {
 		const likesData: LikeData = {
@@ -59,13 +59,13 @@ export const createLikesData = async (artworkId: string) => {
 			userIds: [],
 		};
 		await addDoc(collection(db, "likes"), likesData);
-		console.log("Likes created for artwork:", artworkId);
+		//console.log("Likes created for artwork:", artworkId);
 	} catch (error) {
-		console.log("Error creating likes:", error);
+		//console.log("Error creating likes:", error);
 	}
 };
 
-// creates comments collection
+// creates comments document
 export const createCommentsData = async (artworkId: string) => {
 	try {
 		const commentData: CommentData = {
@@ -73,12 +73,13 @@ export const createCommentsData = async (artworkId: string) => {
 			comments: [],
 		};
 		await addDoc(collection(db, "comments"), commentData);
-		console.log("Successfully created comments for artworkId:", artworkId);
+		//console.log("Successfully created comments for artworkId:", artworkId);
 	} catch (error) {
-		console.log("Error creating comments:", error);
+		//console.log("Error creating comments:", error);
 	}
 };
 
+// add a comment to a comments document based on its coresponding artworkId
 export const addComment = async (artworkId: string, comment: Comment) => {
 	try {
 		const result = await getDocs(
@@ -99,12 +100,12 @@ export const addComment = async (artworkId: string, comment: Comment) => {
 				comments: updatedComments,
 			});
 
-			console.log("Comment was successfully added!!!! WOOOOO");
+			//console.log("Comment was successfully added!!!! WOOOOO");
 		} else {
-			console.log("No comments document found for this artworkId:", artworkId);
+			//console.log("No comments document found for this artworkId:", artworkId);
 		}
 	} catch (error) {
-		console.log("Error adding comment to artworkId:", artworkId);
+		//console.log("Error adding comment to artworkId:", artworkId);
 	}
 };
 
@@ -120,11 +121,13 @@ export const getAllArtworks = async () => {
 			return { ...doc.data(), id: doc.id } as ArtworkData; // replaces artwork id (which we set to null on creation) with its id from firebase
 		});
 	} catch (error) {
-		console.log("Error fetching all posts:", error);
+		//console.log("Error fetching all posts:", error);
 		return [];
 	}
 };
 
+// get all artworks by newest or oldest (based on an artworks Date field)
+// true = newest first     false = oldest first
 export const getAllArtworksByOrder = async (newest: boolean) => {
 	try {
 		const result = await getDocs(
@@ -137,7 +140,7 @@ export const getAllArtworksByOrder = async (newest: boolean) => {
 			return { ...doc.data(), id: doc.id } as ArtworkData; // replaces artwork id (which we set to null on creation) with its id from firebase
 		});
 	} catch (error) {
-		console.log("Error fetching all posts:", error);
+		//console.log("Error fetching all posts:", error);
 		return [];
 	}
 };
@@ -149,18 +152,19 @@ export const getArtworkById = async (id: string) => {
 		if (!specificArtwork.exists()) {
 			throw new Error(`Could not find any artwork with this ID: ${id}`);
 		}
-		console.log("Artwork by specific ID:", specificArtwork.data());
+		//console.log("Artwork by specific ID:", specificArtwork.data());
 
 		return {
 			...specificArtwork.data(),
 			id: specificArtwork.id,
 		} as ArtworkData;
 	} catch (error) {
-		console.log("Error fetching artwork by ID:", error);
+		//console.log("Error fetching artwork by ID:", error);
 		return null;
 	}
 };
 
+// get all artworks based on userId (where a specific user is the artist)
 export const getArtworksByUserId = async (userId: string) => {
 	try {
 		const result = await getDocs(
@@ -170,17 +174,16 @@ export const getArtworksByUserId = async (userId: string) => {
 			return { ...doc.data(), id: doc.id } as ArtworkData;
 		});
 	} catch (error) {
-		console.log("Error fetching artworks by user id:", error);
+		//console.log("Error fetching artworks by user id:", error);
 		return [];
 	}
 };
 
+// get all artworks that contains the hashtag
 export const getArtworkByHashtagSearch = async (searchInput: string) => {
 	// search requires minimum 2 charcter, so we just return early if its not true
 	if (searchInput.length < 2) {
-		console.log(
-			"Search query is too short. Please enter at least 2 characters."
-		);
+		//console.log("Search query is too short.");
 		return [];
 	}
 	try {
@@ -194,12 +197,12 @@ export const getArtworkByHashtagSearch = async (searchInput: string) => {
 			return { ...doc.data(), id: doc.id } as ArtworkData;
 		});
 	} catch (error) {
-		console.log("Error getting posts by hashtag:", error);
+		//console.log("Error getting posts by hashtag:", error);
 		return [];
 	}
 };
 
-// get likes collection based on artworkId
+// get the correct likes document based on artworkId
 export const getLikesByArtworkId = async (artworkId: string) => {
 	try {
 		const result = await getDocs(
@@ -213,12 +216,12 @@ export const getLikesByArtworkId = async (artworkId: string) => {
 			return null;
 		}
 	} catch (error) {
-		console.log("Error fetching likes:", error);
+		//console.log("Error fetching likes:", error);
 		return null;
 	}
 };
 
-// gets comments
+// get the correct comments document based on artworkId
 export const getCommentsByArtworkId = async (artworkId: string) => {
 	try {
 		const result = await getDocs(
@@ -232,7 +235,7 @@ export const getCommentsByArtworkId = async (artworkId: string) => {
 			return null;
 		}
 	} catch (error) {
-		console.log("Error fetching comments", error);
+		//console.log("Error fetching comments", error);
 		return null;
 	}
 };
@@ -263,29 +266,14 @@ export const toggleLike = async (artworkId: string, userId: string) => {
 			});
 		}
 	} catch (error) {
-		console.error("Error toggling like for userId:", userId);
-		console.error("Error toggling like on post:", artworkId);
-		console.log(error);
+		//console.error("Error toggling like for userId:", userId);
+		//console.error("Error toggling like on post:", artworkId);
+		//console.log(error);
 	}
 };
 
-//**************************************
-// DELETE
-//**************************************
-
-export const deleteArtwork = async (artworkId: string) => {
-	try {
-		const artworkToBeDeleted = doc(db, "artworks", artworkId);
-		await deleteDoc(artworkToBeDeleted);
-		console.log(`Artwork with ID: ${artworkId} has been deleted`);
-	} catch (error) {
-		console.log(
-			`Error deleting artwork with ID: ${artworkId}, \n ERROR: `,
-			error
-		);
-	}
-};
-
+// remove a specific comment from a comment document
+// its called delete but it fits in the Update part of crud
 export const deleteComment = async (artworkId: string, commentId: string) => {
 	try {
 		const querySnapshot = await getDocs(
@@ -300,7 +288,7 @@ export const deleteComment = async (artworkId: string, commentId: string) => {
 			);
 
 			if (!commentToRemove) {
-				console.log("Comment with ID", commentId, "not found.");
+				//console.log("Comment with ID", commentId, "not found.");
 				return null;
 			}
 
@@ -309,14 +297,29 @@ export const deleteComment = async (artworkId: string, commentId: string) => {
 				comments: arrayRemove(commentToRemove),
 			});
 
-			console.log("Successfully deleted comment with ID:", commentId);
+			//console.log("Successfully deleted comment with ID:", commentId);
 			return; // Successfully deleted, no need to return any data
 		} else {
-			console.log("No matching document found for artworkId:", artworkId);
+			//console.log("No matching document found for artworkId:", artworkId);
 			return null; // Return null if no matching document found
 		}
 	} catch (error) {
-		console.log("Error deleting comment:", error);
+		//console.log("Error deleting comment:", error);
 		return null;
+	}
+};
+
+//**************************************
+// DELETE
+//**************************************
+
+// delete a single artwork based on artworkId
+export const deleteArtwork = async (artworkId: string) => {
+	try {
+		const artworkToBeDeleted = doc(db, "artworks", artworkId);
+		await deleteDoc(artworkToBeDeleted);
+		//console.log(`Artwork with ID: ${artworkId} has been deleted`);
+	} catch (error) {
+		//console.log(`Error deleting artwork with ID: ${artworkId}, \n ERROR: `,error);
 	}
 };

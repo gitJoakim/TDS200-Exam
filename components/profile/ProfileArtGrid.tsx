@@ -17,6 +17,9 @@ type ProfileArtGridProps = {
 };
 
 export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
+
+		// Renders images of artworks with expo-router Link wrapped around them
+		// links to artwork details
 	const renderItem = ({ item }: { item: ArtworkData }) => (
 		<View
 			style={styles.itemContainer}
@@ -45,6 +48,7 @@ export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
 		</View>
 	);
 
+	{ /* if user has no artworks */}
 	if (artworks.length === 0) {
 		return (
 			<View style={styles.mainContainer}>
@@ -58,6 +62,7 @@ export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
 		);
 	}
 
+	{ /* Flatlist to render grid of ArtworkImages */ }
 	return (
 		<View style={styles.mainContainer}>
 			<FlatList
@@ -72,6 +77,7 @@ export default function ProfileArtGrid({ artworks }: ProfileArtGridProps) {
 	);
 }
 
+// getting window dimensions for styling purposes
 const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({

@@ -3,14 +3,14 @@ import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors"; // Adjust this to your project setup
+import { Colors } from "@/constants/Colors";
 import { getAddressFromCoords } from "@/utils/getAddressFromCoords";
 import fetchAddressWithGoogleAPI from "@/utils/getAddressWithGoogle";
 import SingleArtworkWebMap from "../MapsForWeb/SingleArtworkWebMap";
 
 interface LocationSetterProps {
 	location: Location.LocationObjectCoords | null;
-	setIsMapModalOpen: (isOpen: boolean) => void; // Function to open/close the modal
+	setIsMapModalOpen: (isOpen: boolean) => void;
 }
 
 export default function LocationSetter({
@@ -21,30 +21,35 @@ export default function LocationSetter({
 		Location.LocationGeocodedAddress[] | null
 	>(null);
 
-	const fetchAddressInfoFromCoords = async () => {
+	
+	// gets address from coords through expo-location reverseGeocodeAsync()
+	const getAddressInfoFromCoords = async () => {
 		if (location) {
 			const address = await getAddressFromCoords(location);
 			setAddressCoords(address);
 		}
 	};
 
-	const fetchAddressInfoFromGoogle = async () => {
+	// gets address from coords through google locaiton API
+	const getAddressInfoFromGoogle = async () => {
 		if (location) {
 			const address = await fetchAddressWithGoogleAPI(location);
 			setAddressCoords(address);
 		}
 	};
 
+	// use correct api based on platform
 	useEffect(() => {
 		if (Platform.OS === "web" || "android") {
-			fetchAddressInfoFromGoogle();
+			getAddressInfoFromGoogle();
 		} else {
-			fetchAddressInfoFromCoords();
+			getAddressInfoFromCoords();
 		}
 	}, [location]);
 
 	return (
 		<View style={styles.locationContainer}>
+
 			{/* Location Icon and Text */}
 			<View style={styles.locationIconContainer}>
 				<Ionicons
@@ -59,6 +64,7 @@ export default function LocationSetter({
 						: "Click the map to set location"}
 				</Text>
 			</View>
+
 			{/* Map */}
 			<Pressable
 				onPress={() => {
@@ -71,9 +77,10 @@ export default function LocationSetter({
 				accessibilityRole="button"
 			>
 				{Platform.OS === "web" ? (
-					// @ts-ignore
+					// OpenLayers for web
 					<SingleArtworkWebMap region={location} />
 				) : (
+					// MapView for mobile
 					<MapView
 						style={styles.tinyMap}
 						region={{
@@ -87,6 +94,7 @@ export default function LocationSetter({
 						rotateEnabled={false}
 						pitchEnabled={false}
 					>
+						{ /* Location on map */ }
 						{location && <Marker coordinate={location}></Marker>}
 					</MapView>
 				)}
@@ -122,7 +130,7 @@ const styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent grey overlay
+		backgroundColor: "rgba(0, 0, 0, 0.3)",
 		borderRadius: 8,
 	},
 	locationIconContainer: {

@@ -6,6 +6,10 @@ import {
 } from "firebase/auth";
 import { createUserInDb } from "./userApi";
 
+//**************************************
+// Inspired by lecture code
+//**************************************
+
 // sign up / create user
 export const signUp = async (
 	email: string,
@@ -21,9 +25,7 @@ export const signUp = async (
 		await updateProfile(userCredential.user, { displayName: username });
 		// we save userdata as a user in db
 		await createUserInDb(userCredential.user.uid, username, email);
-		console.log(
-			`Signed up with: username: ${userCredential.user.displayName}, email: ${userCredential.user.email}`
-		);
+		//console.log(`Signed up with: username: ${userCredential.user.displayName}, email: ${userCredential.user.email}`);
 	} catch (error) {
 		throw new Error(handleFirebaseError(error));
 	}
@@ -37,13 +39,13 @@ export const logIn = async (email: string, password: string) => {
 			email,
 			password
 		);
-		console.log("Sign in info: ", userCredential);
+		//console.log("Sign in info: ", userCredential);
 	} catch (error) {
 		throw new Error(handleFirebaseError(error));
 	}
 };
 
-// 
+// error handling for a smooth user feedback on the login page.
 const handleFirebaseError = (error: any) => {
 	let errorMessage = "An unexpected error occurred. Please try again.";
 	switch (error.code) {

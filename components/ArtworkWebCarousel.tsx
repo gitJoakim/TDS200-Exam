@@ -20,33 +20,31 @@ export default function ArtworkWebCarousel({
 		setItemHeight(layoutHeight); // Set item height
 	};
 
-	// Reset FlatList scroll position when artworks prop changes
+	// Reset FlatList scroll position when artworks changes
 	useEffect(() => {
-		// Reset scroll position to top with a smooth animation when the data changes
 		if (flatListRef.current) {
 			flatListRef.current.scrollToOffset({
-				animated: true, // Enable smooth scrolling
-				offset: 0, // Scroll to the top
+				animated: true, 
+				offset: 0, 
 			});
 		}
-	}, [artworks]); // Dependency array ensures it runs when artworks prop changes
+	}, [artworks]);
 
 	return (
 		<View style={styles.mainContainer}>
-			{/* FlatList */}
 			<FlatList
-				ref={flatListRef} // Attach the ref to FlatList
+				ref={flatListRef} 
 				data={artworks}
 				renderItem={({ item }) => (
-					<ArtworkCarouselItem artwork={item} onLayout={onItemLayout} />
+					<ArtworkCarouselItem artwork={item} onLayout={onItemLayout} /> // render as Item artwork component
 				)}
-				keyExtractor={(item) => item.id} // Ensure unique key for each item
-				horizontal={false} // Enable vertical scrolling
-				pagingEnabled={true} // Disable default paging (we handle snapping ourselves)
-				showsVerticalScrollIndicator={false} // Hide scroll indicator
-				snapToInterval={itemHeight} // Snapping interval based on item height
-				snapToAlignment="start" // Ensure snap is at the top of the item
-				decelerationRate="fast" // Smooth scrolling
+				keyExtractor={(item) => item.id} 
+				horizontal={false} 
+				pagingEnabled={true} 
+				showsVerticalScrollIndicator={false} 
+				snapToInterval={itemHeight}
+				snapToAlignment="start"
+				decelerationRate="fast" 
 				getItemLayout={(data, index) => ({
 					length: itemHeight,
 					offset: itemHeight * index,

@@ -20,6 +20,7 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 		});
 	}, [artwork.imageURL]);
 
+	// gets image height
 	function getImageHeight() {
 		const aspectRatio = imageWidth / imageHeight;
 		const containerWidth = (Dimensions.get("window").width - 24) / 2;
@@ -38,9 +39,9 @@ export default function ArtworkGridImage({ artwork }: ArtworkGridImageProps) {
 		<Pressable
 			onPress={handleImagePress}
 			style={styles.container}
-			accessible={true} // Ensure the Pressable is accessible
-			accessibilityRole="link" // Indicate that this element is a clickable link
-			accessibilityLabel={`Artwork titled ${artwork.title}`} // Descriptive label for screen readers
+			accessible={true} 
+			accessibilityRole="link"
+			accessibilityLabel={`Artwork titled ${artwork.title}`} 
 			accessibilityHint={`Opens details for ${artwork.title}`}
 		>
 			{imageWidth && imageHeight ? (

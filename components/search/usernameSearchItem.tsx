@@ -15,6 +15,7 @@ export default function UsernameSearchItem({
 }: UsernameSearchItemProps) {
 	return (
 		<View style={styles.cardContainer}>
+			{/* expo-router link to user profile */}
 			<Link
 				href={{
 					pathname: "/userProfile/[id]",
@@ -25,7 +26,7 @@ export default function UsernameSearchItem({
 				accessibilityLabel={`Go to ${userData.username}'s profile`}
 			>
 				<View style={styles.cardContent}>
-					{/* Profile picture with red border if available */}
+					{/* Profile picture*/}
 					<View style={styles.profilePicContainer}>
 						{userData?.profileImageUrl ? (
 							<Image
@@ -36,6 +37,7 @@ export default function UsernameSearchItem({
 								accessibilityLabel={`${userData.username}'s profile picture`}
 							/>
 						) : (
+							// default icon if no profile picture
 							<FontAwesome
 								name="user-circle"
 								size={47}
@@ -48,6 +50,7 @@ export default function UsernameSearchItem({
 					</View>
 
 					<View>
+						{/* Username*/}
 						<Text
 							style={styles.username}
 							accessible={true}
@@ -56,8 +59,10 @@ export default function UsernameSearchItem({
 						>
 							{userData.username}
 						</Text>
+
+						{/* number of artworks user has uploaded */}
 						<Text
-							style={styles.postsCount}
+							style={styles.artworksCount}
 							accessible={true}
 							accessibilityRole="text"
 							accessibilityLabel={`${numberOfArtworks} artworks`}
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
 	cardContent: {
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "flex-start", // Align content to the start (left side)
+		justifyContent: "flex-start",
 	},
 	profilePicContainer: {
 		width: 50,
@@ -90,10 +95,10 @@ const styles = StyleSheet.create({
 		borderRadius: 50,
 		overflow: "hidden",
 		borderWidth: 3,
-		borderColor: Colors.ArtVistaRed, // Optional border for profile pic
-		marginRight: 12, // Space between the profile picture and the text
-		justifyContent: "center", // Center the content inside the container
-		alignItems: "center", // Ensure content is centered horizontally
+		borderColor: Colors.ArtVistaRed,
+		marginRight: 12,
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	profilePic: {
 		width: "100%",
@@ -101,19 +106,17 @@ const styles = StyleSheet.create({
 		resizeMode: "cover",
 	},
 	icon: {
-		// Align the icon inside the container with the same size as the container
 		width: 47,
 		height: 47,
-		// The icon itself will now be centered inside the container automatically
 	},
 	username: {
 		fontSize: 16,
 		fontWeight: "bold",
-		color: "black", // Dark color for the username
+		color: "black",
 	},
-	postsCount: {
+	artworksCount: {
 		fontSize: 14,
-		color: "#777", // Lighter gray for the posts count
+		color: "#777",
 		marginTop: 4,
 	},
 });

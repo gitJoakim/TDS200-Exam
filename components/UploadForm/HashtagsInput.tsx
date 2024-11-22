@@ -28,12 +28,12 @@ export default function HashtagsInput({
 		}
 	};
 
-	// remove a hashtag from the array
+	// remove any "#" from the array
 	const removeHashtag = (index: number) => {
 		setHashtagsArray((prev) => prev.filter((_, i) => i !== index));
 	};
 
-	// render all the hashtags
+	// render all the hashtags on screen
 	const renderHashtagsJSX = () => {
 		return hashtagsArray.map((hashtag, index) => (
 			<Pressable
@@ -50,6 +50,7 @@ export default function HashtagsInput({
 
 	return (
 		<View>
+			{ /* Hint/tip to user */ }
 			<Text
 				style={{
 					textAlign: "center",
@@ -62,6 +63,8 @@ export default function HashtagsInput({
 					? "Type a hashtag and press Enter to add it (you can add multiple)"
 					: "Tap a hashtag to remove it"}
 			</Text>
+
+			{ /* All hashtags user has entered*/ }
 			<View style={styles.hashtagsContainer}>{renderHashtagsJSX()}</View>
 			<View
 				style={{
@@ -71,6 +74,7 @@ export default function HashtagsInput({
 					alignItems: "center",
 				}}
 			>
+				{ /* Hashtags input field */ }
 				<Text style={styles.textStyle}>Hashtags</Text>
 				<TextInput
 					style={[styles.textInput, { color: "blue", flex: 1 }]}
@@ -81,7 +85,9 @@ export default function HashtagsInput({
 						addHashtag();
 						event.preventDefault();
 					}}
-					blurOnSubmit={false} // keeps focus after user has submitted a hashtag
+					 // keeps focus after user has submitted a hashtag
+					 // so that u can easily add more
+					blurOnSubmit={false}
 					accessibilityLabel="Enter a hashtag"
 					accessibilityHint="Type a hashtag and press Enter to add it."
 				/>

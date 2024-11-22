@@ -3,7 +3,14 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { getArtworkById } from "@/api/artworkApi";
 import Artwork from "@/components/Artwork";
-import { View, Text, ActivityIndicator, Pressable, Modal } from "react-native";
+import {
+	View,
+	Text,
+	ActivityIndicator,
+	Pressable,
+	Modal,
+	StyleSheet,
+} from "react-native";
 import { Colors } from "@/constants/Colors";
 import Feather from "@expo/vector-icons/Feather";
 import { useAuthSession } from "@/providers/AuthContextProvider";
@@ -19,6 +26,7 @@ export default function ArtworkDetails() {
 	const [isDeletingPost, setIsDeletingPost] = useState(false);
 	const { user } = useAuthSession();
 
+	// fetch artwork from DB based on useLocalSearchParams id
 	async function getSelectedArtworkFromDb() {
 		try {
 			const artworkFromDb = await getArtworkById(id as string);
@@ -38,25 +46,21 @@ export default function ArtworkDetails() {
 		}
 	}
 
+	// delete post
 	async function handleDeletePost() {
-		// an extra check just to be sure
+		// an extra check just to be sure user is the artist
 		if (user!.uid === artwork!.userId) {
 			setLoading(true);
 			await artworkAPI.deleteArtwork(artwork!.id);
 			setLoading(false);
 			setIsDeletingPost(false);
+			// navigate out when deletion is done
 			navigation.goBack();
 		}
 	}
 
-	useEffect(() => {
-		getSelectedArtworkFromDb();
-		navigation.setOptions({
-			title: "Artwork",
-			headerTitleAlign: "center",
-		});
-	}, []);
-
+	// sets header right delete button when artwork is select
+	// only if the user who selected the artwork is the artist
 	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () =>
@@ -74,18 +78,19 @@ export default function ArtworkDetails() {
 		});
 	}, [artwork]);
 
+	// fetch artwork and set header on launch
+	useEffect(() => {
+		getSelectedArtworkFromDb();
+		navigation.setOptions({
+			title: "Artwork",
+			headerTitleAlign: "center",
+		});
+	}, []);
+
+	// While loading, show the ActivityIndicator
 	if (loading) {
-		// While loading, show the ActivityIndicator
 		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					borderTopColor: Colors.ArtVistaRed,
-					borderTopWidth: 1,
-				}}
-			>
+			<View style={styles.mainContainer}>
 				<ActivityIndicator size="large" color="#0000ff" />
 				<Text>Loading Artwork...</Text>
 			</View>
@@ -95,15 +100,7 @@ export default function ArtworkDetails() {
 	// Show error message if artwork is not found
 	if (!artwork || errorMessage) {
 		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					borderTopColor: Colors.ArtVistaRed,
-					borderTopWidth: 1,
-				}}
-			>
+			<View style={styles.mainContainer}>
 				<Text accessibilityRole="alert" style={{ color: Colors.ArtVistaRed }}>
 					{errorMessage}
 				</Text>
@@ -113,8 +110,12 @@ export default function ArtworkDetails() {
 
 	// If artwork is available, render it
 	return (
-		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+		<View style={styles.mainContainer}>
+			
+			{/* Display Artowork */}
 			<Artwork artworkData={artwork} />
+
+			{/* Delete Alert Modal */}
 			<Modal visible={isDeletingPost} accessibilityViewIsModal={true}>
 				{loading && (
 					<ActivityIndicator accessibilityLabel="Deleting artwork..." />
@@ -134,3 +135,13 @@ export default function ArtworkDetails() {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	mainContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		borderTopColor: Colors.ArtVistaRed,
+		borderTopWidth: 1,
+	},
+});

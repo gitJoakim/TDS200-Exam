@@ -1,6 +1,6 @@
 import * as Location from "expo-location";
 
-// util function to grab the address info from coords
+// util function to grab the address info from coords with expo-locaiton reverseGeocodeAsync()
 export const getAddressFromCoords = async (
 	coords: Location.LocationObjectCoords | null
 ): Promise<Location.LocationGeocodedAddress[] | null> => {

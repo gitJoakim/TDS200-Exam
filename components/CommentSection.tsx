@@ -30,6 +30,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
+	// fetch users data
 	const fetchUsersData = async (userIds: string[]) => {
 		const usersDataMap: { [key: string]: string } = {};
 		for (const userId of userIds) {
@@ -39,11 +40,13 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 		setUsersData(usersDataMap);
 	};
 
+	// function to delete comment
 	async function handleDeleteComment() {
 		await artworkAPI.deleteComment(artworkId, commentToDelete!);
 		fetchCommentsData();
 	}
 
+	// fetches comment data based on artworkId
 	async function fetchCommentsData() {
 		const commentsDataFromDb = await artworkAPI.getCommentsByArtworkId(
 			artworkId
@@ -57,34 +60,40 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 		setCommentsData(commentsDataFromDb?.commentData || null);
 	}
 
+	// post comment function
 	async function handlePostComment() {
-		if (!commentText.trim()) return; // Prevent posting if comment is empty or only spaces
+		// Prevent posting if comment is empty or only spaces
+		if (!commentText.trim()) return; 
 
-		setIsSubmitting(true); // Set submitting to true to disable the button
+		setIsSubmitting(true); 
 		const comment: Comment = {
 			commentId: "",
 			commentAuthor: user!.uid,
 			comment: commentText,
 		};
 		await artworkAPI.addComment(artworkId, comment);
-		setCommentText(""); // Clear input after posting
-		fetchCommentsData(); // Refresh comments
+		setCommentText("");
+		fetchCommentsData();
 
 		// Re-enable button after 1 second
 		setTimeout(() => {
-			setIsSubmitting(false); // Reset isSubmitting after 1 second
+			setIsSubmitting(false);
 		}, 1000);
 	}
 
+	// fetches comments on init
 	useEffect(() => {
 		fetchCommentsData();
 	}, []);
 
 	return (
 		<View style={styles.container}>
+			{ /* Comments counter */ }
 			<Text style={styles.commentsCounter} accessibilityRole="text">
 				Comments: {commentsData?.comments.length}
 			</Text>
+
+			{/* Comments scrollview */ }
 			<ScrollView style={styles.scrollContainer} nestedScrollEnabled={true}>
 				{commentsData?.comments.length! > 0 ? (
 					commentsData?.comments.map((comment) => {
@@ -92,6 +101,8 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 						return (
 							<View key={comment.commentId} style={styles.commentContainer}>
 								<View style={styles.comment}>
+
+									{ /* Links to comment author */}
 									<Link
 										href={{
 											pathname: "/userProfile/[id]",
@@ -108,10 +119,13 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 											{username ? username : comment.commentAuthor}
 										</Text>
 									</Link>
+
+									{/* Comment */ }
 									<View style={styles.commentContent}>
 										<Text style={styles.commentText}>{comment.comment}</Text>
 									</View>
-									{/* Trash icon positioned at the bottom right */}
+
+									{/* Trash icon if user has posted the comments */}
 									{user!.uid === comment.commentAuthor && (
 										<Pressable
 											style={styles.deleteButton}
@@ -135,6 +149,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 						);
 					})
 				) : (
+					// no comments text
 					<View style={styles.commentContent}>
 						<Text style={[styles.commentText, { textAlign: "center" }]}>
 							Couldn't find any comments...
@@ -143,6 +158,7 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 				)}
 			</ScrollView>
 
+{ /* Comment input and post button */ }
 			<View style={styles.inputContainer}>
 				<TextInput
 					style={styles.textInput}
@@ -155,11 +171,14 @@ export default function CommentSection({ artworkId }: CommentSectionProps) {
 				<Pressable
 					style={[styles.addButton]}
 					onPress={handlePostComment}
-					disabled={isSubmitting || !commentText.trim()} // Disable button if submitting or text is empty
+					// disable button if submitting or text is empty
+					disabled={isSubmitting || !commentText.trim()} 
 				>
 					<Text style={styles.addButtonText}>Post</Text>
 				</Pressable>
 			</View>
+
+			{ /* Delete are u sure modal */ }
 			<Modal visible={isDeleteModalOpen}>
 				<AlertModal
 					prompt="Are you sure you want to delete your comment?"
@@ -215,14 +234,14 @@ const styles = StyleSheet.create({
 		borderRadius: 6,
 		padding: 12,
 		width: "100%",
-		position: "relative", // Set position relative so the trash icon can be positioned absolutely
+		position: "relative", 
 	},
 	commentAuthor: {
 		fontWeight: "bold",
 		marginBottom: 2,
 	},
 	commentContent: {
-		flexDirection: "column", // Stack the text vertically
+		flexDirection: "column", 
 		justifyContent: "flex-start",
 	},
 	commentText: {
@@ -230,9 +249,9 @@ const styles = StyleSheet.create({
 		marginRight: 28,
 	},
 	deleteButton: {
-		position: "absolute", // Position it absolutely within the comment container
-		bottom: 14, // 6 units from the bottom
-		right: 6, // 6 units from the right
+		position: "absolute",
+		bottom: 14, 
+		right: 6,
 	},
 	inputContainer: {
 		flexDirection: "row",

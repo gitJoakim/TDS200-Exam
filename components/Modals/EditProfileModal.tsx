@@ -32,8 +32,9 @@ export default function EditProfileModal({
 	const [selectedImage, setSelectedImage] = useState<string | null>(
 		userData?.profileImageUrl || null
 	);
-	const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State to control ImageModal
+	const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
+	// save function, saves image and bio if they have been changed
 	const handleSave = async () => {
 		if (!userData) return;
 
@@ -56,10 +57,12 @@ export default function EditProfileModal({
 		closeModal();
 	};
 
+	// Close modal when user taps cancel
 	const handleCancel = () => {
 		closeModal();
 	};
 
+	// open image picker modal when user taps camera icon
 	const openImagePicker = () => {
 		setIsImageModalOpen(true);
 	};
@@ -67,7 +70,8 @@ export default function EditProfileModal({
 	return (
 		<View style={styles.modalOverlay}>
 			<View style={styles.modalContent}>
-				{/* Profile Image with Tap-to-Change */}
+
+				{/* Profile Image container */}
 				<TouchableOpacity
 					onPress={openImagePicker}
 					style={styles.profilePicContainer}
@@ -76,12 +80,14 @@ export default function EditProfileModal({
 					accessibilityHint="Tap to select a new profile picture"
 				>
 					{selectedImage ? (
+				// Profile Image
 						<Image
 							source={{ uri: selectedImage }}
 							style={styles.profilePic}
 							accessibilityLabel="Your profile picture"
 						/>
 					) : (
+				// default profile icon if user has no picture
 						<FontAwesome
 							name="user-circle"
 							size={104}
@@ -89,6 +95,8 @@ export default function EditProfileModal({
 							accessibilityLabel="Default profile picture"
 						/>
 					)}
+				
+				{ /* camera icon to indicate that u can change picture  */ }
 					<View style={styles.cameraIconOverlay}>
 						<FontAwesome name="camera" size={24} color="white" />
 					</View>
@@ -173,18 +181,18 @@ const styles = StyleSheet.create({
 	},
 	profilePicContainer: {
 		marginBottom: 20,
-		width: 110, // Set width slightly larger than image
-		height: 110, // Set height slightly larger than image
+		width: 110,
+		height: 110,
 		justifyContent: "center",
 		alignItems: "center",
-		borderRadius: 55, // Match half of container width/height
+		borderRadius: 55,
 		borderWidth: 3,
 		borderColor: Colors.ArtVistaRed,
 	},
 	profilePic: {
-		width: 104, // Match container size minus border width (110 - 6)
-		height: 104, // Match container size minus border width (110 - 6)
-		borderRadius: 52, // Match half of profilePic width/height
+		width: 104,
+		height: 104,
+		borderRadius: 52,
 	},
 	cameraIconOverlay: {
 		position: "absolute",
@@ -215,14 +223,14 @@ const styles = StyleSheet.create({
 	},
 	buttonsContainer: {
 		flexDirection: "row",
-		justifyContent: "space-between", // Spaces out buttons
+		justifyContent: "space-between",
 		width: "100%",
-		marginTop: 20, // Optional margin for spacing
+		marginTop: 20,
 		paddingHorizontal: 20,
 	},
 
 	button: {
-		backgroundColor: Colors.ArtVistaRed, // Red color for the Save button
+		backgroundColor: Colors.ArtVistaRed,
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
@@ -231,15 +239,15 @@ const styles = StyleSheet.create({
 	},
 
 	buttonText: {
-		color: "#fff", // White text color for the Save button
+		color: "#fff",
 		fontSize: 16,
 		fontWeight: "bold",
 	},
 
 	cancelButton: {
-		backgroundColor: "transparent", // Transparent background for the Cancel button
-		borderColor: "gray", // Grey border
-		borderWidth: 2, // Border width
+		backgroundColor: "transparent",
+		borderColor: "gray",
+		borderWidth: 2,
 		paddingVertical: 10,
 		paddingHorizontal: 20,
 		borderRadius: 5,
@@ -248,7 +256,7 @@ const styles = StyleSheet.create({
 	},
 
 	cancelButtonText: {
-		color: "gray", // Gray text color for the Cancel button
+		color: "gray",
 		fontSize: 16,
 		fontWeight: "bold",
 	},
