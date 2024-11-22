@@ -3,10 +3,10 @@ import googleConfig from "@/googlemapsEnv";
 
 
 /***********************************************
-* Created together with chatgpt, Stack Overflow
-* Some github code and a gazillion google searches
-* So... basically not me
- ***********************************************/
+* This was created with ChatGPT.
+* I was feeding it random search results from Github and StackOverflow
+* So not crafted by me alone, but slowly scraped together through my prompts :D!
+************************************************/
 
 // this has been made to try to match the expo-location city and country 
 

@@ -14,7 +14,7 @@ export default function HashtagsInput({
 	const [hashtag, setHashtag] = useState<string>("#");
 
 	// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
-	// ** not mine, taken from stack overflow **
+	// ** inspired by stack overflow: https://stackoverflow.com/questions/12142829/val-replace-a-za-z-0-9-g-produce-syntaxerror-invalid-range-in-charact
 	function handleHashtagChange(input: string) {
 		const sanitizedInput = input.replace(/[^a-zA-Z0-9]/g, "").replace(/^#/, "");
 		setHashtag(`#${sanitizedInput}`);

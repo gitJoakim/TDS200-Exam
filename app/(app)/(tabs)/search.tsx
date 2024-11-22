@@ -109,7 +109,7 @@ export default function Search() {
 	};
 
 	// makes sure inputfield starts with hashtag and only valid input is english alphabet or numbers
-	// ** not mine, taken from stack overflow **
+	// ** inspired by stack overflow: https://stackoverflow.com/questions/12142829/val-replace-a-za-z-0-9-g-produce-syntaxerror-invalid-range-in-charact
 	const handleTextChange = (text: string) => {
 		if (searchType === "hashtags") {
 			const filteredText = text.replace(/[^a-zA-Z#]/g, "");

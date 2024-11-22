@@ -5,6 +5,8 @@
  *    I think it essentially loads an empty module for web usage to avoid the issue.
  *    I am not sure if this is still needed after I decided to use OpenLayers to solve
  *    Maps for web, although I havent found any cons by just leaving it here for now.
+ * 
+ * 		https://stackoverflow.com/questions/76629674/unable-to-resolve-utilities-platform-error-with-metro-bundler
  *
  *    Just another reminder, this is not my code.
  *    Sorry for any inconvenience.
