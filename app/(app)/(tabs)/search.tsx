@@ -300,9 +300,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 		paddingVertical: 16,
 		paddingHorizontal: 16,
-		...(Platform.OS === "web" && {
-			marginHorizontal: "25%",
-		}),
 	},
 	masonryContainer: {
 		flex: 1,
@@ -324,6 +321,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		backgroundColor: "white",
 		marginBottom: 10,
+		...(Platform.OS === "web" && {
+			marginHorizontal: "25%",
+		}),
 	},
 	searchIcon: {
 		marginRight: 8,
@@ -332,6 +332,9 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		marginBottom: 10,
+		...(Platform.OS === "web" && {
+			marginHorizontal: "25%",
+		}),
 	},
 	searchTypeButton: {
 		paddingVertical: 5,
